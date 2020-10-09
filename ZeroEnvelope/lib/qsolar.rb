@@ -70,7 +70,7 @@ module OpenStudio
   phi_w = Utilities.convert(os_model.getSite.latitude, "deg", "rad")
   
   @@sun_phis, @@sun_thetas, @@g_sol_bs, @@g_sol_ds, @@bs, @@f1s, @@f2s = [], [], [], [], [], [], []
-  weather_file.get.data.each do |row|
+  epw_file.data.each do |row|
     next unless row.month.eql?(7)
     
     g_sol_d = Utilities.convert(row.diffuseHorizontalRadiation.get, "W", "kW") # kWh/m2
