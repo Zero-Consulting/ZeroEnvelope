@@ -1,6 +1,6 @@
 require 'sketchup.rb'
 
-plugin_menu = UI.menu("Plugins").add_submenu("EnvolvenCTE")
+plugin_menu = UI.menu("Plugins").add_submenu("Zero Envelope")
 
 require "#{File.dirname(__FILE__)}/lib/src/Geometry"
 require "#{File.dirname(__FILE__)}/lib/src/SketchUp"

@@ -1,7 +1,7 @@
 require 'sketchup.rb' # defines the SketchupExtension class
 require 'extensions.rb'
 
-plugin_name = "EnvolvenCTE"
+plugin_name = "ZeroEnvelope"
 
 ext = SketchupExtension.new(plugin_name, "#{plugin_name}/Startup.rb")
 ext.name = plugin_name
