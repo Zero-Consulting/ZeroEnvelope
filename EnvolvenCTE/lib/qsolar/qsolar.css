@@ -1,0 +1,216 @@
+
+#container > div {
+  position: absolute
+}
+
+#top {
+  width: 50%;
+  height: 10%;
+  padding: 1em
+}
+
+#qsoljul {
+  left: 50%;
+  width: 50%;
+  height: 10%
+}
+
+#left {
+  width: 25%;
+  top: 10%;
+  height: 80%
+}
+
+#main {
+  left: 25%;
+  width: 75%;
+  top: 10%;
+  height: 80%
+}
+
+#main > div {
+  height: 100%;
+  width: 100%;
+}
+
+#output > div {
+  width: 100%;
+}
+
+#header {
+  height: 50px;
+}
+
+#table {
+  height: calc(100% - 50px);
+}
+
+#footer_left, #footer_center, #footer_right {
+  height: 10%;
+  top: 90%;
+  width: 33%;
+  background: #fff;
+  border-top: 1px solid #ccc;
+  padding: 1em
+}
+
+#footer_left {
+  text-align: left
+}
+
+#footer_center {
+  left: 33%;
+  text-align: center;
+  vertical-align: text-top
+}
+
+#footer_right {
+  left: 66%;
+  text-align: right
+}
+
+/* Give the buttons some even width. */
+#footer_right button {
+  min-width: 6em;
+}
+
+#left, #table {
+  overflow-y: auto
+}
+
+#left::-webkit-scrollbar, #table::-webkit-scrollbar {
+  display: none
+}
+
+#left {
+  padding-right: 1vw;
+}
+
+.btn-success {
+  background-color: #789D4A !important;
+  border-color: #789D4A !important
+}
+
+.btn-secondary {
+  background-color:	#d7d3d2 !important;
+  border-color: #d7d3d2 !important;
+  color: #60504c !important
+}
+
+.glyphicon, ul li {
+  cursor: pointer;
+}
+
+.glyphicon:hover {
+  color: #789D4A;
+}
+
+li ul {
+  display: none;
+  padding-left: 20px;
+}
+
+ul {
+  list-style: none;
+}
+
+div > ul > li:not(.edit):before {
+  /*Using a Bootstrap glyphicon as the bullet point*/
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  font-size: 9px;
+  float: left;
+  margin-top: 4px;
+  margin-left: -17px;
+  color: #789D4A;
+}
+
+div > ul > li.open:before {
+  /*Using a Bootstrap glyphicon as the bullet point*/
+  content: "\e259";
+}
+
+.open > ul {
+  display: block;
+}
+
+li.selected {
+  font-weight: bold;
+  color: #789D4A;
+}
+
+div > p:first-child{
+  margin-top: 10px;
+}
+
+select {
+  margin-bottom: 10px;
+}
+
+input {
+  padding-left: 1ch;
+  padding-right: 1ch;
+}
+
+input[type=number] {
+  width: 10ch;
+  margin-right: 1ch;
+}
+
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+#qsoljul input {
+  border: none;
+  text-align: right;
+  width: 75px
+}
+
+
+thead {
+  background-color: #c7bbb8;
+  color: #60504c;
+}
+
+th {
+  border-left: 2px solid #d0d0d0;
+  border-right: 2px solid #d0d0d0;
+  text-align: center;
+  padding: 4px;
+}
+
+#footer_left .glyphicon {
+  font-size: 2em
+}
+
+#footer_left > span {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+
+td {
+  border: 2px solid #dddddd;
+  text-align: center;
+  padding: 4px;
+}
+
+tr :nth-child(1)  {
+  text-align: left;
+  width: 15vw !important;
+}
+
+tr :not(:first-child)  {
+  text-align: center;
+  width: 8vw !important;
+}
+
+tbody tr:hover {
+  background-color: #e6efdc;
+  cursor: pointer;
+}
+
+tbody tr.selected {
+  background-color: #c2d6a8;
+}

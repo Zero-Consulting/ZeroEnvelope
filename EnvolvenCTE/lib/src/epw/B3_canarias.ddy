@@ -1,0 +1,65 @@
+! DesignDays generated from EPW data
+! The coldest/warmest design day is used as representative of each winter/summer zone
+! Rafael Villar Burke, 19/January/2016
+
+Site:Location, B1_canarias,     ! Name
+  28.3300,      ! Latitude {N+ S-}
+  -16.3700,     ! Longitude {W- E+}
+  0.0000,       ! TimeZoneNumber {GMT+/-}
+  30.0;      ! Elevation {m}
+
+SizingPeriod:DesignDay,
+    Winter 0.4% Dry Bulb Temperature (Canary Islands),             !- Name
+    1,                       !- Month
+    15,                      !- Day of Month
+    WinterDesignDay,         !- Day Type
+    10.60,            !- Maximum Dry-Bulb Temperature {C}
+    5.80,          !- Daily Dry-Bulb Temperature Range {deltaC}
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
+    ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
+    DewPoint,                !- Humidity Condition Type
+    1.60,            !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
+    ,                        !- Humidity Condition Day Schedule Name
+    ,                        !- Humidity Ratio at Maximum Dry-Bulb {kgWater/kgDryAir}
+    ,                        !- Enthalpy at Maximum Dry-Bulb {J/kg}
+    ,                        !- Daily Wet-Bulb Temperature Range {deltaC}
+    100965,                  !- Barometric Pressure {Pa}
+    2.8,                     !- Wind Speed {m/s}
+    0,                       !- Wind Direction {deg}
+    No,                      !- Rain Indicator
+    No,                      !- Snow Indicator
+    No,                      !- Daylight Saving Time Indicator
+    ASHRAEClearSky,          !- Solar Model Indicator
+    ,                        !- Beam Solar Day Schedule Name
+    ,                        !- Diffuse Solar Day Schedule Name
+    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0.00;                    !- Sky Clearness
+
+SizingPeriod:DesignDay,
+    Summer 99.6% Dry Bulb Temperature (Canary Islands),             !- Name
+    7,                       !- Month
+    15,                      !- Day of Month
+    SummerDesignDay,         !- Day Type
+    30.00,            !- Maximum Dry-Bulb Temperature {C}
+    8.40,          !- Daily Dry-Bulb Temperature Range {deltaC}
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
+    ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
+    DewPoint,                !- Humidity Condition Type
+    17.20,            !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
+    ,                        !- Humidity Condition Day Schedule Name
+    ,                        !- Humidity Ratio at Maximum Dry-Bulb {kgWater/kgDryAir}
+    ,                        !- Enthalpy at Maximum Dry-Bulb {J/kg}
+    ,                        !- Daily Wet-Bulb Temperature Range {deltaC}
+    100965,                  !- Barometric Pressure {Pa}
+    2.8,                     !- Wind Speed {m/s}
+    0,                       !- Wind Direction {deg}
+    No,                      !- Rain Indicator
+    No,                      !- Snow Indicator
+    Yes,                     !- Daylight Saving Time Indicator
+    ASHRAEClearSky,          !- Solar Model Indicator
+    ,                        !- Beam Solar Day Schedule Name
+    ,                        !- Diffuse Solar Day Schedule Name
+    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    1.00;                    !- Sky Clearness

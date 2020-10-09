@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>K global</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href='Kglobal.css'>
+  </head>
+  <body style="color:#60504C">
+    <div id="container">
+      <div id="input">
+        <button class="btn btn-secondary" value="construction_sets">Construction sets</button>
+        <button class="btn btn-secondary" value="constructions">Constructions</button>
+        <button class="btn btn-secondary" value="materials">Materials</button>
+        <button class="btn btn-secondary" value="windows">Windows</button>
+        <button class="btn btn-secondary" value="thermal_bridges">Thermal bridges</button>
+      </div>
+      <div id="kglobal" >
+        <p>K = <input type="number" readOnly=true value=0.0>W/m<sup>2</sup> K</p>
+      </div>
+      <div id="output">
+        <button class="btn btn-secondary" value="opaques_u">Opaques</button>
+        <button class="btn btn-secondary" value="windows_u">Windows</button>
+        <button class="btn btn-secondary" value="thermal_bridges_psi">Thermal bridges</button>
+      </div>
+      <div id="left">
+        <ul>
+          <li id="construction_sets">Construction Sets
+            <ul></ul>
+          </li>
+          <li class="edit">
+            <span class="glyphicon glyphicon-plus"></span>
+            <span class="hide glyphicon glyphicon-duplicate"></span>
+            <span class="hide glyphicon glyphicon-trash"></span>
+          </li>
+        </ul>
+        <ul>
+          <li id="constructions">Constructions
+            <ul></ul>
+          </li>
+          <li class="edit">
+            <span class="glyphicon glyphicon-plus"></span>
+            <span class="hide glyphicon glyphicon-duplicate"></span>
+            <span class="hide glyphicon glyphicon-sort"></span>
+            <span class="hide glyphicon glyphicon-trash"></span>
+          </li>
+        </ul>
+        <ul>
+          <li id="air_gaps">Air Gaps
+            <ul></ul>
+          </li>
+        </ul>
+        <ul>
+          <li id="materials">Materials
+            <ul></ul>
+          </li>
+          <li class="edit">
+            <span class="glyphicon glyphicon-plus"></span>
+            <span class="hide glyphicon glyphicon-duplicate"></span>
+            <span class="hide glyphicon glyphicon-trash"></span>
+          </li>
+        </ul>
+        <ul>
+          <li id="glazings">Glazings
+            <ul></ul>
+          </li>
+          <li class="edit">
+            <span class="glyphicon glyphicon-plus"></span>
+            <span class="hide glyphicon glyphicon-duplicate"></span>
+            <span class="hide glyphicon glyphicon-trash"></span>
+          </li>
+        </ul>
+        <ul>
+          <li id="frames">Frames
+            <ul></ul>
+          </li>
+          <li class="edit">
+            <span class="glyphicon glyphicon-plus"></span>
+            <span class="hide glyphicon glyphicon-duplicate"></span>
+            <span class="hide glyphicon glyphicon-trash"></span>
+          </li>
+        </ul>
+        <ul>
+          <li id="thermal_bridges">Thermal Bridges
+            <ul></ul>
+          </li>
+          <li class="edit">
+            <span class="glyphicon glyphicon-plus"></span>
+            <span class="hide glyphicon glyphicon-duplicate"></span>
+            <span class="hide glyphicon glyphicon-trash"></span>
+          </li>
+        </ul>
+      </div>
+      <div id="main">
+        <div id="construction_set" class="hide"></div>
+        <div id="construction" class="hide">
+          <div id="top" style="position: relative;">
+            <p>Internal source construction?: <input id="internal_source_check" type="checkbox"></p>
+            <p>Edge insulation?: <input id="edge_insulation_check" type="checkbox"></p>
+            <p>Thermal transmittance without boundary conditions: <input id="uvalue" type="number" readOnly=true value=0.0>W/m<sup>2</sup>·K</p>
+            <p>From outside to inside.</p>
+            <table style="position: absolute; bottom: 0;">
+              <thead>
+                <tr><th style="color: #ffffff;" rowspan="2">10</th><th rowspan="2">Material</th><th>Thickness</th><th>Thermal resistance</th><th style="width: 250px;">Equivalent air thk</th></tr>
+                <tr><th style="display: none;"></th><th style="display: none;"></th><th>[ cm ]</th><th>[ m<sup style="background-color: #c7bbb8; color: #60504c;">2</sup> K / W ]</th><th>[ m ]</th></tr>
+              </thead>
+            </table>
+          </div>
+          <div id="layers">
+            <table>
+              <tbody></tbody>
+              <tbody class="editable"></tbody>
+            </table>
+          </div>
+          <div id="bottom">
+            <div id="interior_horizontal_insulation" class="hide">
+              <p>Horizontal Insulation Thickness: <input id="interior_horizontal_insulation_thickness" type="number">cm</p>
+              <p>Horizontal Insulation Width: <input id="interior_horizontal_insulation_width" type="number">m</p>
+              <div id="interior_horizontal_insulation_material" class="drop">
+                <p>Horizontal Insulation Material</p>
+                <p></p>
+              </div>
+            </div>
+            <div id="exterior_vertical_insulation" class="hide">
+              <p>Vertical Insulation Thickness: <input id="exterior_vertical_insulation_thickness" type="number">cm</p>
+              <p>Vertical Insulation Depth: <input id="exterior_vertical_insulation_depth" type="number">m</p>
+              <div id="exterior_vertical_insulation_material" class="drop">
+                <p>Vertical Insulation Material</p>
+                <p></p>
+              </div>
+            </div>
+            <div id="reverse_construction" class="hide">
+              <div id="reversed_construction" class="drop">
+                <p>Reversed construction</p>
+                <p></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="material" class="hide">
+          <p>Conductivity:</p>
+          <p><input id="lambda" type="number">W/m·K</p>
+          <p>Density:</p>
+          <p><input id="rho" type="number">kg/m<sup>3</sup></p>
+          <p>Specific heat:</p>
+          <p><input id="cp" type="number">J/kg·K</p>
+          <p>Resistance to water vapour diffusion:</p>
+          <p><input id="mu" type="number"></p>
+        </div>
+        <div id="glazing" class="hide">
+          <p>U-Factor:</p>
+          <p><input id="ufactor" type="number">W/m<sup>2</sup>·K</p>
+          <p>Solar Heat Gain Coefficient:</p>
+          <p><input id="shgc" type="number"></p>
+          <p>Visible Transmittance:</p>
+          <p><input id="vlt" type="number"></p>
+          <p>Intended Surface Type</p>
+          <select id="intended_surface_type"></select>
+          <p>Fenestration Type</p>
+          <select id="fenestration_type"></select>
+          <p>Fenestration Frame Type</p>
+          <select id="fenestration_frame_type"></select>
+        </div>
+        <div id="frame" class="hide">
+          <p>Width:</p>
+          <p><input id="frame_width" type="number">cm</p>
+          <p>Conductance:</p>
+          <p><input id="frame_conductance" type="number">W/m<sup>2</sup>·K</p>
+          <p>Setback:</p>
+          <p><input id="frame_setback" type="number">cm</p>
+          <p>Reflectance:</p>
+          <select id="frame_colour">
+            <option value=-1 selected>Input</option>
+            <option value=0.7>White</option>
+            <option value=0.5>Pastel</option>
+            <option value=0.3>Dark</option>
+            <option value=0.1>Black</option>
+          </select>
+          <p><input id="frame_reflectance" type="number"></p>
+        </div>
+        <div id="thermal_bridge" class="hide">
+          <p>Type:</p>
+          <select id="thermal_bridge_type"></select>
+          <p>Linear Transmittance:</p>
+          <p><input id="thermal_bridge_psi" type="number">W/m·K</p>
+        </div>
+        <div id="results" class="hide">
+          <div style="position: relative;">
+            <table style="position: absolute; bottom: 0;">
+              <thead></thead>
+            </table>
+          </div>
+          <div>
+            <table>
+              <tbody class="editable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div id="right"></div>
+      <div id="assign">
+        <span class="glyphicon glyphicon-ok-sign" onclick="sketchup.assign(document.querySelectorAll('#left .selected')[0].parentElement.parentElement.id, document.querySelectorAll('#left .selected')[0].innerHTML);"></span>
+        <span class="glyphicon glyphicon-remove-sign" onclick="sketchup.remove(document.querySelectorAll('#left .selected')[0].parentElement.parentElement.id, document.querySelectorAll('#left .selected')[0].innerHTML);"></span>
+      </div>
+      <div id="render">
+        <span>Render by
+          <select onchange="set_render(this);">
+            <option value="openstudio">OpenStudio</option>
+            <option value="input" selected>Input</option>
+            <option value="w_k">W/K</option>
+            <option value="u_limit">U limit</option>
+            <option value="mirror">Mirror</option>
+          </select>
+        </span>
+      </div>
+      <div id="end">
+        <button id="ok" class="btn btn-success" onclick="sketchup.ok();">OK</button>
+        <button id="cancel" class="btn btn-secondary" onclick="sketchup.cancel();">Cancel</button>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script src='Kglobal.js'></script>
+
+  </body>
+</html>

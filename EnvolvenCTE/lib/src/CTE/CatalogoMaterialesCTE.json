@@ -1,0 +1,3208 @@
+{
+  "Aislantes": {
+    "EPS Poliestireno Expandido [ 0.029 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.029,
+      "rho": 30,
+      "cp": 1000,
+      "mu": 20
+    },
+    "EPS Poliestireno Expandido [ 0.037 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.037,
+      "rho": 30,
+      "cp": 1000,
+      "mu": 20
+    },
+    "EPS Poliestireno Expandido [ 0.046 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.046,
+      "rho": 30,
+      "cp": 1000,
+      "mu": 20
+    },
+    "XPS Expandido con dioxido de carbono CO2 [ 0.034 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.034,
+      "rho": 37.5,
+      "cp": 1000,
+      "mu": 100
+    },
+    "XPS Expandido con dioxido de carbono CO3 [ 0.038 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.038,
+      "rho": 37.5,
+      "cp": 1000,
+      "mu": 100
+    },
+    "XPS Expandido con dioxido de carbono CO4 [ 0.042 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.042,
+      "rho": 37.5,
+      "cp": 1000,
+      "mu": 100
+    },
+    "XPS Expandido con hidrofluorcarbonos HFC [ 0.025 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.025,
+      "rho": 37.5,
+      "cp": 1000,
+      "mu": 100
+    },
+    "XPS Expandido con hidrofluorcarbonos HFC [ 0.032 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.032,
+      "rho": 37.5,
+      "cp": 1000,
+      "mu": 100
+    },
+    "XPS Expandido con hidrofluorcarbonos HFC [ 0.039 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.039,
+      "rho": 37.5,
+      "cp": 1000,
+      "mu": 100
+    },
+    "MW Lana mineral [0.031 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.031,
+      "rho": 40,
+      "cp": 1000,
+      "mu": 1
+    },
+    "MW Lana mineral [0.04 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.04,
+      "rho": 40,
+      "cp": 1000,
+      "mu": 1
+    },
+    "MW Lana mineral [0.05 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.05,
+      "rho": 40,
+      "cp": 1000,
+      "mu": 1
+    },
+    "PUR Proyeccion con Hidrofluorcarbono HFC [ 0.028 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.028,
+      "rho": 45,
+      "cp": 1000,
+      "mu": 105
+    },
+    "PUR Proyeccion con CO2 celda cerrada [ 0.032 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.032,
+      "rho": 50,
+      "cp": 1000,
+      "mu": 100
+    },
+    "PUR Proyeccion con CO2 celda cerrada [ 0.035 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.035,
+      "rho": 50,
+      "cp": 1000,
+      "mu": 100
+    },
+    "PUR Plancha con HFC o Pentano y rev. permeable gases [ 0.027 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.027,
+      "rho": 45,
+      "cp": 1000,
+      "mu": 60
+    },
+    "PUR Plancha con  HFC o Pentano y rev. permeable a gases [ 0.03 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.03,
+      "rho": 45,
+      "cp": 1000,
+      "mu": 60
+    },
+    "PUR Plancha con  HFC o Pentano y rev. impermeable a gases [ 0.025 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.025,
+      "rho": 45,
+      "cp": 1000,
+      "mu": 1e+30
+    },
+    "PUR Inyeccion en tabiqueria con dioxido de carbono CO2": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.04,
+      "rho": 17.5,
+      "cp": 1000,
+      "mu": 20
+    },
+    "Arcilla Expandida [arido suelto]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.148,
+      "rho": 537.5,
+      "cp": 1000,
+      "mu": 1
+    },
+    "Panel de perlita expandida  [EPB] [>80%]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.062,
+      "rho": 190,
+      "cp": 900,
+      "mu": 5
+    },
+    "Panel de vidrio celular [CG]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.05,
+      "rho": 125,
+      "cp": 1000,
+      "mu": 1e+30
+    },
+    "XPS Expandido con hidrofluorcarbonos HFC [ 0.029 W/[mK]]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.029,
+      "rho": 37.5,
+      "cp": 1000,
+      "mu": 100
+    }
+  },
+  "Bituminosos": {
+    "Asfalto": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.7,
+      "rho": 2100,
+      "cp": 1000,
+      "mu": 50000
+    },
+    "Asfalto arenoso": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.15,
+      "rho": 2100,
+      "cp": 1000,
+      "mu": 50000
+    },
+    "Betun puro": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.17,
+      "rho": 1050,
+      "cp": 1000,
+      "mu": 50000
+    },
+    "Betun fieltro o lamina": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.23,
+      "rho": 1100,
+      "cp": 1000,
+      "mu": 50000
+    }
+  },
+  "Cauchos": {
+    "Butadieno": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.25,
+      "rho": 980,
+      "cp": 1000,
+      "mu": 100000
+    },
+    "Butilo [isobuteno] compacto/colado en caliente": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.24,
+      "rho": 1200,
+      "cp": 1400,
+      "mu": 200000
+    },
+    "Caucho celular": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.06,
+      "rho": 70,
+      "cp": 1500,
+      "mu": 7000
+    },
+    "Caucho natural": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.13,
+      "rho": 910,
+      "cp": 1100,
+      "mu": 10000
+    },
+    "Caucho rigido [ebonita] solido": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.17,
+      "rho": 1200,
+      "cp": 1400,
+      "mu": 1e+30
+    },
+    "Etileno propileno dieno monomero [EPDM]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.25,
+      "rho": 1150,
+      "cp": 1000,
+      "mu": 6000
+    },
+    "Neopreno [policloropreno]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.23,
+      "rho": 1240,
+      "cp": 2140,
+      "mu": 10000
+    },
+    "Poliisobutileno": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.2,
+      "rho": 930,
+      "cp": 1100,
+      "mu": 10000
+    },
+    "Polisulfuro": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.4,
+      "rho": 1700,
+      "cp": 1000,
+      "mu": 10000
+    }
+  },
+  "Ceramicos": {
+    "Teja ceramica-porcelana": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.3,
+      "rho": 2300,
+      "cp": 840,
+      "mu": 30
+    },
+    "Azulejo ceramico": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.3,
+      "rho": 2300,
+      "cp": 840,
+      "mu": 1e+30
+    },
+    "Plaqueta o baldosa ceramica": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1,
+      "rho": 2000,
+      "cp": 800,
+      "mu": 30
+    },
+    "Plaqueta o baldosa de gres": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 2.3,
+      "rho": 2500,
+      "cp": 1000,
+      "mu": 30
+    },
+    "Teja de arcilla cocida": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1,
+      "rho": 2000,
+      "cp": 800,
+      "mu": 30
+    },
+    "Gres cuarzoso 2600 < d < 2800": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 2.6,
+      "rho": 2700,
+      "cp": 1000,
+      "mu": 30
+    },
+    "Gres(silice) 2200 < d < 2590": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 2.3,
+      "rho": 2395,
+      "cp": 1000,
+      "mu": 30
+    },
+    "Gres calcareo 2000 < d < 2700": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.9,
+      "rho": 2350,
+      "cp": 1000,
+      "mu": 20
+    }
+  },
+  "Enlucidos": {
+    "Enlucido de yeso 1000 < d < 1300": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.57,
+      "rho": 1150,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Enlucido de yeso d < 1000": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.4,
+      "rho": 850,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Enlucido de yeso aislante 600 < d < 900": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.3,
+      "rho": 750,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Enlucido de yeso aislante 500 < d < 600": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.18,
+      "rho": 550,
+      "cp": 1000,
+      "mu": 6
+    }
+  },
+  "Fabricas de bloque ceramico de arcilla aligerada": {
+    "BC con mortero convencional  espesor 140 mm": {
+      "thickness": 0.14,
+      "editable": false,
+      "lambda": 0.4375,
+      "rho": 1170,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BC con mortero convencional  espesor 190 mm": {
+      "thickness": 0.19,
+      "editable": false,
+      "lambda": 0.43182,
+      "rho": 1080,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BC con mortero convencional  espesor 240 mm": {
+      "thickness": 0.24,
+      "editable": false,
+      "lambda": 0.42105,
+      "rho": 1090,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BC con mortero convencional  espesor 290 mm": {
+      "thickness": 0.29,
+      "editable": false,
+      "lambda": 0.42647,
+      "rho": 1080,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BC con mortero aislante  espesor 140 mm": {
+      "thickness": 0.14,
+      "editable": false,
+      "lambda": 0.31818,
+      "rho": 1020,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BC con mortero aislante  espesor 190 mm": {
+      "thickness": 0.19,
+      "editable": false,
+      "lambda": 0.30159,
+      "rho": 910,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BC con mortero aislante  espesor 240 mm": {
+      "thickness": 0.24,
+      "editable": false,
+      "lambda": 0.2963,
+      "rho": 920,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BC con mortero aislante  espesor 290 mm": {
+      "thickness": 0.29,
+      "editable": false,
+      "lambda": 0.29592,
+      "rho": 910,
+      "cp": 1000,
+      "mu": 10
+    }
+  },
+  "Fabricas de bloque de hormigon aligerado": {
+    "BH aligerado macizo espesor 200 mm": {
+      "thickness": 0.2,
+      "editable": false,
+      "lambda": 0.287,
+      "rho": 840,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH aligerado macizo espesor 250 mm": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 0.3,
+      "rho": 850,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH aligerado macizo espesor 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 0.317,
+      "rho": 860,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH aligerado macizo -muro de carga- espesor 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 0.338,
+      "rho": 940,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH aligerado macizo -muro de carga- espesor 300 mm mortero aligerado": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 0.287,
+      "rho": 910,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH aligerado hueco espesor 250 mm": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 0.472,
+      "rho": 760,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH aligerado hueco espesor 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 0.454,
+      "rho": 1050,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH aligerado hueco -muro de carga- espesor 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 0.475,
+      "rho": 1160,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH aligerado hueco -muro de carga- espesor 300 mm motero aligerado": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 0.421,
+      "rho": 1100,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH perforado con aridos ligeros 80 mm": {
+      "thickness": 0.08,
+      "editable": false,
+      "lambda": 0.17778,
+      "rho": 1220,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH perforado con aridos ligeros 90 mm": {
+      "thickness": 0.09,
+      "editable": false,
+      "lambda": 0.17308,
+      "rho": 1150,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH perforado con aridos ligeros 110 mm": {
+      "thickness": 0.11,
+      "editable": false,
+      "lambda": 0.18644,
+      "rho": 1095,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH perforado con aridos ligeros 140 mm": {
+      "thickness": 0.14,
+      "editable": false,
+      "lambda": 0.20588,
+      "rho": 1000,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH perforado con aridos ligeros 190 mm": {
+      "thickness": 0.19,
+      "editable": false,
+      "lambda": 0.25333,
+      "rho": 950,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH perforado con aridos ligeros 240 mm": {
+      "thickness": 0.24,
+      "editable": false,
+      "lambda": 0.28916,
+      "rho": 850,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH perforado con aridos ligeros 290 mm": {
+      "thickness": 0.29,
+      "editable": false,
+      "lambda": 0.30526,
+      "rho": 860,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH perforado con aridos ligeros 290 mm, muro de carga": {
+      "thickness": 0.29,
+      "editable": false,
+      "lambda": 0.32584,
+      "rho": 970,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH perforado con aridos ligeros 290 mm, muro de carga con mortero aislante": {
+      "thickness": 0.29,
+      "editable": false,
+      "lambda": 0.27619,
+      "rho": 910,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH macizo con aridos ligeros 140 mm": {
+      "thickness": 0.14,
+      "editable": false,
+      "lambda": 0.175,
+      "rho": 1134,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH macizo con aridos ligeros 170 mm": {
+      "thickness": 0.17,
+      "editable": false,
+      "lambda": 0.30909,
+      "rho": 1450,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH macizo con aridos ligeros 240 mm": {
+      "thickness": 0.24,
+      "editable": false,
+      "lambda": 0.26374,
+      "rho": 900,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH macizo con aridos ligeros 290 mm": {
+      "thickness": 0.29,
+      "editable": false,
+      "lambda": 0.30526,
+      "rho": 1050,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH macizo con aridos ligeros 290 mm, muro de carga": {
+      "thickness": 0.29,
+      "editable": false,
+      "lambda": 0.46032,
+      "rho": 1160,
+      "cp": 1000,
+      "mu": 6
+    },
+    "BH macizo con aridos ligeros 290 mm, muro de carga con mortero aislante": {
+      "thickness": 0.29,
+      "editable": false,
+      "lambda": 0.40845,
+      "rho": 1100,
+      "cp": 1000,
+      "mu": 6
+    },
+    "bloque de picon de 90 mm con camara simple": {
+      "thickness": 0.09,
+      "editable": false,
+      "lambda": 0.40909,
+      "rho": 1200,
+      "cp": 800,
+      "mu": 10
+    },
+    "bloque de picon de 120 mm con camara doble": {
+      "thickness": 0.12,
+      "editable": false,
+      "lambda": 0.46154,
+      "rho": 1100,
+      "cp": 800,
+      "mu": 10
+    },
+    "bloque de picon de 150 mm con camara doble": {
+      "thickness": 0.15,
+      "editable": false,
+      "lambda": 0.42857,
+      "rho": 1150,
+      "cp": 800,
+      "mu": 10
+    },
+    "bloque de picon de 200 mm con camara doble": {
+      "thickness": 0.2,
+      "editable": false,
+      "lambda": 0.5,
+      "rho": 1000,
+      "cp": 800,
+      "mu": 10
+    },
+    "bloque de picon de 250 mm con camara doble": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 0.55556,
+      "rho": 900,
+      "cp": 800,
+      "mu": 10
+    },
+    "bloque de picon de 250 mm con camara triple": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 0.5,
+      "rho": 1000,
+      "cp": 800,
+      "mu": 10
+    },
+    "bloque de picon aligerado de 90 mm con camara simple": {
+      "thickness": 0.09,
+      "editable": false,
+      "lambda": 0.33333,
+      "rho": 1000,
+      "cp": 800,
+      "mu": 10
+    },
+    "bloque de picon aligerado de 120 mm con camara doble": {
+      "thickness": 0.12,
+      "editable": false,
+      "lambda": 0.3871,
+      "rho": 900,
+      "cp": 800,
+      "mu": 10
+    },
+    "bloque de picon aligerado de 150 mm con camara doble": {
+      "thickness": 0.15,
+      "editable": false,
+      "lambda": 0.34884,
+      "rho": 950,
+      "cp": 800,
+      "mu": 10
+    },
+    "bloque de picon aligerado de 200 mm con camara doble": {
+      "thickness": 0.2,
+      "editable": false,
+      "lambda": 0.41667,
+      "rho": 900,
+      "cp": 800,
+      "mu": 10
+    },
+    "bloque de picon aligerado de 250 mm con camara doble": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 0.46296,
+      "rho": 800,
+      "cp": 800,
+      "mu": 10
+    },
+    "bloque de picon aligerado de 250 mm con camara triple": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 0.40323,
+      "rho": 900,
+      "cp": 800,
+      "mu": 10
+    }
+  },
+  "Fabricas de bloque de hormigon convencional": {
+    "BH convencional espesor 100 mm": {
+      "thickness": 0.1,
+      "editable": false,
+      "lambda": 0.632,
+      "rho": 1210,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BH convencional espesor 150 mm": {
+      "thickness": 0.15,
+      "editable": false,
+      "lambda": 0.789,
+      "rho": 1040,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BH convencional espesor 200 mm": {
+      "thickness": 0.2,
+      "editable": false,
+      "lambda": 0.923,
+      "rho": 860,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BH convencional espesor 250 mm": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 1.007,
+      "rho": 685,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BH convencional espesor 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 1.16,
+      "rho": 585,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BH hueco con aridos densos 50 mm": {
+      "thickness": 0.05,
+      "editable": false,
+      "lambda": 1,
+      "rho": 2090,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BH hueco con aridos densos 60 mm": {
+      "thickness": 0.06,
+      "editable": false,
+      "lambda": 0.85714,
+      "rho": 1552,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BH hueco con aridos densos 80 mm": {
+      "thickness": 0.08,
+      "editable": false,
+      "lambda": 0.8,
+      "rho": 1514,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BH hueco con aridos densos 90 mm": {
+      "thickness": 0.09,
+      "editable": false,
+      "lambda": 0.5625,
+      "rho": 1400,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BH hueco con aridos densos 110 mm": {
+      "thickness": 0.11,
+      "editable": false,
+      "lambda": 0.64706,
+      "rho": 1300,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BH hueco con aridos densos 140 mm": {
+      "thickness": 0.14,
+      "editable": false,
+      "lambda": 0.73684,
+      "rho": 1200,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BH hueco con aridos densos 190 mm": {
+      "thickness": 0.19,
+      "editable": false,
+      "lambda": 0.86364,
+      "rho": 1100,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BH hueco con aridos densos 240 mm": {
+      "thickness": 0.24,
+      "editable": false,
+      "lambda": 0.96,
+      "rho": 1100,
+      "cp": 1000,
+      "mu": 10
+    },
+    "BH hueco con aridos densos 290 mm": {
+      "thickness": 0.29,
+      "editable": false,
+      "lambda": 1.11538,
+      "rho": 1000,
+      "cp": 1000,
+      "mu": 10
+    }
+  },
+  "Fabricas de ladrillo": {
+    "Tabique de LH sencillo [40 mm < Espesor < 60 mm]": {
+      "thickness": 0.05,
+      "editable": false,
+      "lambda": 0.556,
+      "rho": 1000,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Tabicon de LH doble  [60 mm < E < 90 mm]": {
+      "thickness": 0.075,
+      "editable": false,
+      "lambda": 0.469,
+      "rho": 930,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Tabicon de LH triple [100 mm < E < 110 mm]": {
+      "thickness": 0.105,
+      "editable": false,
+      "lambda": 0.456,
+      "rho": 920,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Tabique de LH sencillo Gran Formato [40 mm < E < 60 mm]": {
+      "thickness": 0.05,
+      "editable": false,
+      "lambda": 0.278,
+      "rho": 670,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Tabicon de LH doble Gran Formato 60 mm < E < 90 mm": {
+      "thickness": 0.075,
+      "editable": false,
+      "lambda": 0.227,
+      "rho": 630,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Tabicon de LH triple Gran Formato 100 mm < E < 110 mm": {
+      "thickness": 0.105,
+      "editable": false,
+      "lambda": 0.219,
+      "rho": 620,
+      "cp": 1000,
+      "mu": 10
+    },
+    "1/2 pie LP metrico o catalan 40 mm< G < 60 mm": {
+      "thickness": 0.1225,
+      "editable": false,
+      "lambda": 0.68,
+      "rho": 1140,
+      "cp": 1000,
+      "mu": 10
+    },
+    "1/2 pie LP metrico o catalan 60 mm< G < 80 mm": {
+      "thickness": 0.1225,
+      "editable": false,
+      "lambda": 0.583,
+      "rho": 1020,
+      "cp": 1000,
+      "mu": 10
+    },
+    "1/2 pie LP metrico o catalan 80 mm< G < 100 mm": {
+      "thickness": 0.1225,
+      "editable": false,
+      "lambda": 0.533,
+      "rho": 900,
+      "cp": 1000,
+      "mu": 10
+    },
+    "1 pie LP metrico o catalan 40 mm< G < 60 mm": {
+      "thickness": 0.26,
+      "editable": false,
+      "lambda": 0.743,
+      "rho": 1220,
+      "cp": 1000,
+      "mu": 10
+    },
+    "1 pie LP metrico o catalan 60 mm< G < 80 mm": {
+      "thickness": 0.26,
+      "editable": false,
+      "lambda": 0.634,
+      "rho": 1150,
+      "cp": 1000,
+      "mu": 10
+    },
+    "1 pie LP metrico o catalan 80 mm< G < 100 mm": {
+      "thickness": 0.26,
+      "editable": false,
+      "lambda": 0.553,
+      "rho": 1000,
+      "cp": 1000,
+      "mu": 10
+    },
+    "1/2 pie LM metrico o catalan 40 mm< G < 50 mm": {
+      "thickness": 0.1225,
+      "editable": false,
+      "lambda": 1.02,
+      "rho": 2170,
+      "cp": 1000,
+      "mu": 10
+    },
+    "1 pie LM metrico o catalan 40 mm< G < 50 mm": {
+      "thickness": 0.26,
+      "editable": false,
+      "lambda": 1.529,
+      "rho": 2140,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Ladrillo de hormigon perforado de aridos densos": {
+      "thickness": 0.12,
+      "editable": false,
+      "lambda": 1.09091,
+      "rho": 1258,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Ladrillo de hormigon macizo de aridos densos": {
+      "thickness": 0.12,
+      "editable": false,
+      "lambda": 1.71429,
+      "rho": 1800,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Ladrillo de hormigon perforado de aridos ligeros": {
+      "thickness": 0.1225,
+      "editable": false,
+      "lambda": 0.39516,
+      "rho": 1183,
+      "cp": 1000,
+      "mu": 6
+    }
+  },
+  "Forjados reticulares": {
+    "FR FR Entrevigado ceramico -Canto 250 mm ": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 1.667,
+      "rho": 1277,
+      "cp": 1000,
+      "mu": 10
+    },
+    "FR Entrevigado ceramico -Canto 300 mm ": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 1.667,
+      "rho": 1215,
+      "cp": 1000,
+      "mu": 10
+    },
+    "FR Entrevigado ceramico -Canto 350 mm ": {
+      "thickness": 0.35,
+      "editable": false,
+      "lambda": 1.75,
+      "rho": 1169,
+      "cp": 1000,
+      "mu": 10
+    },
+    "FR Entrevigado de hormigon  -Canto 250 mm": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 1.923,
+      "rho": 1338,
+      "cp": 1000,
+      "mu": 10
+    },
+    "FR Entrevigado de hormigon  -Canto 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 2,
+      "rho": 1285,
+      "cp": 1000,
+      "mu": 10
+    },
+    "FR Entrevigado de hormigon  -Canto 350 mm": {
+      "thickness": 0.35,
+      "editable": false,
+      "lambda": 1.944,
+      "rho": 1238,
+      "cp": 1000,
+      "mu": 10
+    },
+    "FR Entrevigado de hormigon  -Canto 400 mm": {
+      "thickness": 0.4,
+      "editable": false,
+      "lambda": 2,
+      "rho": 1208,
+      "cp": 1000,
+      "mu": 10
+    },
+    "FR Entrevigado de hormigon  -Canto 450 mm": {
+      "thickness": 0.45,
+      "editable": false,
+      "lambda": 2.045,
+      "rho": 1185,
+      "cp": 1000,
+      "mu": 10
+    },
+    "FR Entrevigado de hormigon aligerado -Canto 250 mm ": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 1.78571,
+      "rho": 1292,
+      "cp": 1000,
+      "mu": 6
+    },
+    "FR Entrevigado de hormigon aligerado -Canto 300 mm ": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 1.875,
+      "rho": 1231,
+      "cp": 1000,
+      "mu": 6
+    },
+    "FR Entrevigado de hormigon aligerado -Canto 350 mm ": {
+      "thickness": 0.35,
+      "editable": false,
+      "lambda": 1.84211,
+      "rho": 1192,
+      "cp": 1000,
+      "mu": 6
+    },
+    "FR Entrevigado de hormigon aligerado -Canto 400 mm ": {
+      "thickness": 0.4,
+      "editable": false,
+      "lambda": 1.90476,
+      "rho": 1162,
+      "cp": 1000,
+      "mu": 6
+    },
+    "FR Entrevigado de hormigon aligerado - Canto 450 mm": {
+      "thickness": 0.45,
+      "editable": false,
+      "lambda": 1.956,
+      "rho": 1146,
+      "cp": 1000,
+      "mu": 6
+    },
+    "FR Entrevigado de EPS mecanizado enrasado -Canto 300 mm ": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 1.30435,
+      "rho": 1131,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FR Entrevigado de EPS mecanizado enrasado -Canto 350 mm ": {
+      "thickness": 0.35,
+      "editable": false,
+      "lambda": 1.2963,
+      "rho": 1092,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FR Entrevigado de EPS mecanizado enrasado - Canto 400 mm ": {
+      "thickness": 0.4,
+      "editable": false,
+      "lambda": 1.33333,
+      "rho": 1069,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FR Entrevigado de EPS mecanizado enrasado -Canto 450 mm": {
+      "thickness": 0.45,
+      "editable": false,
+      "lambda": 1.323,
+      "rho": 1046,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FR Entrevigado de EPS moldeado enrasado  -Canto 300 mm ": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 1.36364,
+      "rho": 1123,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FR Entrevigado de EPS moldeado enrasado -Canto 350 mm ": {
+      "thickness": 0.35,
+      "editable": false,
+      "lambda": 1.4,
+      "rho": 1092,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FR Entrevigado de EPS moldeado enrasado -Canto 400 mm": {
+      "thickness": 0.4,
+      "editable": false,
+      "lambda": 1.379,
+      "rho": 1062,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FR Entrevigado de EPS moldeado enrasado -Canto 450 mm": {
+      "thickness": 0.45,
+      "editable": false,
+      "lambda": 1.406,
+      "rho": 1046,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FR Entrevigado de EPS moldeado descolgado -Canto 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 0.35714,
+      "rho": 1023,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FR Entrevigado de EPS moldeado descolgado -Canto 350 mm": {
+      "thickness": 0.35,
+      "editable": false,
+      "lambda": 0.4023,
+      "rho": 1008,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FR Entrevigado de EPS moldeado descolgado -Canto 400 mm": {
+      "thickness": 0.4,
+      "editable": false,
+      "lambda": 0.43956,
+      "rho": 992,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FR Entrevigado de EPS moldeado descolgado -Canto 450 mm": {
+      "thickness": 0.45,
+      "editable": false,
+      "lambda": 0.47872,
+      "rho": 985,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FR Sin Entrevigado -Canto 250 mm": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 4.16667,
+      "rho": 2350,
+      "cp": 1000,
+      "mu": 80
+    },
+    "FR Sin Entrevigado -Canto 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 4.28571,
+      "rho": 2350,
+      "cp": 1000,
+      "mu": 80
+    },
+    "FR Sin Entrevigado -Canto 350 mm": {
+      "thickness": 0.35,
+      "editable": false,
+      "lambda": 4.375,
+      "rho": 2350,
+      "cp": 1000,
+      "mu": 80
+    },
+    "FR entrevigado de hormigon d < 1200 con aridos ligeros de canto 250 mm": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 1.78571,
+      "rho": 1238,
+      "cp": 1000,
+      "mu": 6
+    },
+    "FR entrevigado de hormigon d < 1200 con aridos ligeros de canto 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 1.875,
+      "rho": 1185,
+      "cp": 1000,
+      "mu": 6
+    },
+    "FR entrevigado de hormigon d < 1200 con aridos ligeros de canto 350 mm": {
+      "thickness": 0.35,
+      "editable": false,
+      "lambda": 1.84211,
+      "rho": 1138,
+      "cp": 1000,
+      "mu": 6
+    },
+    "FR entrevigado de hormigon d < 1200 con  aridos ligeros de canto 400 mm": {
+      "thickness": 0.4,
+      "editable": false,
+      "lambda": 1.90476,
+      "rho": 1115,
+      "cp": 1000,
+      "mu": 6
+    },
+    "FR entrevigado de hormigon d < 1200 con aridos ligeros de canto 450 mm": {
+      "thickness": 0.45,
+      "editable": false,
+      "lambda": 1.95652,
+      "rho": 1092,
+      "cp": 1000,
+      "mu": 6
+    },
+    "FR entrevigado de EPS mecanizado enrasado de canto 250 mm": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 1.19048,
+      "rho": 1280,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FR entrevigado de EPS moldeado enrasado de canto 250 mm": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 1.25,
+      "rho": 1280,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FR entrevigado de EPS moldeado descolgado de canto 250 mm": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 0.30488,
+      "rho": 1140,
+      "cp": 1000,
+      "mu": 60
+    }
+  },
+  "Forjados unidireccionales": {
+    "FU Entrevigado ceramico -Canto 250 mm": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 0.893,
+      "rho": 1220,
+      "cp": 1000,
+      "mu": 10
+    },
+    "FU Entrevigado ceramico -Canto 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 0.937,
+      "rho": 1110,
+      "cp": 1000,
+      "mu": 10
+    },
+    "FU Entrevigado ceramico -Canto 350 mm": {
+      "thickness": 0.35,
+      "editable": false,
+      "lambda": 1,
+      "rho": 1030,
+      "cp": 1000,
+      "mu": 10
+    },
+    "FU Entrevigado de hormigon  -Canto 250 mm": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 1.31579,
+      "rho": 1330,
+      "cp": 1000,
+      "mu": 80
+    },
+    "FU Entrevigado de hormigon  -Canto 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 1.42857,
+      "rho": 1240,
+      "cp": 1000,
+      "mu": 80
+    },
+    "FU Entrevigado de hormigon  -Canto 350 mm": {
+      "thickness": 0.35,
+      "editable": false,
+      "lambda": 1.52174,
+      "rho": 1180,
+      "cp": 1000,
+      "mu": 80
+    },
+    "FU Entrevigado de hormigon aligerado -Canto 250 mm": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 1,
+      "rho": 1230,
+      "cp": 1000,
+      "mu": 6
+    },
+    "FU Entrevigado de hormigon aligerado -Canto 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 1.111,
+      "rho": 1140,
+      "cp": 1000,
+      "mu": 6
+    },
+    "FU Entrevigado de hormigon aligerado -Canto 350 mm": {
+      "thickness": 0.35,
+      "editable": false,
+      "lambda": 1.2069,
+      "rho": 1080,
+      "cp": 1000,
+      "mu": 6
+    },
+    "FU Entrevigado de hormigon aligerado - Canto 400 mm": {
+      "thickness": 0.4,
+      "editable": false,
+      "lambda": 1.29,
+      "rho": 1030,
+      "cp": 1000,
+      "mu": 6
+    },
+    "FU Entrevigado de hormigon aligerado d< 1200 -Canto 250 mm": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 1.136,
+      "rho": 1130,
+      "cp": 1000,
+      "mu": 6
+    },
+    "FU Entrevigado de hormigon aligerado d< 1200 -Canto 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 1.2,
+      "rho": 1040,
+      "cp": 1000,
+      "mu": 6
+    },
+    "FU Entrevigado de hormigon aligerado d< 1200 -Canto 350 mm": {
+      "thickness": 0.35,
+      "editable": false,
+      "lambda": 1.296,
+      "rho": 990,
+      "cp": 1000,
+      "mu": 6
+    },
+    "FU Entrevigado de hormigon aligerado d< 1200 - Canto 400 mm": {
+      "thickness": 0.4,
+      "editable": false,
+      "lambda": 1.429,
+      "rho": 940,
+      "cp": 1000,
+      "mu": 6
+    },
+    "FU Entrevigado de EPS mecanizado enrasado -Canto 250 mm": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 0.26596,
+      "rho": 800,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FU Entrevigado de EPS mecanizado enrasado -Canto 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 0.25641,
+      "rho": 750,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FU Entrevigado de EPS mecanizado enrasado -Canto 350 mm": {
+      "thickness": 0.35,
+      "editable": false,
+      "lambda": 0.25547,
+      "rho": 700,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FU Entrevigado de EPS moldeado enrasado -Canto 250 mm": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 0.3125,
+      "rho": 790,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FU Entrevigado de EPS moldeado enrasado -Canto 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 0.34091,
+      "rho": 740,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FU Entrevigado de EPS moldeado enrasado -Canto 350 mm": {
+      "thickness": 0.35,
+      "editable": false,
+      "lambda": 0.36842,
+      "rho": 690,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FU Entrevigado de EPS moldeado descolgado -Canto 250 mm": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 0.17606,
+      "rho": 710,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FU Entrevigado de EPS moldeado descolgado -Canto 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 0.2,
+      "rho": 670,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FU Entrevigado de EPS moldeado descolgado -Canto 350 mm": {
+      "thickness": 0.35,
+      "editable": false,
+      "lambda": 0.22293,
+      "rho": 640,
+      "cp": 1000,
+      "mu": 60
+    },
+    "FU entrevigado de picon de canto 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 0.88235,
+      "rho": 1273,
+      "cp": 800,
+      "mu": 80
+    },
+    "FU entrevigado de picon de canto 350 mm": {
+      "thickness": 0.35,
+      "editable": false,
+      "lambda": 0.97222,
+      "rho": 1306,
+      "cp": 800,
+      "mu": 80
+    },
+    "FU entrevigado ceramico con canto de 210 mm": {
+      "thickness": 0.21,
+      "editable": false,
+      "lambda": 0.84,
+      "rho": 1338,
+      "cp": 0,
+      "mu": 10
+    },
+    "FU con viguetas de madera con entrevigado de revolton de ladrillo y cascote con canto minimo de 12 cm": {
+      "thickness": 0.31,
+      "editable": false,
+      "lambda": 1.33506,
+      "rho": 840,
+      "cp": 0,
+      "mu": 5
+    }
+  },
+  "Hormigones": {
+    "Hormigon armado d > 2500": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 2.5,
+      "rho": 2600,
+      "cp": 1000,
+      "mu": 80
+    },
+    "Hormigon armado 2300 < d < 2500": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 2.3,
+      "rho": 2400,
+      "cp": 1000,
+      "mu": 80
+    },
+    "Hormigon en masa 2300 < d < 2600": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 2,
+      "rho": 2450,
+      "cp": 1000,
+      "mu": 80
+    },
+    "Hormigon en masa 2000 < d < 2300": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.65,
+      "rho": 2150,
+      "cp": 1000,
+      "mu": 70
+    },
+    "Hormigon con aridos ligeros 1800 < d < 2000": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.35,
+      "rho": 1900,
+      "cp": 1000,
+      "mu": 60
+    },
+    "Hormigon con aridos ligeros 1600 < d < 1800": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.15,
+      "rho": 1700,
+      "cp": 1000,
+      "mu": 60
+    },
+    "Hormigon convencional  d 2400": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.9,
+      "rho": 2400,
+      "cp": 1000,
+      "mu": 120
+    },
+    "Hormigon convencional  d 2300": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.72,
+      "rho": 2300,
+      "cp": 1000,
+      "mu": 120
+    },
+    "Hormigon convencional  d 2200": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.57,
+      "rho": 2200,
+      "cp": 1000,
+      "mu": 120
+    },
+    "Hormigon convencional  d 2100": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.44,
+      "rho": 2100,
+      "cp": 1000,
+      "mu": 120
+    },
+    "Hormigon convencional  d 2000": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.32,
+      "rho": 2000,
+      "cp": 1000,
+      "mu": 120
+    },
+    "Hormigon convencional  d 1900": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.2,
+      "rho": 1900,
+      "cp": 1000,
+      "mu": 120
+    },
+    "Hormigon convencional  d 1800": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.12,
+      "rho": 1800,
+      "cp": 1000,
+      "mu": 120
+    },
+    "Hormigon convencional  d 1700": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.03,
+      "rho": 1700,
+      "cp": 1000,
+      "mu": 120
+    },
+    "Hormigon convencional  d 1600": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.97,
+      "rho": 1600,
+      "cp": 1000,
+      "mu": 120
+    },
+    "Hormigon con arcilla expandida sin otros aridos d 700": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.22,
+      "rho": 700,
+      "cp": 1000,
+      "mu": 4
+    },
+    "Hormigon con arcilla expandida sin otros aridos d 600": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.19,
+      "rho": 600,
+      "cp": 1000,
+      "mu": 4
+    },
+    "Hormigon con arcilla expandida sin otros aridos d 500": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.16,
+      "rho": 500,
+      "cp": 1000,
+      "mu": 4
+    },
+    "Hormigon con arcilla expandida sin otros aridos d 400": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.13,
+      "rho": 400,
+      "cp": 1000,
+      "mu": 4
+    },
+    "Hormigon con arcilla expandida como arido principal d 1700": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.76,
+      "rho": 1700,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Hormigon con arcilla expandida como arido principal d 1600": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.68,
+      "rho": 1600,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Hormigon con arcilla expandida como arido principal d 1500": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.61,
+      "rho": 1500,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Hormigon con arcilla expandida como arido principal d 1400": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.55,
+      "rho": 1400,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Hormigon con arcilla expandida como arido principal d 1300": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.5,
+      "rho": 1300,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Hormigon con arcilla expandida como arido principal d 1200": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.44,
+      "rho": 1200,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Hormigon con arcilla expandida como arido principal d 1100": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.39,
+      "rho": 1100,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Hormigon con arcilla expandida como arido principal d 1000": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.35,
+      "rho": 1000,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Hormigon con arcilla expandida como arido principal d 900": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.3,
+      "rho": 900,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Hormigon con arcilla expandida como arido principal d 800": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.27,
+      "rho": 800,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Hormigon con otros aridos ligeros d 2000": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.5,
+      "rho": 2000,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Hormigon con otros aridos ligeros d 1800": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.22,
+      "rho": 1800,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Hormigon con otros aridos ligeros d 1600": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.59,
+      "rho": 1600,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Hormigon con otros aridos ligeros d 1500": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.52,
+      "rho": 1500,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Hormigon con otros aridos ligeros d 1400": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.46,
+      "rho": 1400,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Hormigon con otros aridos ligeros d 1300": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.42,
+      "rho": 1300,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Hormigon con otros aridos ligeros d 1200": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.37,
+      "rho": 1200,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Hormigon con otros aridos ligeros d 1100": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.34,
+      "rho": 1100,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Hormigon con otros aridos ligeros d 1000": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.3,
+      "rho": 1000,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Hormigon con otros aridos ligeros d 900": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.27,
+      "rho": 900,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Hormigon con otros aridos ligeros d 800": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.65,
+      "rho": 800,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Hormigon con otros aridos ligeros d 700": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.74,
+      "rho": 700,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Hormigon con otros aridos ligeros d 600": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.83,
+      "rho": 600,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Hormigon con otros aridos ligeros d 500": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.94,
+      "rho": 500,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Hormigon celular curado en autoclave d 1000": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.29,
+      "rho": 1000,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Hormigon celular curado en autoclave d 900": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.27,
+      "rho": 900,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Hormigon celular curado en autoclave d 800": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.23,
+      "rho": 800,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Hormigon celular curado en autoclave d 700": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.2,
+      "rho": 700,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Hormigon celular curado en autoclave d 600": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.18,
+      "rho": 600,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Hormigon celular curado en autoclave d 500": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.14,
+      "rho": 500,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Hormigon celular curado en autoclave d 400": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.12,
+      "rho": 400,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Hormigon celular curado en autoclave d 300": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.09,
+      "rho": 300,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Teja de hormigon": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.5,
+      "rho": 2100,
+      "cp": 1000,
+      "mu": 60
+    }
+  },
+  "Losas alveolares": {
+    "Sin capa de compresion -Canto 200 mm": {
+      "thickness": 0.2,
+      "editable": false,
+      "lambda": 1.42857,
+      "rho": 1410,
+      "cp": 1000,
+      "mu": 80
+    },
+    "Sin capa de compresion -Canto 250 mm": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 1.5625,
+      "rho": 1380,
+      "cp": 1000,
+      "mu": 80
+    },
+    "Sin capa de compresion -Canto 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 1.579,
+      "rho": 1290,
+      "cp": 1000,
+      "mu": 80
+    },
+    "Sin capa de compresion -Canto 350 mm": {
+      "thickness": 0.35,
+      "editable": false,
+      "lambda": 1.667,
+      "rho": 1180,
+      "cp": 1000,
+      "mu": 80
+    },
+    "Sin capa de compresion -Canto 400 mm": {
+      "thickness": 0.4,
+      "editable": false,
+      "lambda": 1.818,
+      "rho": 1180,
+      "cp": 1000,
+      "mu": 80
+    },
+    "Sin capa de compresion -Canto 500 mm": {
+      "thickness": 0.5,
+      "editable": false,
+      "lambda": 2,
+      "rho": 1120,
+      "cp": 1000,
+      "mu": 80
+    },
+    "Con capa de compresion -Canto 200 mm": {
+      "thickness": 0.2,
+      "editable": false,
+      "lambda": 1.429,
+      "rho": 1810,
+      "cp": 1000,
+      "mu": 80
+    },
+    "Con capa de compresion -Canto 250 mm": {
+      "thickness": 0.25,
+      "editable": false,
+      "lambda": 1.5625,
+      "rho": 1580,
+      "cp": 1000,
+      "mu": 80
+    },
+    "Con capa de compresion -Canto 300 mm": {
+      "thickness": 0.3,
+      "editable": false,
+      "lambda": 1.579,
+      "rho": 1530,
+      "cp": 1000,
+      "mu": 80
+    },
+    "Con capa de compresion -Canto 350 mm": {
+      "thickness": 0.35,
+      "editable": false,
+      "lambda": 1.667,
+      "rho": 1440,
+      "cp": 1000,
+      "mu": 80
+    },
+    "Con capa de compresion -Canto 400 mm": {
+      "thickness": 0.4,
+      "editable": false,
+      "lambda": 1.818,
+      "rho": 1320,
+      "cp": 1000,
+      "mu": 80
+    },
+    "Con capa de compresion -Canto 500 mm": {
+      "thickness": 0.5,
+      "editable": false,
+      "lambda": 2,
+      "rho": 1300,
+      "cp": 1000,
+      "mu": 80
+    },
+    "losa de hormigon d = 2500 y canto 200 mm": {
+      "thickness": 0.2,
+      "editable": true,
+      "lambda": 2.5,
+      "rho": 2500,
+      "cp": 1000,
+      "mu": 80
+    },
+    "losa de hormigon d = 2500 y canto 250 mm": {
+      "thickness": 0.25,
+      "editable": true,
+      "lambda": 2.5,
+      "rho": 2500,
+      "cp": 1000,
+      "mu": 80
+    },
+    "losa de hormigon d = 2500 y canto 300 mm": {
+      "thickness": 0.3,
+      "editable": true,
+      "lambda": 2.5,
+      "rho": 2500,
+      "cp": 1000,
+      "mu": 80
+    },
+    "losa de hormigon d = 2500 y canto 350 mm": {
+      "thickness": 0.35,
+      "editable": true,
+      "lambda": 2.5,
+      "rho": 2500,
+      "cp": 1000,
+      "mu": 80
+    },
+    "losa de hormigon d = 2500 y canto 400 mm": {
+      "thickness": 0.4,
+      "editable": true,
+      "lambda": 2.5,
+      "rho": 2500,
+      "cp": 1000,
+      "mu": 80
+    },
+    "losa de hormigon d = 2500 y canto 500 mm": {
+      "thickness": 0.5,
+      "editable": true,
+      "lambda": 2.5,
+      "rho": 2500,
+      "cp": 1000,
+      "mu": 80
+    },
+    "losa de hormigon d = 2000 y canto 200 mm": {
+      "thickness": 0.2,
+      "editable": true,
+      "lambda": 1.66667,
+      "rho": 2000,
+      "cp": 1000,
+      "mu": 80
+    },
+    "losa de hormigon d = 2000 y canto 250 mm": {
+      "thickness": 0.25,
+      "editable": true,
+      "lambda": 1.66667,
+      "rho": 2000,
+      "cp": 1000,
+      "mu": 80
+    },
+    "losa de hormigon d = 2000 y canto 300 mm": {
+      "thickness": 0.3,
+      "editable": true,
+      "lambda": 1.66667,
+      "rho": 2000,
+      "cp": 1000,
+      "mu": 80
+    },
+    "losa de hormigon d = 2000 y canto 350 mm": {
+      "thickness": 0.35,
+      "editable": true,
+      "lambda": 1.66667,
+      "rho": 2000,
+      "cp": 1000,
+      "mu": 80
+    },
+    "losa de hormigon d = 2000 y canto 400 mm": {
+      "thickness": 0.4,
+      "editable": true,
+      "lambda": 1.66667,
+      "rho": 2000,
+      "cp": 1000,
+      "mu": 80
+    },
+    "losa de hormigon d = 2000 y canto 500 mm": {
+      "thickness": 0.5,
+      "editable": true,
+      "lambda": 1.66667,
+      "rho": 2000,
+      "cp": 1000,
+      "mu": 80
+    }
+  },
+  "Maderas": {
+    "Frondosa muy pesada [d > 870]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.29,
+      "rho": 900,
+      "cp": 1600,
+      "mu": 50
+    },
+    "Frondosa pesada 750 < d < 870": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.23,
+      "rho": 810,
+      "cp": 1600,
+      "mu": 50
+    },
+    "Frondosade peso medio 565 < d < 750": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.18,
+      "rho": 657,
+      "cp": 1600,
+      "mu": 50
+    },
+    "Frondosa ligera 435 < d < 565": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.15,
+      "rho": 500,
+      "cp": 1600,
+      "mu": 50
+    },
+    "Frondosa muy ligera 200 < d < 435": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.13,
+      "rho": 317,
+      "cp": 1600,
+      "mu": 50
+    },
+    "Conifera muy pesada d >610": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.23,
+      "rho": 650,
+      "cp": 1600,
+      "mu": 20
+    },
+    "Conifera pesada 520 < d < 610": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.18,
+      "rho": 565,
+      "cp": 1600,
+      "mu": 20
+    },
+    "Conifera de peso medio 435 < d < 520": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.15,
+      "rho": 477,
+      "cp": 1600,
+      "mu": 20
+    },
+    "Conifera ligera d < 435": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.13,
+      "rho": 390,
+      "cp": 1600,
+      "mu": 20
+    },
+    "Balsa d < 200": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.057,
+      "rho": 200,
+      "cp": 1600,
+      "mu": 20
+    },
+    "Tablero contrachapado 700 < d < 900 ": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.24,
+      "rho": 800,
+      "cp": 1600,
+      "mu": 110
+    },
+    "Tablero contrachapado 600 < d < 750": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.21,
+      "rho": 675,
+      "cp": 1600,
+      "mu": 110
+    },
+    "Tablero contrachapado 500 < d < 600": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.17,
+      "rho": 550,
+      "cp": 1600,
+      "mu": 90
+    },
+    "Tablero contrachapado 450 < d < 500": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.15,
+      "rho": 475,
+      "cp": 1600,
+      "mu": 70
+    },
+    "Tablero contrachapado 350 < d < -450": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.13,
+      "rho": 400,
+      "cp": 1600,
+      "mu": 70
+    },
+    "Tablero contrachapado 250 < d < 350": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.11,
+      "rho": 300,
+      "cp": 1600,
+      "mu": 50
+    },
+    "Tablero contrachapado d < 250": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.09,
+      "rho": 200,
+      "cp": 1600,
+      "mu": 50
+    },
+    "Tablero de particulas 640 < d < 820": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.18,
+      "rho": 730,
+      "cp": 1700,
+      "mu": 20
+    },
+    "Tablero de particulas 450 < d < 640": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.15,
+      "rho": 545,
+      "cp": 1700,
+      "mu": 20
+    },
+    "Tablero de particulas 270 < d < 450": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.13,
+      "rho": 360,
+      "cp": 1700,
+      "mu": 20
+    },
+    "Tablero de particulas 180 < d < 270": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.1,
+      "rho": 225,
+      "cp": 1700,
+      "mu": 20
+    },
+    "Tablero de particulas con cemento d < 1200": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.23,
+      "rho": 1200,
+      "cp": 1500,
+      "mu": 30
+    },
+    "Tableros de fibras incluyendo MDF 750 < d < 1000": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.2,
+      "rho": 875,
+      "cp": 1700,
+      "mu": 20
+    },
+    "Tableros de fibras incluyendo MDF 550 < d < 750": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.18,
+      "rho": 650,
+      "cp": 1700,
+      "mu": 20
+    },
+    "Tableros de fibras incluyendo MDF 350 < d < 550": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.14,
+      "rho": 450,
+      "cp": 1700,
+      "mu": 12
+    },
+    "Tableros de fibras incluyendo MDF 200 < d < 350": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.1,
+      "rho": 275,
+      "cp": 1700,
+      "mu": 6
+    },
+    "Tableros de fibras incluyendo MDF d < 200": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.07,
+      "rho": 125,
+      "cp": 1700,
+      "mu": 2
+    },
+    "Paneles de fibras con conglomerante hidraulico 450 < d < 550": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.15,
+      "rho": 500,
+      "cp": 1700,
+      "mu": 12
+    },
+    "Paneles de fibras con conglomerante hidraulico 350 < d < 450": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.12,
+      "rho": 400,
+      "cp": 1700,
+      "mu": 5
+    },
+    "Paneles de fibras con conglomerante hidraulico 250 < d < 350": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.1,
+      "rho": 300,
+      "cp": 1700,
+      "mu": 5
+    },
+    "Tablero de virutas orientadas [OSB] d < 650": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.13,
+      "rho": 650,
+      "cp": 1700,
+      "mu": 30
+    },
+    "Corcho Comprimido ": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.1,
+      "rho": 500,
+      "cp": 1560,
+      "mu": 5
+    },
+    "Corcho Expandido puro 100 < d < 150": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.049,
+      "rho": 125,
+      "cp": 1560,
+      "mu": 5
+    },
+    "Corcho Expandido con resinas sinteticas 150 < d < 250": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.055,
+      "rho": 200,
+      "cp": 1560,
+      "mu": 5
+    },
+    "Corcho Expandido con resinas sinteticas 100 < d < 150": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.049,
+      "rho": 125,
+      "cp": 1560,
+      "mu": 5
+    },
+    "Placas de corcho": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.065,
+      "rho": 400,
+      "cp": 1500,
+      "mu": 20
+    }
+  },
+  "Metales": {
+    "Acero": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 50,
+      "rho": 7800,
+      "cp": 450,
+      "mu": 1e+30
+    },
+    "Acero Inoxidable": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 17,
+      "rho": 7900,
+      "cp": 460,
+      "mu": 1e+30
+    },
+    "Aluminio": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 230,
+      "rho": 2700,
+      "cp": 880,
+      "mu": 1e+30
+    },
+    "Aluminio aleaciones de": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 160,
+      "rho": 2800,
+      "cp": 880,
+      "mu": 1e+30
+    },
+    "Bronce": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 65,
+      "rho": 8700,
+      "cp": 380,
+      "mu": 1e+30
+    },
+    "Cobre": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 380,
+      "rho": 8900,
+      "cp": 380,
+      "mu": 1e+30
+    },
+    "Cromo": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 93.7,
+      "rho": 7160,
+      "cp": 449,
+      "mu": 1e+30
+    },
+    "Estano": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 66.6,
+      "rho": 7310,
+      "cp": 227,
+      "mu": 1e+30
+    },
+    "Hierro": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 72,
+      "rho": 7870,
+      "cp": 450,
+      "mu": 1e+30
+    },
+    "Hierro fundicion": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 50,
+      "rho": 7500,
+      "cp": 450,
+      "mu": 1e+30
+    },
+    "Laton": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 120,
+      "rho": 8400,
+      "cp": 380,
+      "mu": 1e+30
+    },
+    "Niquel": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 90.7,
+      "rho": 8900,
+      "cp": 444,
+      "mu": 1e+30
+    },
+    "Plomo": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 35,
+      "rho": 11300,
+      "cp": 130,
+      "mu": 1e+30
+    },
+    "Titanio": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 21.9,
+      "rho": 4500,
+      "cp": 522,
+      "mu": 1e+30
+    },
+    "Zinc": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 110,
+      "rho": 7200,
+      "cp": 380,
+      "mu": 1e+30
+    }
+  },
+  "Morteros": {
+    "Mortero de cemento o cal para albanileria y para revoco/enlucido d >2000": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.8,
+      "rho": 2100,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Mortero de cemento o cal para albanileria y para revoco/enlucido 1800 < d < 2000": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.3,
+      "rho": 1900,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Mortero de cemento o cal para albanileria y para revoco/enlucido 1600 < d < 1800": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1,
+      "rho": 1700,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Mortero de cemento o cal para albanileria y para revoco/enlucido 1450 < d < 1600": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.8,
+      "rho": 1525,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Mortero de cemento o cal para albanileria y para revoco/enlucido 1250 < d < 1450": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.7,
+      "rho": 1350,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Mortero de cemento o cal para albanileria y para revoco/enlucido 1000 < d < 1250": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.55,
+      "rho": 1125,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Mortero de cemento o cal para albanileria y para revoco/enlucido 750 < d < 1000": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.4,
+      "rho": 875,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Mortero de cemento o cal para albanileria y para revoco/enlucido 500 < d < 750": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.3,
+      "rho": 625,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Mortero de aridos ligeros [vermiculita perlita]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.41,
+      "rho": 1000,
+      "cp": 1000,
+      "mu": 10
+    },
+    "Mortero de yeso": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.8,
+      "rho": 1600,
+      "cp": 1000,
+      "mu": 6
+    }
+  },
+  "Petreos y suelos": {
+    "Basalto [2700 < d < 3000]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 3.5,
+      "rho": 2850,
+      "cp": 1000,
+      "mu": 10000
+    },
+    "Granito [2500 < d < 2700]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 2.8,
+      "rho": 2600,
+      "cp": 1000,
+      "mu": 10000
+    },
+    "Piedra pomez natural [d < 400]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.12,
+      "rho": 400,
+      "cp": 1000,
+      "mu": 6
+    },
+    "Roca natural porosa [por ejem. Lava] d < 1600": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.55,
+      "rho": 1600,
+      "cp": 1000,
+      "mu": 15
+    },
+    "Traquita andesita [2000 < d < 2700]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.1,
+      "rho": 2350,
+      "cp": 1000,
+      "mu": 15
+    },
+    "Arcilla o limo [1200 < d < 1800]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.5,
+      "rho": 1500,
+      "cp": 2085,
+      "mu": 50
+    },
+    "Arena y grava [1700 < d < 2200]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 2,
+      "rho": 1950,
+      "cp": 1045,
+      "mu": 50
+    },
+    "Arenisca [2200 < d < 2600]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 3,
+      "rho": 2400,
+      "cp": 1000,
+      "mu": 50
+    },
+    "Asperon [1900 < d < 2500]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.8,
+      "rho": 2200,
+      "cp": 1000,
+      "mu": 40
+    },
+    "Asperon [1300 < d < 1900]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.9,
+      "rho": 1600,
+      "cp": 1000,
+      "mu": 20
+    },
+    "Caliza muy dura [2200 < d < 2590]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 2.3,
+      "rho": 2395,
+      "cp": 1000,
+      "mu": 200
+    },
+    "Caliza dura [2000 < d < 2190]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.7,
+      "rho": 2095,
+      "cp": 1000,
+      "mu": 150
+    },
+    "Caliza dureza media [1800 < d < 1990]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.4,
+      "rho": 1895,
+      "cp": 1000,
+      "mu": 40
+    },
+    "Caliza blanda [1600 < d < 1790]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.1,
+      "rho": 1695,
+      "cp": 1000,
+      "mu": 25
+    },
+    "Caliza muy blanda [d < 1590]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.85,
+      "rho": 1495,
+      "cp": 1000,
+      "mu": 20
+    },
+    "Silex [2600 < d < 2800]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 2.6,
+      "rho": 2700,
+      "cp": 1000,
+      "mu": 10000
+    },
+    "Gneis Porfido [2300 < d < 2900]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 3.5,
+      "rho": 2600,
+      "cp": 1000,
+      "mu": 10000
+    },
+    "Esquisto Pizarra [2000 < d < 2800]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 2.2,
+      "rho": 2400,
+      "cp": 1000,
+      "mu": 800
+    },
+    "Marmol [2600 < d < 2800]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 3.5,
+      "rho": 2700,
+      "cp": 1000,
+      "mu": 10000
+    },
+    "Tierra vegetal [d < 2050]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.52,
+      "rho": 2050,
+      "cp": 1840,
+      "mu": 1
+    },
+    "Piedra artificial": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.3,
+      "rho": 1750,
+      "cp": 1000,
+      "mu": 40
+    },
+    "Tierra apisonada adobe bloques de tierra comprimida [1770 < d < 2000]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.1,
+      "rho": 1885,
+      "cp": 1000,
+      "mu": 1
+    },
+    "Tierra cruda con densidad 800 kg/m3": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.3,
+      "rho": 800,
+      "cp": 1000,
+      "mu": 3
+    },
+    "Tierra cruda con densidad 1000 kg/m3": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.4,
+      "rho": 1000,
+      "cp": 1000,
+      "mu": 3
+    },
+    "Tierra cruda con densidad 1200 kg/m3": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.5,
+      "rho": 1200,
+      "cp": 1000,
+      "mu": 3
+    },
+    "Tierra cruda con densidad 1400 kg/m3": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.6,
+      "rho": 1400,
+      "cp": 1000,
+      "mu": 3
+    },
+    "Tierra cruda con densidad 1600 kg/m3": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.8,
+      "rho": 1600,
+      "cp": 1000,
+      "mu": 3
+    },
+    "Tierra cruda con densidad 1800 kg/m3": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1,
+      "rho": 1800,
+      "cp": 1000,
+      "mu": 3
+    },
+    "Tierra cruda con densidad 2000 kg/m3": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.2,
+      "rho": 2000,
+      "cp": 1000,
+      "mu": 3
+    },
+    "relleno de cascote de ladrillo": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.41,
+      "rho": 1300,
+      "cp": 0,
+      "mu": 10
+    }
+  },
+  "Plasticos": {
+    "Acrilicos": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.2,
+      "rho": 1050,
+      "cp": 1500,
+      "mu": 10000
+    },
+    "Cloruro de polivinilo [PVC]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.17,
+      "rho": 1390,
+      "cp": 900,
+      "mu": 50000
+    },
+    "Linoleo": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.17,
+      "rho": 1200,
+      "cp": 1400,
+      "mu": 800
+    },
+    "Poliacetato": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.3,
+      "rho": 1410,
+      "cp": 1400,
+      "mu": 100000
+    },
+    "Poliamida [nylon] [PA]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.25,
+      "rho": 1150,
+      "cp": 1600,
+      "mu": 50000
+    },
+    "Poliamida 6.6 [PA6.6] 25%fibra vidrio": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.3,
+      "rho": 1450,
+      "cp": 1600,
+      "mu": 50000
+    },
+    "Policarbonatos [PC]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.2,
+      "rho": 1200,
+      "cp": 1200,
+      "mu": 5000
+    },
+    "Poliestireno [PS]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.16,
+      "rho": 1050,
+      "cp": 1300,
+      "mu": 100000
+    },
+    "Polietileno alta densidad [HDPE]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.5,
+      "rho": 980,
+      "cp": 1800,
+      "mu": 100000
+    },
+    "Polietileno baja densidad [LDPE]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.33,
+      "rho": 920,
+      "cp": 2200,
+      "mu": 100000
+    },
+    "Polimetilmetacrilato [PMMA]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.18,
+      "rho": 1180,
+      "cp": 1500,
+      "mu": 50000
+    },
+    "Polipropileno [PP]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.22,
+      "rho": 910,
+      "cp": 1800,
+      "mu": 10000
+    },
+    "Polipropileno 25%fibra vidrio": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.25,
+      "rho": 1200,
+      "cp": 1800,
+      "mu": 10000
+    },
+    "Politetrafluoretileno [PTFE]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.25,
+      "rho": 2200,
+      "cp": 1000,
+      "mu": 10000
+    },
+    "Poliuretano [PU]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.25,
+      "rho": 1200,
+      "cp": 1800,
+      "mu": 6000
+    },
+    "Resina epoxi": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.2,
+      "rho": 1200,
+      "cp": 1400,
+      "mu": 10000
+    },
+    "Resina fenolica": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.3,
+      "rho": 1300,
+      "cp": 1700,
+      "mu": 100000
+    },
+    "Resina poliester no saturado [UP]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.19,
+      "rho": 1400,
+      "cp": 1200,
+      "mu": 10000
+    },
+    "Teja plastico": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.2,
+      "rho": 1000,
+      "cp": 1000,
+      "mu": 10000
+    }
+  },
+  "Sellantes": {
+    "Cloruro de polivinilo [PVC] + 40% plastificante": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.14,
+      "rho": 1200,
+      "cp": 1000,
+      "mu": 100000
+    },
+    "Espuma de polietileno": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.05,
+      "rho": 70,
+      "cp": 2300,
+      "mu": 100
+    },
+    "Espuma de poliuretano [PU]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.05,
+      "rho": 70,
+      "cp": 1500,
+      "mu": 60
+    },
+    "Espuma de silicona": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.12,
+      "rho": 750,
+      "cp": 1000,
+      "mu": 10000
+    },
+    "Espuma elastomerica-flexible": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.05,
+      "rho": 70,
+      "cp": 1500,
+      "mu": 10000
+    },
+    "Silica gel [desecante]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.13,
+      "rho": 720,
+      "cp": 1000,
+      "mu": 1e+30
+    },
+    "Silicona masilla": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.5,
+      "rho": 1450,
+      "cp": 1000,
+      "mu": 5000
+    },
+    "Silicona pura": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.35,
+      "rho": 1200,
+      "cp": 1000,
+      "mu": 5000
+    },
+    "Uretano o poliuretano [rotura de puente termico]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.21,
+      "rho": 1300,
+      "cp": 1800,
+      "mu": 60
+    }
+  },
+  "Textiles": {
+    "Subcapa fieltro": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.05,
+      "rho": 120,
+      "cp": 1300,
+      "mu": 15
+    },
+    "Subcapa lana": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.06,
+      "rho": 200,
+      "cp": 1300,
+      "mu": 15
+    },
+    "Moquetas revestimientos textiles": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.06,
+      "rho": 200,
+      "cp": 1300,
+      "mu": 5
+    }
+  },
+  "Vidrios": {
+    "Sodocalcico [inc. Vidrio flotado]": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1,
+      "rho": 2500,
+      "cp": 750,
+      "mu": 1e+30
+    },
+    "Cuarzo": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.4,
+      "rho": 2200,
+      "cp": 750,
+      "mu": 1e+30
+    },
+    "Vidrio prensado": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 1.2,
+      "rho": 2000,
+      "cp": 750,
+      "mu": 1e+30
+    }
+  },
+  "Yesos": {
+    "Yeso de alta dureza 1200 < d < 1500": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.56,
+      "rho": 1350,
+      "cp": 1000,
+      "mu": 4
+    },
+    "Yeso de alta dureza 900 < d < 1200": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.43,
+      "rho": 1050,
+      "cp": 1000,
+      "mu": 4
+    },
+    "Yeso dureza media 600 < d < 900": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.3,
+      "rho": 750,
+      "cp": 1000,
+      "mu": 4
+    },
+    "Yeso baja dureza  d < 600": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.18,
+      "rho": 450,
+      "cp": 1000,
+      "mu": 4
+    },
+    "Placa de yeso o escayola 750 < d < 900": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.25,
+      "rho": 825,
+      "cp": 1000,
+      "mu": 4
+    },
+    "Placa de yeso laminado [PYL] 750 < d < 900": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.25,
+      "rho": 825,
+      "cp": 1000,
+      "mu": 4
+    },
+    "Placas de yeso armado con fibras minerales 800 < d < 1000": {
+      "thickness": 0.02,
+      "editable": true,
+      "lambda": 0.25,
+      "rho": 900,
+      "cp": 1000,
+      "mu": 4
+    }
+  },
+  "Barreras de vapor": {
+    "Barrera de vapor": {
+      "thickness": 0.001,
+      "editable": true,
+      "lambda": 500,
+      "rho": 600,
+      "cp": 1000,
+      "mu": 1.5e6
+    }
+  }
+}

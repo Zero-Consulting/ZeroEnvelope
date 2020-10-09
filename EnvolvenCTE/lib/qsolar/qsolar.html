@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>q solar</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href='qsolar.css'>
+  </head>
+  <body style="color:#60504C">
+    <div id="container">
+      <div id="top">
+        <button class="btn btn-success" value="input">Input</button>
+        <button class="btn btn-secondary" value="output">Output</button>
+      </div>
+      <div id="qsoljul" class="hide">
+        <p>q<sub>sol;jul</sub> = <input type="number" readOnly=true value=0.0>kWh/m<sup>2</sup></p>
+      </div>
+      <div id="left">
+        <ul>
+          <li id="classs">Air Permeabilities
+            <ul></ul>
+          </li>
+        </ul>
+        <ul>
+          <li id="glazings">Glazings
+            <ul></ul>
+          </li>
+          <li class="edit">
+            <span class="glyphicon glyphicon-plus"></span>
+            <span class="hide glyphicon glyphicon-duplicate"></span>
+            <span class="hide glyphicon glyphicon-trash"></span>
+          </li>
+        </ul>
+        <ul>
+          <li id="frames">Frames
+            <ul></ul>
+          </li>
+          <li class="edit">
+            <span class="glyphicon glyphicon-plus"></span>
+            <span class="hide glyphicon glyphicon-duplicate"></span>
+            <span class="hide glyphicon glyphicon-trash"></span>
+          </li>
+        </ul>
+        <ul>
+          <li id="shades">Shades
+            <ul></ul>
+          </li>
+          <li class="edit">
+            <span class="glyphicon glyphicon-plus"></span>
+            <span class="hide glyphicon glyphicon-duplicate"></span>
+            <span class="hide glyphicon glyphicon-trash"></span>
+          </li>
+        </ul>
+      </div>
+      <div id="main">
+        <div id="class" class="hide">          
+          <p>Air Permeability at 100 Pa:</p>
+          <p><input id="air_permeability" type="number" readOnly=true>m<sup>3</sup>/h·m<sup>2</sup></p>
+        </div>
+        <div id="glazing" class="hide">
+          <p>U-Factor:</p>
+          <p><input id="ufactor" type="number">W/m<sup>2</sup>·K</p>
+          <p>Solar Heat Gain Coefficient:</p>
+          <p><input id="shgc" type="number"></p>
+          <p>Visible Transmittance:</p>
+          <p><input id="vlt" type="number"></p>
+          <p>Intended Surface Type</p>
+          <select id="intended_surface_type"></select>
+          <p>Fenestration Type</p>
+          <select id="fenestration_type"></select>
+          <p>Fenestration Frame Type</p>
+          <select id="fenestration_frame_type"></select>
+        </div>
+        <div id="frame" class="hide">
+          <p>Width:</p>
+          <p><input id="frame_width" type="number">cm</p>
+          <p>Conductance:</p>
+          <p><input id="frame_conductance" type="number">W/m<sup>2</sup>·K</p>
+          <p>Setback:</p>
+          <p><input id="frame_setback" type="number">cm</p>
+          <p>Reflectance:</p>
+          <select id="frame_colour">
+            <option value=-1 selected>Input</option>
+            <option value=0.7>White</option>
+            <option value=0.5>Pastel</option>
+            <option value=0.3>Dark</option>
+            <option value=0.1>Black</option>
+          </select>
+          <p><input id="frame_reflectance" type="number"></p>
+        </div>
+        <div id="shade" class="hide">
+          <p>Type:</p>
+          <select id="shade_type"></select>
+          <p>Openness Fraction:</p>
+          <select id="shade_material">
+            <option value=-1 selected>Input</option>
+            <option value=0>Opaque</option>
+            <option value=0.2>Mean translucent</option>
+            <option value=0.4>Very translucent</option>
+          </select>
+          <p><input id="shade_openness_fraction" type="number"></p>
+          <p>Yarn Reflectance:</p>
+          <select id="shade_colour">
+            <option value=-1 selected>Input</option>
+            <option value=0.7>White</option>
+            <option value=0.5>Pastel</option>
+            <option value=0.3>Dark</option>
+            <option value=0.1>Black</option>
+          </select>
+          <p><input id="shade_yarn_reflectance" type="number"></p>
+          <p>Transmittance:</p>
+          <p><input id="shade_transmittance" type="number" readOnly=true></p>
+          <p>Reflectance:</p>
+          <p><input id="shade_reflectance" type="number" readOnly=true></p>
+          <p>Control:</p>
+          <select id="shade_control">
+            <option value=300 selected>Manual</option>
+            <option value=200>Automatic</option>
+          </select>
+          <p><input id="shade_setpoint" type="number" readOnly=true value=300>W/m<sup>2</sup></p>
+        </div>
+        <div id="output" class="hide">
+          <div id="header" style="position: relative;">
+            <table style="position: absolute; bottom: 0;">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Area [m<sup>2</sup>]</th>
+                  <th>H<sub>sol;jul;dir</sub> [kWh/m<sup>2</sup> mes]</th>
+                  <th>H<sub>sol;jul;dif</sub> [kWh/m<sup>2</sup> mes]</th>
+                  <th>F<sub>sh;obst;dir</sub></th>
+                  <th>F<sub>sh;obst;dif</sub></th>
+                  <th>g<sub>gl;sh;wi</sub></th>
+                  <th>&Phi;<sub>sol;jul</sub> [kWh/mes]</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div id="table">
+            <table>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div id="footer_left">
+        <span class="glyphicon glyphicon-ok-sign" onclick="sketchup.assign(document.querySelectorAll('#left .selected')[0].parentElement.parentElement.id, document.querySelectorAll('#left .selected')[0].innerHTML);"></span>
+        <span class="glyphicon glyphicon-remove-sign" onclick="sketchup.remove(document.querySelectorAll('#left .selected')[0].parentElement.parentElement.id, document.querySelectorAll('#left .selected')[0].innerHTML);"></span>
+      </div>
+      <div id="footer_center">
+        <span>Render by
+          <select id="render">
+            <option value="openstudio">OpenStudio</option>
+            <option value="input" selected>Input</option>
+            <option value="output">Output</option>
+          </select>
+        </span>
+      </div>
+      <div id="footer_right">
+        <button id="ok" class="btn btn-success" onclick="sketchup.ok();">OK</button>
+        <button id="cancel" class="btn btn-secondary" onclick="sketchup.cancel();">Cancel</button>
+      </div>
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script src='qsolar.js'></script>
+
+  </body>
+</html>
