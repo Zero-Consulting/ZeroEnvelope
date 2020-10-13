@@ -162,12 +162,12 @@ module OpenStudio
   dialog.add_action_callback("load") do |action_context|
     script = []
     
-    script << "var ul = document.querySelectorAll('#classs > ul')[0]"
-    class_array.length.times do |index|
-      script << "var li = document.createElement('li')"
-      script << "li.appendChild(document.createTextNode('Class #{index}'))"
-      script << "ul.appendChild(li)"
-    end
+    # script << "var ul = document.querySelectorAll('#classs > ul')[0]"
+    # class_array.length.times do |index|
+      # script << "var li = document.createElement('li')"
+      # script << "li.appendChild(document.createTextNode('Class #{index}'))"
+      # script << "ul.appendChild(li)"
+    # end
     script += Constructions.add_interface_objects(os_model, os_type)
 
     standards_information_hash.each do |id, options|
