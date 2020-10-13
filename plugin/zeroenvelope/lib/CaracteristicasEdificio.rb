@@ -85,14 +85,42 @@ module OpenStudio
   input = UI.inputbox(prompts, defaults, list, "User input.")
   
   zonaClimatica = input[0]
+  epw_file_name = ( zonaClimatica.include?('c') || zonaClimatica.include?('alpha') ? "#{zonaClimatica.sub('c', '')}_canarias" : "#{zonaClimatica}_peninsula" ) + ".epw"
+  epw_path = "#{File.dirname(__FILE__)}/src/epw/" + epw_file_name
+  
+  osm_path = Plugin.model_manager.model_interface.openstudio_path
+  osw_path = osm_path.gsub(".osm", "/workflow.osw")
+  osw = OpenStudio::WorkflowJSON.load(osw_path).get.clone
+  FileUtils.copy_entry(epw_path, osm_path.gsub(".osm", "/files/") + epw_file_name, remove_destination = true)
+  osw.setWeatherFile(epw_file_name)
+  osw.saveAs(osw_path)
+
+  UI.messagebox("Successfully set weather file to #{epw_file_name}.")
+  
+  Plugin.model_manager.open_openstudio(osm_path, su_model)
+  
+  os_model = Plugin.model_manager.model_interface.openstudio_model
+  
+  lZ = os_model.getClimateZones
   if lZ.getClimateZones('CTE').empty?
     lZ.appendClimateZone('CTE', zonaClimatica)
   else
     lZ.getClimateZone('CTE', 0).setValue(zonaClimatica)
   end
-  epw_path = "#{File.dirname(__FILE__)}/src/epw/" + ( zonaClimatica.include?('c') || zonaClimatica.include?('alpha') ? "#{zonaClimatica.sub('c', '')}_canarias" : "#{zonaClimatica}_peninsula" ) + ".epw"
+  
   epw_file = OpenStudio::EpwFile.new(epw_path)
-  OpenStudio::Model::WeatherFile::setWeatherFile(os_model, epw_file)
+  weather_lat = epw_file.latitude
+  weather_lon = epw_file.longitude
+  weather_time = epw_file.timeZone
+  weather_elev = epw_file.elevation
+
+  # Add or update site data
+  site = os_model.getSite
+  site.setName(epw_path.split("/")[-1])
+  site.setLatitude(weather_lat)
+  site.setLongitude(weather_lon)
+  site.setTimeZone(weather_time)
+  site.setElevation(weather_elev)
   
   residencialOTerciario = input[1]
   os_model.building.get.setStandardsBuildingType(nuevoOExistente + "-" + residencialOTerciario)
