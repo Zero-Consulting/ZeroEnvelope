@@ -1,18 +1,18 @@
 # ZeroEnvelope
 
-The Zero Envelope SketchUp plugin is an OpenStudio design tool that computes some energy efficiency indicators of the thermal envelope according to the CTE DB-HE.
+The ZeroEnvelope SketchUp plugin is an OpenStudio design tool that computes some energy efficiency indicators of the thermal envelope according to the CTE DB-HE.
 
 ## Installation
 
-* SketchUp 2019 or newer is needed for **q solar** tool.
-* Install [OpenStudio SketchUp Plug-in](https://github.com/openstudiocoalition/openstudio-sketchup-plugin).
-* Donwload the [RBZ](https://github.com/agonzalezesteve/ZeroEnvelope/blob/main/ZeroEnvelope.rbz) file and [install it manually](https://help.sketchup.com/en/extension-warehouse/adding-extensions-sketchup#install-manual) in SketchUp.
+* SketchUp 2019 or newer is required for **q solar** tool.
+* Install the [OpenStudio SketchUp Plug-in](https://github.com/openstudiocoalition/openstudio-sketchup-plugin).
+* Donwload the [RBZ](https://github.com/agonzalezesteve/ZeroEnvelope/raw/main/ZeroEnvelope.rbz) file and [install it manually](https://help.sketchup.com/en/extension-warehouse/adding-extensions-sketchup#install-manual) in SketchUp.
 
 ## K global
 
 * Automatic U values taking into account the different boundary conditions and linear transmittances of thermal bridges.
 * The calculations are explained in the [Zero Consulting blog](https://blog.zeroconsulting.com/nuevo-cte-he-2019-kglobal).
-* Good complement to the [OpenStudio Application](https://github.com/openstudiocoalition/OpenStudioApplication) for editing Layered Constructions.
+* Good complement to the [OpenStudio Application](https://github.com/openstudiocoalition/OpenStudioApplication) for editing Layered Constructions and assigning Constructions.
 * Good complement to [SG Save](http://www.efinovatic.es/energyPlus/) for introducing thermal bridges.
 
 ## q solar
