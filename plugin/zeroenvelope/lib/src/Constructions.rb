@@ -356,7 +356,7 @@ class Constructions
         end
       end
 
-      perimeter = outdoors_perimeter + unconditioned_perimeter
+      perimeter = [outdoors_perimeter + unconditioned_perimeter, 1e-6].max
       d_w_e = outdoors_perimeter > 1e-6 ? wall_thickness_times_outdoors_perimeter / outdoors_perimeter : 0.0
       
       d_g = lambda_g / self.get_opaque_u_factor(r_si, surface, r_se)

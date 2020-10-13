@@ -1969,6 +1969,7 @@ module OpenStudio
               au += sub_surface_au
             else
               sub_surface_au = sub_surface_area * sub_surface_u_factor
+
               windows_us << [
                 [sub_surface.name.get.to_s, -1],
                 [boundary_condition, -1],
@@ -2142,7 +2143,7 @@ module OpenStudio
         else
           u_lims[2]
         end
-        
+
         surface_au = surface_area * surface_u_factor
         opaques_us << [
           [surface_name, -1],
@@ -2257,8 +2258,8 @@ module OpenStudio
       # aux = row[-1]
       # aux.first / aux.last
     # end.reverse
-    
-    case output
+        
+    (case output
     when "opaques_u"
       opaques_us
       
@@ -2267,10 +2268,7 @@ module OpenStudio
       
     when "thermal_bridges_psi"
       thermal_bridges_psis
-      
-    else
-      []
-    end.sort_by do |row|
+    end || []).sort_by do |row|
       row.last.first || -1
     end.reverse.each_with_index do |row, i|
       script << "var row = tbody.insertRow(#{i})"
