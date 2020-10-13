@@ -2,6 +2,8 @@
 
 The ZeroEnvelope SketchUp plugin is an OpenStudio design tool that computes some energy efficiency indicators of the thermal envelope according to the CTE DB-HE.
 
+Based on the idea from [EnvolventeCTE](https://github.com/pachi/envolventecte) of getting quick indicators of the building envelope, this plugin simplifies the introduction of data into an OpenStudio and plots the results in SketchUp.
+
 ## Installation
 
 * SketchUp 2019 or newer is required for **q solar** tool.
@@ -18,7 +20,7 @@ The ZeroEnvelope SketchUp plugin is an OpenStudio design tool that computes some
 ## q solar
 
 * Automatic solar heat gains trough windows in July with active solar protection and window setback.
-* The [polygon clipping](https://bigladdersoftware.com/epx/docs/9-4/engineering-reference/shading-module.html#polygon-clipping) algorithm is implemented for computing the [shading factors](https://bigladdersoftware.com/epx/docs/9-4/engineering-reference/sky-radiance-model.html#shadowing-of-sky-diffuse-solar-radiation) in order to avoid the run time of the EnergyPlus simulation.
+* The [polygon clipping](https://bigladdersoftware.com/epx/docs/9-4/engineering-reference/shading-module.html#polygon-clipping) algorithm is implemented for computing the [shading factors](https://bigladdersoftware.com/epx/docs/9-4/engineering-reference/sky-radiance-model.html#shadowing-of-sky-diffuse-solar-radiation) in order to avoid the simulation time of the EnergyPlus simulation.
 * The [geom2d](https://github.com/gettalong/geom2d) library is used for polygon clipping but using the [rbclipper](https://github.com/mieko/rbclipper) algorithm.
 
 ## License
