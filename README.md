@@ -17,7 +17,7 @@ The ZeroEnvelope SketchUp plugin is an OpenStudio design tool that computes some
 
 ## q solar
 
-* Automatic solar heat gains trough windows in July with active solar protection.
+* Automatic solar heat gains trough windows in July with active solar protection and window setback.
 * The [polygon clipping](https://bigladdersoftware.com/epx/docs/9-4/engineering-reference/shading-module.html#polygon-clipping) algorithm is implemented for computing the [shading factors](https://bigladdersoftware.com/epx/docs/9-4/engineering-reference/sky-radiance-model.html#shadowing-of-sky-diffuse-solar-radiation) in order to avoid the run time of the EnergyPlus simulation.
 * The [geom2d](https://github.com/gettalong/geom2d) library is used for polygon clipping but using the [rbclipper](https://github.com/mieko/rbclipper) algorithm.
 
