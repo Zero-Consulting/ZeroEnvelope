@@ -86,7 +86,7 @@
   min-width: 6em;
 }
 
-#construction_set, #construction {
+#main > div {
   width: 100%;
   height: 100%
 }
@@ -118,11 +118,11 @@
   height: calc(100% - 100px);
 }
 
-#left, #construction_set, #layers, #right {
+#left, #construction_set, #layers, #right, #results {
   overflow-y: auto
 }
 
-#left::-webkit-scrollbar, #construction_set::-webkit-scrollbar, #layers::-webkit-scrollbar, #right::-webkit-scrollbar {
+#left::-webkit-scrollbar, #construction_set::-webkit-scrollbar, #layers::-webkit-scrollbar, #right::-webkit-scrollbar, #results::-webkit-scrollbar {
   display: none
 }
 
