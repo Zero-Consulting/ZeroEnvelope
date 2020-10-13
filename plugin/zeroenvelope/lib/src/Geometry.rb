@@ -93,7 +93,7 @@ class Geometry
     return Utilities.merge(surfaces_neighbours).map do |plane_surfaces|
       thickness_times_area, total_area = 0.0, 0.0
       plane_surfaces.each do |plane_surface|
-        thickness = self.get_construction_thickness(plane_surface)
+        thickness = Constructions.get_construction_thickness(plane_surface)
         case plane_surface.outsideBoundaryCondition
         when "Outdoors", "Ground", "OtherSideCoefficients"
         when "Surface", "Adiabatic"
