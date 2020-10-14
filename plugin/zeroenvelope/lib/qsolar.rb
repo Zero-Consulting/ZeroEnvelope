@@ -399,29 +399,33 @@ module OpenStudio
   def self.get_g_gl_sh_wi(sub_surface)
     glass_construction = sub_surface.construction
     return 1 if glass_construction.empty?
+    
     glass_construction = glass_construction.get
     return 1 unless glass_construction.isFenestration
+    
     layered_construction = glass_construction.to_LayeredConstruction
     return 1 if layered_construction.empty?
+    
     layers = layered_construction.get.layers
     return 1 if layers.empty?
+    
     simple_glazing = layers[0].to_SimpleGlazing
     return 1 if simple_glazing.empty?
-    simple_glazing = simple_glazing.get
     
+    simple_glazing = simple_glazing.get
     glass_u_factor = simple_glazing.uFactor
     g_gl_n = simple_glazing.solarHeatGainCoefficient
     g_gl_wi = 0.9 * g_gl_n
 
     shading_control = sub_surface.shadingControl 
     return g_gl_wi if shading_control.empty?
+    
     shading_control = shading_control.get
     shading_type = shading_control.shadingType
     return g_gl_wi unless shading_type.end_with?("Shade")
 
     shade = shading_control.shadingMaterial.get.to_Shade.get
     transmittance, reflectance = shade.thermalTransmittance, shade.solarReflectance
-
     case shading_type
     when "ExteriorShade"
       g_1, g_2 = 5, 10
@@ -1146,7 +1150,7 @@ module OpenStudio
       
       @@total_phi_sol_jul += phi_sol_jul
     end
-    
+
     if @@total_floor_area > 1e-6 then
       script << "document.getElementById('qsoljul').classList.remove('hide')"
       script << "var q_sol_jul = document.querySelectorAll('#qsoljul input')[0]"
@@ -1156,7 +1160,7 @@ module OpenStudio
     else
       script << "document.getElementById('qsoljul').classList.add('hide')"
     end
-    
+
     return script
   end
   
@@ -1170,7 +1174,7 @@ module OpenStudio
       script << "sketchup.set_render('output', null, null);" if @@render.eql?("openstudio")
       compute_shadows = false
     end
-    
+
     dialog.execute_script(script.join(";"))
   end
     
