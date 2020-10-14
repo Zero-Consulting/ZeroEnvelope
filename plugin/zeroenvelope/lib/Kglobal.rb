@@ -754,7 +754,7 @@ module OpenStudio
       else
         script << "sort.previousElementSibling.classList.add('hide')"
         script << "document.getElementById('reverse_construction').classList.remove('hide')"
-        reversed_construction = self.get_reversed_construction(os_model, layered_construction)
+        reversed_construction = Constructions.get_reversed_construction(os_model, layered_construction)
         script << "document.getElementById('reversed_construction').getElementsByTagName('p')[1].innerHTML = '#{reversed_construction.name.get.to_s}'"
       end
       script << "var tbody = document.getElementsByTagName('tbody')[#{ reversed_type.eql?(3) ? 0 : 1 }]"
@@ -990,7 +990,7 @@ module OpenStudio
 
     construction_name = Utilities.fix_name(construction_name)
     layered_construction = os_model.getLayeredConstructionByName(construction_name).get
-    reversed_construction = self.get_reversed_construction(os_model, layered_construction)
+    reversed_construction = Constructions.get_reversed_construction(os_model, layered_construction)
     reversed_construction.additionalProperties.setFeature("interface", true)
     reversed_construction.additionalProperties.setFeature("reversed", true)
     script << "add_li('constructions', '#{reversed_construction.name.get.to_s}')"
@@ -1008,7 +1008,7 @@ module OpenStudio
     when "constructions"
       reversed_type = Constructions.get_reversed_type(os_model, object)
       if reversed_type.eql?(2) then
-        reversed_construction = self.get_reversed_construction(os_model, object)
+        reversed_construction = Constructions.get_reversed_construction(os_model, object)
         script << "remove_li('constructions', '#{reversed_construction.name.get.to_s}')"
         reversed_construction.remove
       end
@@ -1071,7 +1071,7 @@ module OpenStudio
   dialog.add_action_callback("toggle_layered_construction") do |action_context, construction_name|
     construction_name = Utilities.fix_name(construction_name)
     layered_construction = os_model.getLayeredConstructionByName(construction_name).get
-    reversed_construction = Constructions.get_reversed_type(os_model, layered_construction).eql?(2) ? self.get_reversed_construction(os_model, layered_construction) : nil
+    reversed_construction = Constructions.get_reversed_type(os_model, layered_construction).eql?(2) ? Constructions.get_reversed_construction(os_model, layered_construction) : nil
 
     layers = layered_construction.layers.map do |layer| layer.to_OpaqueMaterial.get end
     new_layered_construction = if layered_construction.to_Construction.empty? then
@@ -1087,7 +1087,7 @@ module OpenStudio
     unless reversed_construction.nil? then
       reversed_construction_name = reversed_construction.name.get.to_s
       reversed_construction.remove
-      new_reversed_construction = self.get_reversed_construction(os_model, new_layered_construction)
+      new_reversed_construction = Constructions.get_reversed_construction(os_model, new_layered_construction)
       new_reversed_construction.setName(reversed_construction_name)
       new_reversed_construction.additionalProperties.setFeature("reversed", true)
     end
@@ -1110,7 +1110,7 @@ module OpenStudio
   dialog.add_action_callback("add_layer") do |action_context, construction_name, material_name|
     construction_name = Utilities.fix_name(construction_name)
     layered_construction = os_model.getLayeredConstructionByName(construction_name).get
-    reversed_construction = Constructions.get_reversed_type(os_model, layered_construction).eql?(2) ? self.get_reversed_construction(os_model, layered_construction) : nil
+    reversed_construction = Constructions.get_reversed_type(os_model, layered_construction).eql?(2) ? Constructions.get_reversed_construction(os_model, layered_construction) : nil
 
     num_layers = layered_construction.layers.length
     layer = Constructions.get_material(os_model, material_name)
@@ -1119,7 +1119,7 @@ module OpenStudio
     unless reversed_construction.nil? then
       reversed_construction_name = reversed_construction.name.get.to_s
       reversed_construction.remove
-      new_reversed_construction = self.get_reversed_construction(os_model, layered_construction)
+      new_reversed_construction = Constructions.get_reversed_construction(os_model, layered_construction)
       new_reversed_construction.setName(reversed_construction_name)
       new_reversed_construction.additionalProperties.setFeature("reversed", true)
     end
@@ -1130,7 +1130,7 @@ module OpenStudio
   dialog.add_action_callback("edit_layer") do |action_context, construction_name, thickness, layer_index|
     construction_name = Utilities.fix_name(construction_name)
     layered_construction = os_model.getLayeredConstructionByName(construction_name).get
-    reversed_construction = Constructions.get_reversed_type(os_model, layered_construction).eql?(2) ? self.get_reversed_construction(os_model, layered_construction) : nil
+    reversed_construction = Constructions.get_reversed_type(os_model, layered_construction).eql?(2) ? Constructions.get_reversed_construction(os_model, layered_construction) : nil
 
     index = layer_index.to_i-1
     layer = layered_construction.getLayer(index)
@@ -1145,7 +1145,7 @@ module OpenStudio
       unless reversed_construction.nil? then
         reversed_construction_name = reversed_construction.name.get.to_s
         reversed_construction.remove
-        new_reversed_construction = self.get_reversed_construction(os_model, layered_construction)
+        new_reversed_construction = Constructions.get_reversed_construction(os_model, layered_construction)
         new_reversed_construction.setName(reversed_construction_name)
         new_reversed_construction.additionalProperties.setFeature("reversed", true)
       end
@@ -1157,7 +1157,7 @@ module OpenStudio
   dialog.add_action_callback("sort_layers") do |action_context, construction_name, indices, source_layer|
     construction_name = Utilities.fix_name(construction_name)
     layered_construction = os_model.getLayeredConstructionByName(construction_name).get
-    reversed_construction = Constructions.get_reversed_type(os_model, layered_construction).eql?(2) ? self.get_reversed_construction(os_model, layered_construction) : nil
+    reversed_construction = Constructions.get_reversed_type(os_model, layered_construction).eql?(2) ? Constructions.get_reversed_construction(os_model, layered_construction) : nil
 
     layers = layered_construction.layers
     layered_construction.setLayers(indices.map do |layer_index| layered_construction.getLayer(layer_index.to_i-1) end)
@@ -1170,7 +1170,7 @@ module OpenStudio
     unless reversed_construction.nil? then
       reversed_construction_name = reversed_construction.name.get.to_s
       reversed_construction.remove
-      new_reversed_construction = self.get_reversed_construction(os_model, layered_construction)
+      new_reversed_construction = Constructions.get_reversed_construction(os_model, layered_construction)
       new_reversed_construction.setName(reversed_construction_name)
       new_reversed_construction.additionalProperties.setFeature("reversed", true)
     end
@@ -1201,7 +1201,7 @@ module OpenStudio
   dialog.add_action_callback("remove_layer") do |action_context, construction_name, layer_index|
     construction_name = Utilities.fix_name(construction_name)
     layered_construction = os_model.getLayeredConstructionByName(construction_name).get
-    reversed_construction = Constructions.get_reversed_type(os_model, layered_construction).eql?(2) ? self.get_reversed_construction(os_model, layered_construction) : nil
+    reversed_construction = Constructions.get_reversed_type(os_model, layered_construction).eql?(2) ? Constructions.get_reversed_construction(os_model, layered_construction) : nil
 
     index = layer_index.to_i - 1
     layer = layered_construction.getLayer(index)
@@ -1211,7 +1211,7 @@ module OpenStudio
     unless reversed_construction.nil? then
       reversed_construction_name = reversed_construction.name.get.to_s
       reversed_construction.remove
-      new_reversed_construction = self.get_reversed_construction(os_model, layered_construction)
+      new_reversed_construction = Constructions.get_reversed_construction(os_model, layered_construction)
       new_reversed_construction.setName(reversed_construction_name)
       new_reversed_construction.additionalProperties.setFeature("reversed", true)
     end
@@ -1482,7 +1482,7 @@ module OpenStudio
       adjacent_construction = if reversed_type.eql?(0) then
         construction
       else
-        reversed_construction = self.get_reversed_construction(os_model, construction)
+        reversed_construction = Constructions.get_reversed_construction(os_model, construction)
         if reversed_type.eql?(1) then
           reversed_construction.additionalProperties.setFeature("interface", true)
           reversed_construction.additionalProperties.setFeature("reversed", true)
@@ -1826,7 +1826,7 @@ module OpenStudio
       else
         if construction.eql?(adjacent_construction) then
           return 60
-        elsif !self.get_reversed_construction(os_model, construction).eql?(adjacent_construction) then
+        elsif !Constructions.get_reversed_construction(os_model, construction).eql?(adjacent_construction) then
           return 0
         end
       end
