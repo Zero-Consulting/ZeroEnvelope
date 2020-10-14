@@ -1197,6 +1197,8 @@ module OpenStudio
       script << "document.getElementById('qsoljul').classList.add('hide')"
       @@total_phi_sol_jul = nil
     else
+      script << "sketchup.render_white()"
+      
       @@new_group.hidden = false
       os_model.getSpaces.each do |space| space.drawing_interface.entity.hidden = true end
 
