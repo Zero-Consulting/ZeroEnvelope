@@ -1,4 +1,3 @@
-require "#{File.dirname(__FILE__)}/src/Constructions"
 require "#{File.dirname(__FILE__)}/src/ThermalBridges"
 require "json"
 

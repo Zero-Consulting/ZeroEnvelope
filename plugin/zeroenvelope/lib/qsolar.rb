@@ -1,5 +1,4 @@
 require "#{File.dirname(__FILE__)}/src/geom2d"
-require "#{File.dirname(__FILE__)}/src/Constructions"
 
 module OpenStudio
   

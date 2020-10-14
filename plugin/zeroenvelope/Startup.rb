@@ -5,6 +5,7 @@ plugin_menu = UI.menu("Plugins").add_submenu("Zero Envelope")
 require "#{File.dirname(__FILE__)}/lib/src/Geometry"
 require "#{File.dirname(__FILE__)}/lib/src/SketchUp"
 require "#{File.dirname(__FILE__)}/lib/src/Utilities"
+require "#{File.dirname(__FILE__)}/lib/src/Constructions"
 
 {
   'CaracteristicasEdificio' => "Definicion del caso y tipo de edificio",
