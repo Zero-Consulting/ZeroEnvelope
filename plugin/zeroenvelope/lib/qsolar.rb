@@ -50,9 +50,6 @@ module OpenStudio
     permeabilidadHuecos = os_model.getClimateZones.getClimateZone('PermeabilidadHuecos', 0).value
   end
 
-  class_array = [100, 50, 27, 9, 3]
-  air_permeability_default = class_array.index(permeabilidadHuecos.to_f)
-
   # ISO 52010
   
   fij_table = [
@@ -162,12 +159,6 @@ module OpenStudio
   dialog.add_action_callback("load") do |action_context|
     script = []
     
-    # script << "var ul = document.querySelectorAll('#classs > ul')[0]"
-    # class_array.length.times do |index|
-      # script << "var li = document.createElement('li')"
-      # script << "li.appendChild(document.createTextNode('Class #{index}'))"
-      # script << "ul.appendChild(li)"
-    # end
     script += Constructions.add_interface_objects(os_model, os_type)
 
     standards_information_hash.each do |id, options|
@@ -213,8 +204,6 @@ module OpenStudio
   def self.render_by_selection(id, li_object)
     @@outdoor_sub_surfaces.each do |sub_surface|
       aux = case id
-      when "classs"
-        sub_surface.additionalProperties.getFeatureAsInteger("air_permeability")
       when "glazings"
         sub_surface.construction
       when "frames"
@@ -287,11 +276,7 @@ module OpenStudio
     script = []
         
     li_object = nil
-    case id
-    when "classs"
-      li_object = li[-1].to_i
-      script << "document.getElementById('air_permeability').value = parseFloat(#{class_array[li_object]})"
-      
+    case id      
     when "glazings"
       simple_glazing = os_model.getSimpleGlazingByName(li).get
       script << "document.getElementById('ufactor').value = parseFloat(#{simple_glazing.uFactor}).toFixed(2)"
@@ -910,10 +895,7 @@ module OpenStudio
     end
 
     sub_surfaces.each do |sub_surface|  
-      case id
-      when "classs"
-        sub_surface.additionalProperties.setFeature("air_permeability", li[-1].to_i)
-        
+      case id        
       when "glazings"
         sub_surface.setConstruction(os_model.getLayeredConstructionByName(li).get)
         script << self.update_g_gl_sh_wi(sub_surface, @@outdoor_sub_surfaces.index(sub_surface)) unless @@total_phi_sol_jul.nil?
@@ -949,10 +931,7 @@ module OpenStudio
     end
 
     sub_surfaces.each do |sub_surface|  
-      case id
-      when "classs"
-        sub_surface.additionalProperties.setFeature("air_permeability", air_permeability_default)
-        
+      case id        
       when "glazings"
         sub_surface.resetConstruction
         script << self.update_g_gl_sh_wi(sub_surface, @@outdoor_sub_surfaces.index(sub_surface)) unless @@total_phi_sol_jul.nil?
@@ -1018,7 +997,7 @@ module OpenStudio
   @@total_floor_area, @@total_phi_sol_jul = 0.0, nil
   @@h_sh_obst_jul_dirs, @@h_sh_obst_jul_difs, @@g_gl_sh_wis = {}, {}, {} 
   
-  def self.compute_shadows(os_model, air_permeability_default)
+  def self.compute_shadows(os_model)
     new_groups, @@os2su = SketchUp.get_os2su(os_model, true)
     @@new_group.erase!
     @@new_group = new_groups.first
@@ -1041,9 +1020,6 @@ module OpenStudio
             "direct" => @@sun_thetas.length.times.map do Geom2D::PolygonSet.new end,
             "diffuse" => @@phis.length.times.map do @@thetas.length.times.map do Geom2D::PolygonSet.new end end
           }
-          next unless sub_surface.additionalProperties.getFeatureAsInteger("air_permeability").empty?
-          
-          sub_surface.additionalProperties.setFeature("air_permeability", air_permeability_default)
         end
       end
     end
@@ -1236,7 +1212,7 @@ module OpenStudio
     script = []
     
     if compute_shadows then
-      script += self.compute_shadows(os_model, air_permeability_default)
+      script += self.compute_shadows(os_model)
       script << "sketchup.set_render('output', null, null);" if @@render.eql?("openstudio")
       compute_shadows = false
     end
@@ -1277,8 +1253,6 @@ module OpenStudio
       when "input"
         unless id.nil? then
           li_object = case id
-          when "classs"
-            li[-1].to_i
           when "glazings"
             os_model.getLayeredConstructionByName(li).get
           when "frames"
@@ -1292,7 +1266,7 @@ module OpenStudio
         
       when "output"
         if compute_shadows then
-          script += self.compute_shadows(os_model, air_permeability_default)
+          script += self.compute_shadows(os_model)
           compute_shadows = false
         end
         
