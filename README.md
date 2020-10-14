@@ -6,8 +6,7 @@ Based on the idea from [EnvolventeCTE](https://github.com/pachi/envolventecte) o
 
 ### K global
 
-* Automatic U values taking into account the different boundary conditions and linear transmittances of thermal bridges.
-* The calculations are explained in the [Zero Consulting blog](https://blog.zeroconsulting.com/nuevo-cte-he-2019-kglobal).
+* Automatic U values taking into account the different boundary conditions and linear transmittances of thermal bridges (calculations are explained in the [Zero Consulting blog](https://blog.zeroconsulting.com/nuevo-cte-he-2019-kglobal)).
 * Good complement to the [OpenStudio Application](https://github.com/openstudiocoalition/OpenStudioApplication) for editing Layered Constructions and assigning Constructions.
 * Good complement to [SG Save](http://www.efinovatic.es/energyPlus/) for introducing thermal bridges.
 
