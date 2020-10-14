@@ -19,10 +19,10 @@ class Constructions
 
     return material.additionalProperties.setFeature("eq_air_gap", eq_air_gap)
   end
-    
+
   def self.add_interface_objects(os_model, os_type)
     script = []
-    
+
     objects = nil
     os_type.each do |id, type|
       script << "var ul = document.querySelectorAll('##{id} > ul')[0]"
@@ -45,14 +45,14 @@ class Constructions
   def self.get_reversed_type(os_model, construction)
     reversed = construction.additionalProperties.getFeatureAsBoolean("reversed")
     return 3 if !reversed.empty? && reversed.get # reversed
-    
+
     reversed_construction = self.get_reversed_construction(os_model, construction)
     return 0 unless reversed_construction # cannot be reversed
-    
+
     reversed = reversed_construction.additionalProperties.getFeatureAsBoolean("reversed")
     return 2 if !reversed.empty? && reversed.get # mirror
 
-    reversed_construction.remove      
+    reversed_construction.remove
     return 1 # can be reversed
   end
 
@@ -63,7 +63,7 @@ class Constructions
     temperature_layer = construction.temperatureCalculationRequestedAfterLayerNumber
     ctf_dimensions = construction.dimensionsForTheCTFCalculation
     tube_spacing = construction.tubeSpacing
-    
+
     os_model.getConstructionWithInternalSources.each do |reversed_construction|
       next unless reversed_layers.eql?(reversed_construction.layers)
       next unless source_layer.eql?(num_layers-reversed_construction.sourcePresentAfterLayerNumber)
@@ -72,7 +72,7 @@ class Constructions
       next unless tube_spacing.eql?(reversed_construction.tubeSpacing)
       return reversed_construction
     end
-    
+
     reversed_construction = OpenStudio::Model::ConstructionWithInternalSource.new(os_model)
     reversed_construction.setName("#{construction.name.get.to_s} Reversed")
     reversed_construction.additionalProperties.setFeature("interface", true)
@@ -91,7 +91,7 @@ class Constructions
       return false if construction.isSymmetric
       return construction.reverseConstruction
     end
-    
+
     construction_with_internal_source = construction_base.to_ConstructionWithInternalSource
     unless construction_with_internal_source.empty? then
       construction_with_internal_source = construction_with_internal_source.get
@@ -99,7 +99,7 @@ class Constructions
       return false if reversed_construction.eql?(construction_with_internal_source)
       return reversed_construction
     end
-    
+
     return false
   end
 
@@ -127,8 +127,8 @@ class Constructions
       os_model.getConstructions.find do |temp|
         temp.isFenestration && temp.getLayerIndices(simple_glazing).length > 0
       end
-    end   
-    
+    end
+
     default_constructions_id, default_construction_id = id.split("_surface_")
     if default_construction_id.nil? then
       default_construction_id = id.split("other_")[1]
@@ -176,7 +176,7 @@ class Constructions
 
     return material
   end
-  
+
   def self.get_num_materials(os_model, material)
     num_materials = 0
 
@@ -203,15 +203,15 @@ class Constructions
   def self.get_glazing_u_factor(sub_surface)
     construction = sub_surface.construction
     return 1e6 if construction.empty?
-    
+
     construction = construction.get
     while true do
       layers = construction.to_LayeredConstruction.get.layers
       break unless layers.length.eql?(1)
-      
+
       simple_glazing = layers.first.to_SimpleGlazing
       break if simple_glazing.empty?
-      
+
       return simple_glazing.get.uFactor
     end
 
@@ -265,14 +265,14 @@ class Constructions
     frame_type = [frame_conductance, 1.5, 4.4].sort.index(frame_conductance)
     glazing_type = [sub_surface_u_factor, 1.8, 3.5].sort.reverse.index(sub_surface_u_factor)
     psi_value = [[0.0, 0.5, 0.6], [0.0, 0.06, 0.08], [0.0, 0.01, 0.04]][frame_type][glazing_type]
-    
+
     return sub_surface_area, sub_surface_u_factor, frame_area, frame_u_factor, perimeter, psi_value
   end
 
   def self.get_opaque_u_factor(r_si, surface, r_se)
     construction = surface.construction
     return 1e6 if construction.empty?
-    
+
     return 1.0 / (r_si + 1.0 / construction.get.thermalConductance.get + r_se)
   end
 
@@ -282,7 +282,7 @@ class Constructions
 
     surface = planar_surface.to_Surface.get
     r_si, r_se = self.get_R_si(surface), self.get_R_se
-    
+
     return self.get_opaque_u_factor(r_si, surface, r_se)
   end
 
@@ -306,7 +306,7 @@ class Constructions
       surface.subSurfaces.each do |sub_surface|
         sub_surface_area, u_factor, frame_area, frame_u_factor, perimeter, psi_value = self.get_outdoors_window_thermal_properties(sub_surface)
         au += sub_surface_area * u_factor
-        
+
         unless frame_area.nil? then
           surface_area -= frame_area
           au += frame_area * frame_u_factor + perimeter * psi_value
@@ -332,17 +332,20 @@ class Constructions
   def self.get_ground_u_factor(surface, space, ground_level_plane, os_model)
     centroid = space.transformation * surface.centroid
     z = [((-ground_level_plane.d - ground_level_plane.a * centroid.x - ground_level_plane.b * centroid.y) / ground_level_plane.c - centroid.z), 0.0].max
-    
+
     lambda_g = 2.0 # W/m K ISO 13370 default
     r_si, r_se = self.get_R_si(surface), self.get_R_se
 
     surface_type = surface.surfaceType
     u_factor = case surface_type
     when "Floor", "Wall"
+
+
       outdoors_perimeter, unconditioned_perimeter, wall_thickness_times_outdoors_perimeter = 0.0, 0.0, 0.0
 
       space.surfaces.each do |other|
         next unless other.surfaceType.eql?("Wall")
+
         length = Geometry.get_length(surface.vertices, other.vertices)
         next if length < 1e-6
 
@@ -350,7 +353,7 @@ class Constructions
         when "Outdoors"
           outdoors_perimeter += length
           wall_thickness_times_outdoors_perimeter += self.get_construction_thickness(other) * length
-          
+
         when "Surface"
           unconditioned_perimeter += length unless other.adjacentSurface.get.space.get.partofTotalFloorArea
         end
@@ -358,24 +361,24 @@ class Constructions
 
       perimeter = [outdoors_perimeter + unconditioned_perimeter, 1e-6].max
       d_w_e = outdoors_perimeter > 1e-6 ? wall_thickness_times_outdoors_perimeter / outdoors_perimeter : 0.0
-      
+
       d_g = lambda_g / self.get_opaque_u_factor(r_si, surface, r_se)
       d_f = d_w_e + d_g
 
       case surface_type
       when "Floor"
         b = surface.grossArea / (0.5 * perimeter)
-        
+
         u_factor_0 = if d_f + 0.5 * z < b then
           2 * lambda_g / (Math::PI * b + d_f + 0.5 * z) * Math.log(Math::PI * b / (d_f + 0.5 * z) + 1)
         else
           lambda_g / (0.457 * b + d_f + 0.5 * z)
         end
-        
+
         while true do
           construction = surface.construction
           break if construction.empty?
-          
+
           edge_insulation = os_model.getFoundationKivaByName(construction.get.name.get.to_s)
           break if edge_insulation.empty?
 
@@ -383,21 +386,21 @@ class Constructions
           [["interior", "horizontal", "width", 1], ["exterior", "vertical", "depth", 2]].each do |interior_exterior, horizontal_vertical, width_depth, coeff|
             eval("insulation_material = edge_insulation.#{interior_exterior}#{horizontal_vertical.capitalize}InsulationMaterial")
             next if insulation_material.empty?
-            
+
             insulation_material = insulation_material.get
             d_n, lambda_n = self.get_layer_thickness(insulation_material), insulation_material.to_OpaqueMaterial.get.thermalConductivity
             d_prime = d_n / lambda_n * (lambda_g - lambda_n)
             r_prime = d_prime / lambda_g
             eval("d = edge_insulation.#{interior_exterior}#{horizontal_vertical.capitalize}Insulation#{width_depth.capitalize}")
             next if d.empty?
-            
+
             d = d.get
             u_factor_0 -= 2 * (lambda_g / Math::PI * (Math::log(coeff * d / d_f + 1) - Math::log(coeff * d / (d_f + d_prime) + 1))) / b
           end
-          
+
           break
         end
-        
+
         u_factor_0
 
       when "Wall"
@@ -412,7 +415,7 @@ class Constructions
 
     return u_factor
   end
-  
+
   def self.get_input_psi(thermal_bridge_type, exterior_wall, other)
     os_model.getMasslessOpaqueMaterials.each do |thermal_bridge|
       type = thermal_bridge.additionalProperties.getFeatureAsString("thermal_bridge_type")
@@ -422,11 +425,11 @@ class Constructions
       exterior_wall2others = thermal_bridge.additionalProperties.getFeatureAsString("exterior_wall2others")
       next if exterior_wall2others.empty?
       next unless JSON.parse(exterior_wall2others.get)[exterior_wall].include?(other)
-      
-      return 1.0 / thermal_bridge.thermalResistance 
+
+      return 1.0 / thermal_bridge.thermalResistance
     end
-    
+
     return ThermalBridges.get_default_psi
   end
-  
+
 end

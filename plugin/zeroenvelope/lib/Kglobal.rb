@@ -1913,9 +1913,6 @@ module OpenStudio
       script << "header_units.appendChild(cell)"
     end
 
-    p Process.clock_gettime(Process::CLOCK_MONOTONIC) - t
-    t = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-
     opaques_us, windows_us, thermal_bridges_psis = [], [], []
 
     au = 0.0
