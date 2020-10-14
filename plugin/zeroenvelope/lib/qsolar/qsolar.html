@@ -8,12 +8,14 @@
   </head>
   <body style="color:#60504C">
     <div id="container">
-      <div id="top">
-        <button class="btn btn-success" value="input">Input</button>
-        <button class="btn btn-secondary" value="output">Output</button>
+      <div id="input">
+        <button class="btn btn-success" value="input">Windows</button>
       </div>
       <div id="qsoljul" class="hide">
         <p>q<sub>sol;jul</sub> = <input type="number" readOnly=true value=0.0>kWh/m<sup>2</sup></p>
+      </div>
+      <div id="output">
+        <button class="btn btn-secondary" value="output">Windows</button>
       </div>
       <div id="left">
         <ul>
@@ -114,7 +116,7 @@
           </select>
           <p><input id="shade_setpoint" type="number" readOnly=true value=300>W/m<sup>2</sup></p>
         </div>
-        <div id="output" class="hide">
+        <div id="results" class="hide">
           <div id="header" style="position: relative;">
             <table style="position: absolute; bottom: 0;">
               <thead>
@@ -147,7 +149,7 @@
           <select id="render">
             <option value="openstudio">OpenStudio</option>
             <option value="input" selected>Input</option>
-            <option value="output">Output</option>
+            <option value="output">&Phi;<sub>sol;jul</sub></option>
           </select>
         </span>
       </div>

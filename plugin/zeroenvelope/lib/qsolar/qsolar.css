@@ -3,16 +3,30 @@
   position: absolute
 }
 
-#top {
-  width: 50%;
-  height: 10%;
+#input, #qsoljul, #output {
+  height: 10%
+}
+
+#input, #output {
+  width: 40%
+}
+
+#qsoljul {
+  width: 20%
+}
+
+#input, #output {
   padding: 1em
 }
 
 #qsoljul {
-  left: 50%;
-  width: 50%;
-  height: 10%
+  left: 40%;
+  text-align: center
+}
+
+#output {
+  left: 60%;
+  text-align: right
 }
 
 #left {
@@ -33,7 +47,7 @@
   width: 100%;
 }
 
-#output > div {
+#results > div {
   width: 100%;
 }
 

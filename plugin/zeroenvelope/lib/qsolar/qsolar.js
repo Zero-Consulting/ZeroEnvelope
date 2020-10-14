@@ -13,8 +13,8 @@ function set_render(render) {
   }
 }
 
-$("#top button").click(function() {
-  var tabs = document.querySelectorAll("#top button");
+$("#input button, #output button").click(function() {
+  var tabs = document.querySelectorAll("#input button, #output button");
   for (var i = 0; i < tabs.length; i++) {
     tabs[i].className = tabs[i].className.replace("btn btn-success", "btn btn-secondary");
   }
@@ -34,7 +34,7 @@ $("#top button").click(function() {
       break;
       
     case "output":
-      document.getElementById("output").classList.remove("hide");
+      document.getElementById("results").classList.remove("hide");
       sketchup.compute_shadows();
       set_render(document.getElementById("render"));
       break;
@@ -74,7 +74,7 @@ function select_li(li) {
   }
   
   var id = aux.getAttribute("id");
-  if (document.querySelectorAll("#top button.btn-success")[0].value === "input") {
+  if (document.querySelectorAll("#input button.btn-success").length > 0) {
     document.getElementById(id.slice(0, -1)).classList.remove("hide");
   }
   sketchup.show_li(id, li.innerHTML);
@@ -98,8 +98,8 @@ $("#left").click(function() {
   for (var i = 0; i < divs.length; i++) {
     divs[i].classList.add("hide");
   }
-  if (document.querySelectorAll("#top button.btn-success")[0].value === "output") {
-    document.getElementById("output").classList.remove("hide");
+  if (document.querySelectorAll("#output button.btn-success").length > 0) {
+    document.getElementById("results").classList.remove("hide");
   }
   
   sketchup.render_white();
