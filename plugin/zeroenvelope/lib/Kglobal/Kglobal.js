@@ -52,14 +52,14 @@ function unselect_left() {
 }
 
 function select_tab(tab) {
-  tabs = document.getElementById("output").getElementsByTagName("button");
+  var tabs = document.getElementById("output").getElementsByTagName("button");
   for (var i = 0; i < tabs.length; i++) {
     tabs[i].className = tabs[i].className.replace("btn btn-success", "btn btn-secondary");
   }
 
   unselect_left();
 
-  var tabs = document.getElementById("input").getElementsByTagName("button");
+  tabs = document.getElementById("input").getElementsByTagName("button");
   for (var i = 0; i < tabs.length; i++) {
     tabs[i].className = tabs[i].className.replace("btn btn-success", "btn btn-secondary");
   }
