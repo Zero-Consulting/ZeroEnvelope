@@ -3,23 +3,23 @@ require "#{File.dirname(__FILE__)}/src/ThermalBridges"
 require "json"
 
 module OpenStudio
-  
+
   su_model = Sketchup.active_model
   os_model = Plugin.model_manager.model_interface.openstudio_model
   os_path = Plugin.model_manager.model_interface.openstudio_path
 
   # remove air gaps
-    
+
   os_model.getAirGaps.each do |air_gap|
     interface = air_gap.additionalProperties.getFeatureAsBoolean("interface")
     next if interface.empty?
     next unless interface.get
-    
+
     air_gap.remove
   end
-  
+
   # add air gap
-  
+
   air_gap = OpenStudio::Model::AirGap.new(os_model, 0.18)
   air_gap_name = "Camara de aire sin ventilar"
   air_gap.setName(air_gap_name)
@@ -27,13 +27,13 @@ module OpenStudio
   air_gap.additionalProperties.setFeature("interface", true)
   air_gap.additionalProperties.setFeature("editable", true)
   Constructions.set_thickness(air_gap, 0.02)
-  
+
   # remove thermal bridges
-  
+
   edges = []
   os_model.getSurfaces.each do |surface|
     next unless surface.name.get.to_s.start_with?("PT ")
-    
+
     construction = surface.construction.get.to_LayeredConstruction.get
     construction.layers.each do |layer| layer.remove end
     construction.remove
@@ -41,40 +41,40 @@ module OpenStudio
     surface.remove
   end
   edges.each do |edge| edge.erase! unless edge.deleted? end
-  
+
   # ground level for ISO 13370
-  
+
   ground_level_plane = OpenStudio::Plane.new(OpenStudio::Point3d.new, OpenStudio::Vector3d.new(0, 0, 1))
-  
+
   # sketchup components for rendering
-  
+
   new_groups, os2su, su2os = [], {}, {}
-  
+
   # sg save data
-  
+
   zonaClimatica = os_model.getClimateZones.getClimateZone("CTE", 0).value
-  
+
   residencialOTerciario = nil
   while true do
     standards_building_type = os_model.building.get.standardsBuildingType()
     break if standards_building_type.empty?
-    
+
     aux = standards_building_type.get.split("-").map do |x| x.strip() end
     break unless aux.length.eql?(3)
-    
+
     residencialOTerciario = aux[1]
     break
   end
-  
+
   if zonaClimatica.empty? || residencialOTerciario.nil? then
     load(File.dirname(__FILE__)+"/CaracteristicasEdificio.rb")
-    
+
     zonaClimatica = os_model.getClimateZones.getClimateZone("CTE", 0).value
     residencialOTerciario = (os_model.building.get.standardsBuildingType().get.split("-").map do |x| x.strip() end)[1]
   end
 
   # he1 indicators limits
-  
+
   u_lims_cte = [
     [0.8, 0.7, 0.56, 0.49, 0.41, 0.37],
     [0.55, 0.5, 0.44, 0.4, 0.35, 0.33],
@@ -87,7 +87,7 @@ module OpenStudio
   ]
   u_lims = u_lims_cte.map do |row| row.last end
   volume, area_int = 0.0, 0.0
-  
+
   k_lims_cte = case residencialOTerciario
   when "Residencial"
     [
@@ -102,9 +102,9 @@ module OpenStudio
   end
   au_lim = k_lims_cte.first.last * area_int
   w_k_lim, w_k_count = 0.0, 0
-  
+
   # sketchup dialog
-  
+
   inputbox_file = "#{File.dirname(__FILE__)}/Kglobal/Kglobal.html"
   dialog = UI::HtmlDialog.new({:dialog_title => "K global", :preferences_key => "com.example.html-input", :scrollable => true, :resizable => false, :style => UI::HtmlDialog::STYLE_DIALOG})
   dialog.set_size(1800, 1000)
@@ -147,7 +147,7 @@ module OpenStudio
 
   dialog.add_action_callback("add_construction_set_layout") do |action_context|
     script = []
-          
+
     script << "var construction_set = document.getElementById('construction_set')"
     construction_set_hash.each do |default_constructions_id, default_constructions|
       is_construction_set = !construction_set_hash[default_constructions_id].nil?
@@ -177,7 +177,7 @@ module OpenStudio
       end
       script << "construction_set.appendChild(default_constructions_div)"
     end
-    
+
     dialog.execute_script(script.join(";"))
   end
 
@@ -208,10 +208,10 @@ module OpenStudio
       cte_materials_hash[group][name] = new_material
     end
   end
-  
+
   zc_thermal_bridge_types = ThermalBridges.get_zc_thermal_bridge_types
   cte_thermal_bridge_types = ThermalBridges.get_cte_thermal_bridge_types
-    
+
   dialog.add_action_callback("add_lists") do |action_context|
     script = Constructions.add_interface_objects(os_model, os_type)
 
@@ -242,7 +242,7 @@ module OpenStudio
     script << "var thermal_bridges = document.getElementById('thermal_bridges').parentNode"
     zc_thermal_bridge_types.each do |thermal_bridge_type|
       display_name = thermal_bridge_type.gsub("_", " ").capitalize
-      
+
       script << "var option = document.createElement('option')"
       script << "option.innerHTML = '#{display_name}'"
       script << "option.value = '#{thermal_bridge_type}'"
@@ -310,19 +310,19 @@ module OpenStudio
   end
 
   render = "openstudio"
-  
+
   dialog.add_action_callback("render_by") do |action_context, id, li|
     script = []
-    
+
     case render
     when "openstudio"
-    
+
     else
       self.reset_render(su_model, new_groups)
-      
+
       script << "var tabs = document.getElementById('output').getElementsByClassName('btn btn-success')"
       script << "sketchup.compute_k_global(tabs.length === 0 ? null : tabs[0].value)"
-      
+
       case render
       when "input"
         white = Sketchup::Color.new(255, 255, 255, 1.0)
@@ -455,18 +455,19 @@ module OpenStudio
             end
           end
         end
-      end      
+      end
+
     end
-    
+
     dialog.execute_script(script.join(";"))
   end
-  
+
   dialog.add_action_callback("set_render") do |action_context, option, id, li|
     script = []
-    
+
     if option.eql?("openstudio") then
       self.reset_render(su_model, new_groups)
-      
+
       new_groups.each do |group| group.hidden = true end
       os_model.getSpaces.each do |space| space.drawing_interface.entity.hidden = false end
 
@@ -483,7 +484,7 @@ module OpenStudio
           next if thermal_bridges.empty?
           (exterior_wall.additionalProperties.resetFeature("thermal_bridges"); next) unless exterior_wall.outsideBoundaryCondition.eql?("Outdoors")
           (exterior_wall.additionalProperties.resetFeature("thermal_bridges"); next) unless exterior_wall.space.get.partofTotalFloorArea
-          
+
           thermal_bridges = JSON.parse(thermal_bridges.get).map do |thermal_bridge_type, value|
             value = value.each_with_index.map do |others, index|
               others.map do |other_name|
@@ -620,11 +621,11 @@ module OpenStudio
         else
           OpenStudio::Plane.new(OpenStudio::Point3d.new, OpenStudio::Vector3d.new(0, 0, 1))
         end
-        
+
         new_groups, os2su = SketchUp.get_os2su(os_model, false)
         os_model.getSurfaces.each do |intermediate_floor|
           next unless intermediate_floor.surfaceType.eql?("RoofCeiling") && intermediate_floor.outsideBoundaryCondition.eql?("Surface")
-          
+
           face = os2su[intermediate_floor]
           intermediate_floor.space.get.surfaces.each do |exterior_wall|
             next unless exterior_wall.surfaceType.eql?("Wall") && exterior_wall.outsideBoundaryCondition.eql?("Outdoors")
@@ -644,11 +645,11 @@ module OpenStudio
         volume, area_int, w_k_lim, w_k_count = 0.0, 0.0, 0.0, 0
         spaces_neighbours = os_model.getSpaces.map do |space|
           next unless space.partofTotalFloorArea
-          
+
           volume += Geometry.get_volume(space)
           space.surfaces.each do |surface|
             area = surface.grossArea
-            
+
             area = case surface.outsideBoundaryCondition
             when "Outdoors", "Ground"
               area
@@ -663,40 +664,40 @@ module OpenStudio
             u_lim = case surface.outsideBoundaryCondition
             when "Outdoors"
               u_lims[ surface.surfaceType.eql?("RoofCeiling") ? 1 : 0 ]
-              
+
             else
               u_lims[2]
             end
             sub_surfaces_area = surface.subSurfaces.map do |sub_surface| sub_surface.grossArea end
-            w_k_lim = [surface.netArea * u_lim, (sub_surfaces_area.max || 0.0) * u_lims[3], w_k_lim].max
+            # w_k_lim = [surface.netArea * u_lim, (sub_surfaces_area.max || 0.0) * u_lims[3], w_k_lim].max
             w_k_count += (1 + sub_surfaces_area.length)
-            
+
             area_int += area
           end
-  
+
           space_neighbours = space.surfaces.map do |surface|
             adjacent_surface = surface.adjacentSurface
             next if adjacent_surface.empty?
-            
+
             adjacent_space = adjacent_surface.get.space
             next if adjacent_space.empty?
-            
+
             space_neighbour = adjacent_space.get
             next if space_neighbour.eql?(space)
             next unless space_neighbour.partofTotalFloorArea
             next unless surface.isAirWall || surface.subSurfaces.length > 0
-            
+
             space_neighbour
           end.compact
-            
+
           [space, space_neighbours]
         end.compact.to_h
-        
+
         f_array = k_lims_cte.map do |row| row[column] end
         au_lim = area_int * [[ThermalBridges.interpolate([1.0, 4.0], f_array, volume / area_int), f_array.max].min, f_array.min].max
-        # w_k_lim = 3 * au_lim / w_k_count
+        w_k_lim = 3 * au_lim / w_k_count
       end
-      
+
       new_groups.each do |group| group.hidden = false end
       os_model.getSpaces.each do |space| space.drawing_interface.entity.hidden = true end
 
@@ -705,18 +706,18 @@ module OpenStudio
       end
       script << "show_assign()"
     end
-    
+
     render = option
     script << "sketchup.render_by(#{id.nil? ? "null" : "'#{id}'"}, #{li.nil? ? "null" : "'#{li}'"})"
-    
+
     dialog.execute_script(script.join(";"))
   end
 
   dialog.add_action_callback("show_li") do |action_context, id, li|
     script = []
-    
+
     script << "document.getElementById('right').classList.remove('hide')"
-    
+
     li = Utilities.fix_name(li)
     case id
     when "construction_sets"
@@ -868,9 +869,9 @@ module OpenStudio
         script << "document.getElementById('mu').readOnly = #{ id.eql?("materials") ? false : true }"
       end
     end
-    
+
     script << "sketchup.render_by(#{id.nil? ? "null" : "'#{id}'"}, #{li.nil? ? "null" : "'#{li}'"})"
-    
+
     dialog.execute_script(script.join(";"))
   end
 
@@ -1044,9 +1045,9 @@ module OpenStudio
       end
     end
     object.remove
-    
+
     script << "sketchup.render_by(null, null)"
-    
+
     dialog.execute_script(script.join(";"))
   end
 
@@ -1391,7 +1392,7 @@ module OpenStudio
   def self.select_edges_thermal_bridges(edges, new_groups, su2os, thermal_bridge_type)
     return edges.inject([]) do |sum, edge| sum + SketchUp.get_edge_surfaces(edge, new_groups, su2os) end.map do |planar_surfaces|
       next unless planar_surfaces.first.space.get.partofTotalFloorArea
-      
+
       exterior_walls, others = planar_surfaces.sort_by do |planar_surface|
         planar_surface.name.get.to_s
       end.partition do |planar_surface|
@@ -1465,14 +1466,14 @@ module OpenStudio
 
   def self.assign_surface_planar_surface(os_model, planar_surface)
     script = []
-    
+
     surface = planar_surface.to_Surface
     adjacent_planar_surface = if surface.empty? then
       planar_surface.to_SubSurface.get.adjacentSubSurface.get
     else
       surface.get.adjacentSurface.get
     end
-    
+
     if planar_surface.isConstructionDefaulted then
       adjacent_planar_surface.resetConstruction
     else
@@ -1494,10 +1495,10 @@ module OpenStudio
 
       adjacent_planar_surface.setConstruction(adjacent_construction)
     end
-    
+
     return script
   end
-  
+
   def self.select_spaces_thermal_bridges(spaces, thermal_bridge_type, group)
     return spaces.select do |space| space.partofTotalFloorArea end.inject([]) do |sum, space|
       temp = []
@@ -1631,7 +1632,7 @@ module OpenStudio
       end.each do |planar_surface|
         planar_surface.setConstruction(construction)
         next unless planar_surface.outsideBoundaryCondition.eql?("Surface")
-        
+
         script += self.assign_surface_planar_surface(os_model, planar_surface)
       end
 
@@ -1648,7 +1649,7 @@ module OpenStudio
 
     else
       group = id.eql?("thermal_bridges") ? 0 : li[-1].to_i
-        
+
       (edges_surfaces + self.select_spaces_thermal_bridges(spaces, thermal_bridge_type, group)).each do |exterior_wall, other|
         thermal_bridges = exterior_wall.additionalProperties.getFeatureAsString("thermal_bridges")
         thermal_bridges = thermal_bridges.empty? ? zc_thermal_bridge_types.map do |key| [key, (ThermalBridges.get_ngroups(key) + 1).times.map do |x| [] end] end.to_h : JSON.parse(thermal_bridges.get)
@@ -1762,7 +1763,7 @@ module OpenStudio
 
       case id
       when "constructions", "glazings"
-        (surfaces + sub_surfaces).each do |planar_surface| 
+        (surfaces + sub_surfaces).each do |planar_surface|
           planar_surface.resetConstruction
           next unless planar_surface.outsideBoundaryCondition.eql?("Surface")
 
@@ -1775,7 +1776,7 @@ module OpenStudio
 
     else
       group = id.eql?("thermal_bridges") ? 0 : li[-1].to_i
-    
+
       (edges_surfaces + self.select_spaces_thermal_bridges(spaces, thermal_bridge_type, group)).each do |exterior_wall, other|
         thermal_bridges = exterior_wall.additionalProperties.getFeatureAsString("thermal_bridges")
         next if thermal_bridges.empty?
@@ -1807,17 +1808,17 @@ module OpenStudio
   end
 
   thermal_bridges_psis = []
-  
+
   def self.get_mirror_h_color(planar_surface, adjacent_planar_surface, os_model)
     construction = planar_surface.construction
     adjacent_construction = adjacent_planar_surface.construction
-    
+
     if construction.empty? || adjacent_construction.empty? then
       return 0
     else
       construction = construction.get
       adjacent_construction = adjacent_construction.get
-        
+
       case Constructions.get_reversed_type(os_model, construction)
       when 0
         return 0 unless construction.eql?(adjacent_construction)
@@ -1831,24 +1832,24 @@ module OpenStudio
         end
       end
     end
-    
+
     return 120
   end
-  
-  dialog.add_action_callback("compute_k_global") do |action_context, output|   
+
+  dialog.add_action_callback("compute_k_global") do |action_context, output|
     script = []
-    
+
     if render.eql?("w_k") then
       su_model.rendering_options["EdgeColorMode"] = 0
       su_model.rendering_options["DrawDepthQue"] = 1
       su_model.rendering_options["DepthQueWidth"] = 10
     end
-    
+
     ["thead", "tbody"].each do |value|
       script << "var #{value} = document.querySelectorAll('#results #{value}')[0]"
       script << "$('#results #{value} tr').remove()"
     end
-    
+
     script << "var header_names = thead.insertRow(0)"
     script << "var header_units = thead.insertRow(1)"
     case output
@@ -1861,7 +1862,7 @@ module OpenStudio
         "U [W/m<sup>2</sup> K]" => "number",
         "A·U [W/K]" => "number"
       }
-      
+
     when "windows_u"
       {
         "Sub Surface" => "text",
@@ -1875,8 +1876,8 @@ module OpenStudio
         "U [W/m<sup>2</sup> K]" => "number",
         "A·U [W/K]" => "number"
       }
-      
-    when "thermal_bridges_psi"  
+
+    when "thermal_bridges_psi"
       {
         "Space" => "text",
         "Type" => "text",
@@ -1884,7 +1885,7 @@ module OpenStudio
         "&Psi; [W/m K]" => "number",
         "l·&Psi; [W/K]" => "number"
       }
-    
+
     else
       {}
     end.each_with_index do |(text, type), index|
@@ -1894,7 +1895,7 @@ module OpenStudio
       when "text"
         script << "cell.innerHTML = '#{text}'"
         script << "cell.rowSpan = '2'"
-        
+
       when "number"
         script << "cell.innerHTML = '#{text.split(" [").first}'"
       end
@@ -1905,31 +1906,34 @@ module OpenStudio
       case type
       when "text"
         script << "cell.style.display = 'none'"
-        
+
       when "number"
         script << "cell.innerHTML = '#{"[" + text.split(" [").last}'"
       end
       script << "header_units.appendChild(cell)"
     end
-    
+
+    p Process.clock_gettime(Process::CLOCK_MONOTONIC) - t
+    t = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
     opaques_us, windows_us, thermal_bridges_psis = [], [], []
 
     au = 0.0
     os_model.getSpaces.each do |space|
       next unless space.partofTotalFloorArea
-      
+
       space_thermal_bridges = cte_thermal_bridge_types.map do |key| [key, {"length" => 0.0, "au" => 0.0}] end.to_h
       surfaces = space.surfaces
       air_walls = surfaces.select do |surface| surface.isAirWall end
       space_transformation = space.transformation
-      
+
       surfaces.each do |surface|
         surface_name = surface.name.get.to_s
         boundary_condition = surface.outsideBoundaryCondition
         adjacent_space = nil
-        
+
         surface_u_factor = case boundary_condition
-        when "Outdoors"        
+        when "Outdoors"
           Constructions.get_outdoors_u_factor(surface)
         when "Surface"
           adjacent_space = surface.adjacentSurface.get.space.get
@@ -1946,11 +1950,11 @@ module OpenStudio
         when "Outdoors"
           surface.subSurfaces.each do |sub_surface|
             sub_surface_area, sub_surface_u_factor, frame_area, frame_u_factor, perimeter, psi_value = Constructions.get_outdoors_window_thermal_properties(sub_surface)
-            
+
             u_lim = u_lims[3]
             unless frame_area.nil? then
               surface_area -= frame_area
-              
+
               sub_surface_au = sub_surface_area * sub_surface_u_factor + frame_area * frame_u_factor + perimeter * psi_value
               overall_u = sub_surface_au / (sub_surface_area + frame_area)
               windows_us << [
@@ -1982,17 +1986,17 @@ module OpenStudio
                 [sub_surface_u_factor, 1, u_lim],
                 [sub_surface_au, 1]
               ]
-              
+
               au += sub_surface_au
             end
           end
-          
+
           while true do
             break unless surface_type.eql?("Wall")
-            
+
             thermal_bridges = surface.additionalProperties.getFeatureAsString("thermal_bridges")
             break if thermal_bridges.empty?
-            
+
             surface_transformation = OpenStudio::Transformation.alignFace(surface.vertices)
             thermal_bridges = JSON.parse(thermal_bridges.get)
             dintel_psi = {}
@@ -2006,7 +2010,7 @@ module OpenStudio
                     sub_surface_area, sub_surface_u_factor, frame_area, frame_u_factor, perimeter, psi_value = Constructions.get_outdoors_window_thermal_properties(sub_surface)
                     frame_u_factor = frame_u_factor || sub_surface_u_factor
                     frame_width = frame_area.nil? ? 0.0 : (Math.sqrt(perimeter * perimeter + 16.0 * frame_area) - perimeter) / 8.0
-                    
+
                     os2su[sub_surface].edges.each do |edge|
                       position = nil
                       points = ["start", "end"].map do |value|
@@ -2016,12 +2020,12 @@ module OpenStudio
                       edge_vector = points.last - points.first
                       edge_vector.normalize
                       edge_normal = edge_vector.cross(OpenStudio::Vector3d.new(0, 0, 1))
-                      
+
                       edge_length = edge.length.to_m
                       if frame_width > 1e-6 then
                         edge_normal.setLength(frame_width)
                         translation = OpenStudio::createTranslation(edge_normal)
-                        
+
                         air_walls.each do |air_wall| edge_length -= Geometry.get_length(surface_transformation * translation * points, air_wall.vertices) end
                         edge_normal.normalize
                       end
@@ -2032,26 +2036,26 @@ module OpenStudio
                         case thermal_bridge_type
                         when "hueco"
                           "dintel"
-                          
+
                         when "capialzado"
                           thermal_bridge_type
                         end
                       elsif angle > 135 then
                         next if thermal_bridge_type.eql?("capialzado")
-                        
+
                         "alfeizar"
                       else
                         next if thermal_bridge_type.eql?("capialzado")
-                        
+
                         "jamba"
                       end
-                      
-                      psi = if group.eql?(0) then 
+
+                      psi = if group.eql?(0) then
                         self.get_input_psi(thermal_bridge_type, surface_name, other)
                       else
                         ThermalBridges.get_cte_psi(cte_type, group, surface_u_factor, frame_u_factor)
                       end
-                      
+
                       case render
                       when "w_k"
                         h = [1.0 - edge_length * psi / w_k_lim, 0.0].max * 120
@@ -2064,35 +2068,35 @@ module OpenStudio
                       space_thermal_bridges[cte_type]["length"] += edge_length
                       space_thermal_bridges[cte_type]["au"] += edge_length * psi
                       next unless !dintel_psi[other].nil? && cte_type.eql?("capialzado")
-                      
+
                       space_thermal_bridges["dintel"]["length"] -= edge_length
                       space_thermal_bridges["dintel"]["au"] -= edge_length * dintel_psi[other]
                     end
                   else
                     other_surface = os_model.getSurfaceByName(other).get
-                    
+
                     cte_other = case thermal_bridge_type
                     when "pilares", "frente_forjado"
                       Utilities.convert(Constructions.get_construction_thickness(other_surface), "m", "cm")
-                      
+
                     when "contorno_cubierta", "esquina", "forjado_aire"
                       Constructions.get_outdoors_u_factor(other_surface)
-                    
+
                     when "contorno_de_solera"
                       Constructions.get_ground_u_factor(other_surface, space, ground_level_plane, os_model)
                     end
-                    
+
                     length = Geometry.get_length(surface.vertices, other_surface.vertices)
-                    psi = if group.eql?(0) then 
+                    psi = if group.eql?(0) then
                       Constructions.get_input_psi(thermal_bridge_type, surface_name, other)
                     else
                       ThermalBridges.get_cte_psi(thermal_bridge_type, group, surface_u_factor, cte_other)
-                    end                  
-                    
+                    end
+
                     case render
                     when "w_k"
                       h = [1.0 - length * psi / w_k_lim, 0.0].max * 120
-                      
+
                       face = os2su[surface]
                       os2su[other_surface].edges.each do |edge|
                         next unless edge.used_by?(face)
@@ -2102,7 +2106,7 @@ module OpenStudio
                         edge.material = color
                       end
                     end
-                    
+
                     space_thermal_bridges[thermal_bridge_type]["length"] += length
                     space_thermal_bridges[thermal_bridge_type]["au"] += length * psi
                   end
@@ -2112,12 +2116,12 @@ module OpenStudio
 
             break
           end
- 
+
         when "Surface"
           surface.subSurfaces.each do |sub_surface|
             sub_surface_area = sub_surface.grossArea
             sub_surface_u_factor = Constructions.get_unconditioned_u_factor(sub_surface, adjacent_space)
-            
+
             sub_surface_au = sub_surface_area * sub_surface_u_factor
             windows_us << [
               [sub_surface.name.get.to_s, -1],
@@ -2131,15 +2135,15 @@ module OpenStudio
               [sub_surface_u_factor, 1, u_lims[3]],
               [sub_surface_au, 1]
             ]
-            
+
             au += sub_surface_au
           end
         end
-        
+
         u_lim = case boundary_condition
         when "Outdoors"
           u_lims[ surface_type.eql?("RoofCeiling") ? 1 : 0 ]
-          
+
         else
           u_lims[2]
         end
@@ -2156,12 +2160,12 @@ module OpenStudio
 
         au += surface_au
       end
-      
+
       space_thermal_bridges.each do |thermal_bridge_type, thermal_bridge|
         length = thermal_bridge["length"]
         next if length < 1e-6
-        
-        thermal_bridge_au = thermal_bridge["au"]       
+
+        thermal_bridge_au = thermal_bridge["au"]
         thermal_bridges_psis << [
           [space.name.get.to_s, -1],
           [thermal_bridge_type.gsub("_", " ").capitalize, -1],
@@ -2169,72 +2173,71 @@ module OpenStudio
           [thermal_bridge_au / length, 1],
           [thermal_bridge_au, 1]
         ]
-        
+
         au += thermal_bridge_au
       end
     end
-    
-      
+
     case render
     when "w_k", "u_limit"
-      opaques_us.each do |row|       
+      opaques_us.each do |row|
         h = case render
         when "w_k"
           [1.0 - row[-1].first / w_k_lim, 0.0].max * 120
-            
+
         when "u_limit"
           [1.0 - row[-2].first  / row[-1].last, 0.0].max * 120
         end
-      
+
         color = Sketchup::Color.new
         OpenStudio::set_hsba(color, [h, 100, 100, 1.0])
-        
+
         surface = os_model.getSurfaceByName(row[0].first).get
         face = os2su[surface]
         face.material = color
         face.back_material = color
-        
+
         adjacent_surface = surface.adjacentSurface
         next if adjacent_surface.empty?
-        
+
         face = os2su[adjacent_surface.get]
         face.material = color
         face.back_material = color
       end
-      
+
       windows_us.each do |row|
         h = case render
         when "w_k"
           [1.0 - row[-1].first / w_k_lim, 0.0].max * 120
-            
+
         when "u_limit"
           [1.0 - row[-2].first  / u_lims[3], 0.0].max * 120
         end
-        
+
         color = Sketchup::Color.new
         OpenStudio::set_hsba(color, [h, 100, 100, 1.0])
-        
+
         sub_surface = os_model.getSubSurfaceByName(row[0].first).get
         face = os2su[sub_surface]
         face.material = color
         face.back_material = color
-        
+
         adjacent_sub_surface = sub_surface.adjacentSubSurface
         next if adjacent_sub_surface.empty?
-        
+
         face = os2su[adjacent_sub_surface.get]
         face.material = color
         face.back_material = color
       end
     end
-    
+
     os_model.getSurfaces.each do |surface|
       next unless surface.outsideBoundaryCondition.eql?("Surface")
-      
+
       surface_name = surface.name.get.to_s
       adjacent_surface = surface.adjacentSurface.get
       next if adjacent_surface.name.get.to_s < surface_name
-            
+
       case render
       when "mirror"
         ([surface] + surface.subSurfaces).each_with_index do |planar_surface, index|
@@ -2245,7 +2248,7 @@ module OpenStudio
           color = Sketchup::Color.new
           h = self.get_mirror_h_color(planar_surface, adjacent_planar_surface, os_model)
           OpenStudio::set_hsba(color, [h, 100, 100, 1.0])
-          
+
           face.material = color
           face.back_material = color
           adjacent_face.material = color
@@ -2253,19 +2256,19 @@ module OpenStudio
         end
       end
     end
-    
+
     # opaques_us = opaques_us.sort_by do |row|
       # aux = row[-1]
       # aux.first / aux.last
     # end.reverse
-        
+
     (case output
     when "opaques_u"
       opaques_us
-      
+
     when "windows_u"
       windows_us
-      
+
     when "thermal_bridges_psi"
       thermal_bridges_psis
     end || []).sort_by do |row|
@@ -2295,14 +2298,14 @@ module OpenStudio
         end
       end
     end
-    
+
     script << "var k_global = document.querySelectorAll('#kglobal input')[0]"
     script << "k_global.value = parseFloat(#{au / area_int}).toFixed(2)"
     script << "k_global.style.color = '#{ au > au_lim ? "red" : nil }'"
-        
+
     dialog.execute_script(script.join(";"))
   end
-  
+
   dialog.add_action_callback("select_object") do |action_context, output, name|
     selection = su_model.selection
     selection.clear
@@ -2312,17 +2315,17 @@ module OpenStudio
       planar_surface = case output
       when "opaques_u"
         os_model.getSurfaceByName(name).get
-        
+
       when "windows_u"
         os_model.getSubSurfaceByName(name).get
       end
-      
+
       face = os2su[planar_surface]
       selection.add(face)
       face.edges.each do |edge| selection.add(edge) end
     when "thermal_bridges_psi"
       space = os_model.getSpaceByName(name).get
-      
+
       face = os2su[space.surfaces[0]]
       new_groups.each do |group|
         next unless group.entities.include?(face)
@@ -2330,9 +2333,9 @@ module OpenStudio
         selection.add(group)
         break
       end
-    end    
+    end
   end
-  
+
   ok = false
   dialog.add_action_callback("ok") do |action_context|
     ok = true
@@ -2361,12 +2364,12 @@ module OpenStudio
       end.each do |layered_construction|
         edge_insulation = os_model.getFoundationKivaByName(Utilities.fix_name(layered_construction.name.get.to_s))
         next if edge_insulation.empty?
-        
+
         edge_insulation, insulation_material = edge_insulation.get, nil
         [["interior", "horizontal", "width"], ["exterior", "vertical", "depth"]].each do |type|
           eval("insulation_material = edge_insulation.#{type[0]}#{type[1].capitalize}InsulationMaterial")
           next if insulation_material.empty?
-          
+
           layer = insulation_material.get
           layers << layer
         end
@@ -2384,7 +2387,7 @@ module OpenStudio
       end.each do |space_name, thermal_bridge_type, length, psi, au|
         ThermalBridges.add_surface(os_model, space_name, thermal_bridge_type.gsub(" ", "_").downcase, length, psi)
       end
-      
+
       os_model.getAdditionalPropertiess.each do |additional_properties| additional_properties.modelObject.removeAdditionalProperties if additional_properties.featureNames.empty? end
 
       if os_path.nil?
