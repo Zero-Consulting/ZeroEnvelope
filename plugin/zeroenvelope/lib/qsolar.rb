@@ -226,52 +226,6 @@ module OpenStudio
     end
   end
   
-  def self.get_window_with_frame_area(sub_surface, frame_width)
-    coordinates, normal_k = ["x", "y", "z"], sub_surface.outwardNormal
-    max_normal, max_coordinate = coordinates.map do |coordinate|
-      eval("[normal_k.#{coordinate}.abs, coordinate]")
-    end.sort.max
-    plane_coordinates = coordinates - [max_coordinate]
-    
-    vertices = sub_surface.vertices
-    new_vertices = vertices.each_with_index.map do |vertex, index|
-      edge_i, edge_j = [vertices[(index+1) % vertices.length], vertex], [vertex, vertices[index-1]]
-      
-      normal_i = (edge_i.last - edge_i.first).cross(normal_k)
-      normal_i.setLength(1)
-      normal_j = (edge_j.last - edge_j.first).cross(normal_k)                
-      normal_j.setLength(1)
-
-      normal_u = normal_i
-      normal_v = normal_j
-      normal_w = normal_k
-      detA = normal_u.dot(normal_v.cross(normal_w))
-      
-      normal_u = OpenStudio::Vector3d.new(-frame_width, normal_i.y, normal_i.z)
-      normal_v = OpenStudio::Vector3d.new(-frame_width, normal_j.y, normal_j.z)
-      normal_w = OpenStudio::Vector3d.new(0.0, normal_k.y, normal_k.z)
-      detAu = normal_u.dot(normal_v.cross(normal_w))
-      
-      normal_u = OpenStudio::Vector3d.new(normal_i.x, -frame_width, normal_i.z)
-      normal_v = OpenStudio::Vector3d.new(normal_j.x, -frame_width, normal_j.z)
-      normal_w = OpenStudio::Vector3d.new(normal_k.x, 0.0, normal_k.z)
-      detAv = normal_u.dot(normal_v.cross(normal_w))
-      
-      normal_u = OpenStudio::Vector3d.new(normal_i.x, normal_i.y, -frame_width)
-      normal_v = OpenStudio::Vector3d.new(normal_j.x, normal_j.y, -frame_width)
-      normal_w = OpenStudio::Vector3d.new(normal_k.x, normal_k.y, 0.0)
-      detAw = normal_u.dot(normal_v.cross(normal_w))
-      
-      vertex + OpenStudio::Vector3d.new(detAu/detA, detAv/detA, detAw/detA)
-    end
-
-    area =  new_vertices.each_with_index.map do |vertex, index|
-      eval("vertex.#{plane_coordinates.first} * (new_vertices[(index+1) % new_vertices.length].#{plane_coordinates.last}-new_vertices[index-1].#{plane_coordinates.last})")
-    end.inject(0.0) do |sum, x| sum + x end.abs / max_normal / 2
-    
-    return area
-  end
-  
   dialog.add_action_callback("show_li") do |action_context, id, li|
     script = []
         
@@ -386,7 +340,7 @@ module OpenStudio
   dialog.add_action_callback("rename_object") do |action_context, id, old_name, new_name|    
     script = []
     
-    old_name, new_name = self.fix_name(old_name), self.fix_name(new_name)
+    old_name, new_name = Utilities.fix_name(old_name), Utilities.fix_name(new_name)
     object = nil
     eval("object = os_model.get#{os_type[id]}ByName(old_name).get")
     object.setName(new_name)
@@ -407,7 +361,7 @@ module OpenStudio
   dialog.add_action_callback("duplicate_object") do |action_context, id, object_name|    
     script = []
     
-    object_name = self.fix_name(object_name)
+    object_name = Utilities.fix_name(object_name)
     new_object = nil
     eval("new_object = os_model.get#{os_type[id]}ByName(object_name).get.clone(os_model).to_#{os_type[id]}.get")
     new_name = new_object.name.get.to_s
@@ -828,7 +782,7 @@ module OpenStudio
   dialog.add_action_callback("remove_object") do |action_context, id, object_name|   
     script = []
     
-    object_name = self.fix_name(object_name)
+    object_name = Utilities.fix_name(object_name)
     object = nil
     eval("object = os_model.get#{os_type[id]}ByName(object_name).get")
     case id
