@@ -2084,7 +2084,7 @@ module OpenStudio
                     
                     length = Geometry.get_length(surface.vertices, other_surface.vertices)
                     psi = if group.eql?(0) then 
-                      self.get_input_psi(thermal_bridge_type, surface_name, other)
+                      Constructions.get_input_psi(thermal_bridge_type, surface_name, other)
                     else
                       ThermalBridges.get_cte_psi(thermal_bridge_type, group, surface_u_factor, cte_other)
                     end                  
