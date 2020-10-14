@@ -44,6 +44,10 @@ Based on the idea from [EnvolventeCTE](https://github.com/pachi/envolventecte) o
   * add edge insulation and
   * reverse asymmetric constructions to mirror adjacent surfaces (check it rendering by mirror).
 
+### q solar
+
+* Sort the results table by clicking on the header names.
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
