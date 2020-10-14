@@ -5,8 +5,8 @@ plugin_name = "ZeroEnvelope"
 
 ext = SketchupExtension.new(plugin_name, "#{plugin_name.downcase}/Startup.rb")
 ext.name = plugin_name
-ext.description = "Computes some energy efficiency indicators of the thermal envelope according to CTE DB-HE 2019."
-ext.version = "0.0.201009"
+ext.description = "Computes some energy efficiency indicators of the thermal envelope according to CTE DB-HE."
+ext.version = "0.0.201014"
 ext.creator = "Zero Consulting"
 ext.copyright = "2020"
 
