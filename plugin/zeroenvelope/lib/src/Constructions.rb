@@ -339,8 +339,6 @@ class Constructions
     surface_type = surface.surfaceType
     u_factor = case surface_type
     when "Floor", "Wall"
-
-
       outdoors_perimeter, unconditioned_perimeter, wall_thickness_times_outdoors_perimeter = 0.0, 0.0, 0.0
 
       space.surfaces.each do |other|
