@@ -25,7 +25,7 @@ Based on the idea from [EnvolventeCTE](https://pachi.github.io/envolventecte) of
 
 * SketchUp 2019 or newer is required for **q solar** tool.
 * Install the [OpenStudio SketchUp Plug-in](https://github.com/openstudiocoalition/openstudio-sketchup-plugin).
-* Donwload the [RBZ](https://github.com/agonzalezesteve/ZeroEnvelope/releases/tag/v0.1.0/zeroenvelope.rbz) file and [install it manually](https://help.sketchup.com/en/extension-warehouse/adding-extensions-sketchup#install-manual) in SketchUp.
+* Donwload the [RBZ](https://github.com/agonzalezesteve/ZeroEnvelope/releases/latest/download/zeroenvelope.rbz) file and [install it manually](https://help.sketchup.com/en/extension-warehouse/adding-extensions-sketchup#install-manual) in SketchUp.
 
 ## Usage
 
