@@ -4,16 +4,16 @@ class SketchUp
   def self.is_interior(transformation_su, planar_surface, face)
     planar_surface.drawing_interface.entity.vertices.each do |vertex|
       result = face.classify_point(transformation_su*vertex.position)
-      next unless result == Sketchup::Face::PointNotOnPlane || result == Sketchup::Face::PointOutside 
+      next unless result == Sketchup::Face::PointNotOnPlane || result == Sketchup::Face::PointOutside
       return false
     end
-    
+
     return true
   end
-  
+
   def self.get_selected_planar_surfaces(os_model)
     planar_surfaces = []
-    
+
     Sketchup.active_model.selection.grep(Sketchup::Face).each do |face|
       os_model.getSpaces.each do |space|
         group = space.drawing_interface.entity
@@ -30,14 +30,13 @@ class SketchUp
         end
       end
     end
-    
+
     return planar_surfaces
   end
 
   def self.get_os2su(os_model, merge_adjacent)
-    new_groups = []
-    os2su = {}
-          
+    new_groups, os_su = [], {}
+
     if merge_adjacent then
       new_group = Sketchup.active_model.entities.add_group
       new_group.locked = true
@@ -48,11 +47,13 @@ class SketchUp
       group = space.drawing_interface.entity
       group.hidden = true
       transformation = group.transformation
+
       unless merge_adjacent then
         new_group = Sketchup.active_model.entities.add_group
         new_group.locked = true
         new_groups << new_group
       end
+
       space.surfaces.each do |surface|
         next if surface.name.get.to_s.start_with?("PT ")
         next if os2su.include?(surface)
@@ -67,32 +68,32 @@ class SketchUp
         end
       end
     end
-    
+
     color = Sketchup::Color.new(255, 255, 255, 1.0)
     os2su.values.uniq.each do |face|
       face.material = color
       face.back_material = color
     end
-          
+
     return new_groups, os2su
   end
-  
+
   def self.get_space(group, os2su)
     os2su.each do |planar_surface, face|
       next unless group.entities.include?(face)
       space = planar_surface.space
       next if space.empty?
-      
+
       return space.get
     end
-    
+
     return nil
   end
-  
+
   def self.get_edge_surfaces(edge, groups, su2os)
     start, other_vertex = edge.start.position, edge.end.position
     vertices_a = [OpenStudio::Point3d.new(start.x.to_m, start.y.to_m, start.z.to_m), OpenStudio::Point3d.new(other_vertex.x.to_m, other_vertex.y.to_m, other_vertex.z.to_m)]
-    
+
     return groups.inject([]) do |sum, group|
       transformation = group.transformation
       sum + group.entities.grep(Sketchup::Edge).map do |edge|
@@ -103,6 +104,6 @@ class SketchUp
       end.compact
     end
   end
-  
-  
+
+
 end
