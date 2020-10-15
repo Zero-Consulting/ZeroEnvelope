@@ -312,6 +312,7 @@ module OpenStudio
 
     white = Sketchup::Color.new(255, 255, 255, 1.0)
     black = Sketchup::Color.new(0, 0, 0, 1.0)
+
     new_groups.each do |group|
       group.entities.grep(Sketchup::Face).each do |face|
         self.set_material(face, white)
@@ -611,7 +612,7 @@ module OpenStudio
         end
 
         new_groups, os2su = SketchUp.get_os2su(os_model, false)
-
+        
         os_model.getSurfaces.each do |intermediate_floor|
           next unless intermediate_floor.surfaceType.eql?("RoofCeiling") && intermediate_floor.outsideBoundaryCondition.eql?("Surface")
 
@@ -713,6 +714,7 @@ module OpenStudio
     script << "document.getElementById('right').classList.remove('hide')"
 
     li = Utilities.fix_name(li)
+    
     case id
     when "construction_sets"
       construction_set = os_model.getDefaultConstructionSetByName(li).get
