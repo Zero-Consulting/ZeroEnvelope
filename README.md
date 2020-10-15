@@ -6,11 +6,15 @@ Based on the idea from [EnvolventeCTE](https://pachi.github.io/envolventecte) of
 
 ### K global
 
+[![Zero Envelope - K global - 201015 Demo](http://img.youtube.com/vi/NnLzam9g170/0.jpg)](http://www.youtube.com/watch?v=NnLzam9g170 "K global demo")
+
 * Automatic U values taking into account the different boundary conditions and linear transmittances of thermal bridges (calculations are explained in the [Zero Consulting blog](https://blog.zeroconsulting.com/nuevo-cte-he-2019-kglobal)).
 * Good complement to the [OpenStudio Application](https://github.com/openstudiocoalition/OpenStudioApplication) for editing Layered Constructions and assigning Constructions.
 * Good complement to [SG Save](http://www.efinovatic.es/energyPlus/) for introducing thermal bridges.
 
 ### q solar
+
+[![Zero Envelope - q solar - 201015 Demo](http://img.youtube.com/vi/iTK3uvhkkqs/0.jpg)](http://www.youtube.com/watch?v=iTK3uvhkkqs "q solar demo")
 
 * Automatic solar heat gains through windows in July with active solar protection and window setback.
 * The [polygon clipping](https://bigladdersoftware.com/epx/docs/9-4/engineering-reference/shading-module.html#polygon-clipping) algorithm is implemented for computing the [shading factors](https://bigladdersoftware.com/epx/docs/9-4/engineering-reference/sky-radiance-model.html#shadowing-of-sky-diffuse-solar-radiation) in order to avoid the simulation time of the EnergyPlus simulation.
@@ -44,13 +48,9 @@ Based on the idea from [EnvolventeCTE](https://pachi.github.io/envolventecte) of
   * add edge insulation and
   * reverse asymmetric constructions to mirror adjacent surfaces (check it rendering by mirror).
 
-[![Zero Envelope - K global - 201015 Demo](http://img.youtube.com/vi/NnLzam9g170/0.jpg)](http://www.youtube.com/watch?v=NnLzam9g170 "K global demo")
-
 ### q solar
 
 * Sort the results table by clicking on the header names.
-
-[![Zero Envelope - q solar - 201015 Demo](http://img.youtube.com/vi/iTK3uvhkkqs/0.jpg)](http://www.youtube.com/watch?v=iTK3uvhkkqs "q solar demo")
 
 ## License
 
