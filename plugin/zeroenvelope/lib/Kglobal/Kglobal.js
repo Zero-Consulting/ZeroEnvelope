@@ -287,6 +287,7 @@ function select_li(li) {
 
 $("#left").click(function() {
   unselect_left();
+  sketchup.render_white();
 });
 
 function add_li(id, object_name) {

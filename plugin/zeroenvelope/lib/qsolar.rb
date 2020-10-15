@@ -155,6 +155,13 @@ module OpenStudio
     "fenestration_frame_type" => [""] + OpenStudio::Model::StandardsInformationConstruction.fenestrationFrameTypeValues
   }
 
+  t_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+  dialog.add_action_callback("time") do |action_context, msg|
+    t_end = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    p "#{msg}: #{t_end - t_start}"
+    t_start = t_end
+  end
+
   dialog.add_action_callback("load") do |action_context|
     script = []
     
@@ -811,6 +818,7 @@ module OpenStudio
     unless aux_os_type.nil? then
       aux_object = nil
       eval("aux_object = os_model.get#{aux_os_type}ByName(object_name).get")
+      
       case id        
       when "glazings"
         @@outdoor_sub_surfaces.each_with_index do |sub_surface, index|
@@ -831,6 +839,7 @@ module OpenStudio
           script += self.update_g_gl_sh_wi(sub_surface, index)
         end unless @@total_phi_sol_jul.nil?
       end
+      
       aux_object.remove
     end
     

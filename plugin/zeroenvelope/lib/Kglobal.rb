@@ -296,8 +296,17 @@ module OpenStudio
 
     dialog.execute_script(script.join(";"))
   end
-
-  def self.reset_render(su_model, new_groups)
+  
+  def self.set_material(entity, color)
+    return true if !entity.material.nil? && entity.material.color == color
+    
+    entity.material = color
+    entity.back_material = color if entity.is_a?(Sketchup::Face)
+    
+    return true
+  end
+  
+  def self.render_white(su_model, new_groups)
     su_model.rendering_options["EdgeColorMode"] = 1
     su_model.rendering_options["DrawDepthQue"] = 0
 
@@ -305,174 +314,148 @@ module OpenStudio
     black = Sketchup::Color.new(0, 0, 0, 1.0)
     new_groups.each do |group|
       group.entities.grep(Sketchup::Face).each do |face|
-        face.material = white
-        face.back_material = white
+        self.set_material(face, white)
       end
 
       group.entities.grep(Sketchup::Edge).each do |edge|
-        edge.material = black
+        self.set_material(edge, black)
       end
     end
   end
 
   render = "openstudio"
 
-  dialog.add_action_callback("render_by") do |action_context, id, li|
-    script = []
+  dialog.add_action_callback("render_white") do |action_context|
+    self.render_white(su_model, new_groups) if render.eql?("input")
+  end
 
-    case render
-    when "openstudio"
+  def self.render_by_selection(os_model, id, li, zc_thermal_bridge_types, os2su)
+    white = Sketchup::Color.new(255, 255, 255, 1.0)
+    grey = Sketchup::Color.new(96, 80, 76, 1.0)
+    green = Sketchup::Color.new(120, 157, 74, 1.0)
+
+    case id
+    when "construction_sets"
+      os_model.getSpaces.each do |space|
+        construction_set = space.defaultConstructionSet
+
+        color = if construction_set.empty? then
+          grey
+        elsif construction_set.get.name.get.to_s.eql?(li) then
+          green
+        end
+        next if color.nil?
+
+        space.surfaces.each do |surface|
+          self.set_material(os2su[surface], color)
+          surface.subSurfaces.each do |sub_surface| self.set_material(os2su[sub_surface], color) end
+        end
+      end
+
+    when "constructions"
+      os_model.getSurfaces.each do |surface|
+        construction = surface.construction
+
+        color = if construction.empty? then
+          grey
+        elsif construction.get.name.get.to_s.eql?(li) then
+          green
+        end
+        next if color.nil?
+        
+        self.set_material(os2su[surface], color)
+      end
+
+    when "materials"
+
+    when "glazings", "frames"
+      os_model.getSubSurfaces.each do |sub_surface|
+        object = case id
+        when "glazings"
+          sub_surface.construction
+
+        when "frames"
+          sub_surface.windowPropertyFrameAndDivider
+        end
+
+        color = if object.empty? then
+          grey
+        elsif object.get.name.get.to_s.eql?(li) then
+          green
+        end
+        next if color.nil?
+        
+        self.set_material(os2su[sub_surface], color)
+      end
 
     else
-      self.reset_render(su_model, new_groups)
-
-      script << "var tabs = document.getElementById('output').getElementsByClassName('btn btn-success')"
-      script << "sketchup.compute_k_global(tabs.length === 0 ? null : tabs[0].value)"
-
-      case render
-      when "input"
-        white = Sketchup::Color.new(255, 255, 255, 1.0)
-        grey = Sketchup::Color.new(96, 80, 76, 1.0)
-        green = Sketchup::Color.new(120, 157, 74, 1.0)
+      if (zc_thermal_bridge_types + ["thermal_bridges"]).include?(id) then
+        su_model.rendering_options["EdgeColorMode"] = 0
+        su_model.rendering_options["DrawDepthQue"] = 1
+        su_model.rendering_options["DepthQueWidth"] = 10
 
         case id
-        when "construction_sets"
-          os_model.getSpaces.each do |space|
-            construction_set = space.defaultConstructionSet
+        when "thermal_bridges"
+          thermal_bridge = os_model.getMasslessOpaqueMaterialByName(li).get
+          thermal_bridge_type = thermal_bridge.additionalProperties.getFeatureAsString("thermal_bridge_type").get
+          exterior_wall2others = thermal_bridge.additionalProperties.getFeatureAsString("exterior_wall2others")
 
-            color = if construction_set.empty? then
-              grey
-            elsif construction_set.get.name.get.to_s.eql?(li) then
-              green
-            end
-            next if color.nil?
+          unless exterior_wall2others.empty? then
+            exterior_wall2others = JSON.parse(exterior_wall2others.get)
 
-            space.surfaces.each do |surface|
-              face = os2su[surface]
-              face.material = color
-              face.back_material = color
+            exterior_wall2others.each do |exterior_wall, others|
+              face = os2su[os_model.getSurfaceByName(exterior_wall).get]
+              others.each do |other|
+                planar_surface = case thermal_bridge_type
+                when "jamba", "dintel", "alfeizar", "capialzado"
+                  os_model.getSubSurfaceByName(other).get
+                else
+                  os_model.getSurfaceByName(other).get
+                end
+                other_face = os2su[planar_surface]
 
-              surface.subSurfaces.each do |sub_surface|
-                face = os2su[sub_surface]
-                face.material = color
-                face.back_material = color
+                face.edges.each do |edge|
+                  next unless edge.used_by?(other_face)
+                  
+                  self.set_material(edge, green)
+                end
               end
             end
           end
-
-        when "constructions"
+        else
+          group = li[-1].to_i
           os_model.getSurfaces.each do |surface|
-            construction = surface.construction
-
-            color = if construction.empty? then
-              grey
-            elsif construction.get.name.get.to_s.eql?(li) then
-              green
-            end
-            next if color.nil?
+            thermal_bridges = surface.additionalProperties.getFeatureAsString("thermal_bridges")
+            next if thermal_bridges.empty?
+            thermal_bridges = JSON.parse(thermal_bridges.get)
 
             face = os2su[surface]
-            face.material = color
-            face.back_material = color
-          end
-
-        when "materials"
-
-        when "glazings", "frames"
-          os_model.getSubSurfaces.each do |sub_surface|
-            object = case id
-            when "glazings"
-              sub_surface.construction
-
-            when "frames"
-              sub_surface.windowPropertyFrameAndDivider
-            end
-
-            color = if object.empty? then
-              grey
-            elsif object.get.name.get.to_s.eql?(li) then
-              green
-            end
-            next if color.nil?
-
-            face = os2su[sub_surface]
-            face.material = color
-            face.back_material = color
-          end
-
-        else
-          if (zc_thermal_bridge_types + ["thermal_bridges"]).include?(id) then
-            su_model.rendering_options["EdgeColorMode"] = 0
-            su_model.rendering_options["DrawDepthQue"] = 1
-            su_model.rendering_options["DepthQueWidth"] = 10
-
-            case id
-            when "thermal_bridges"
-              thermal_bridge = os_model.getMasslessOpaqueMaterialByName(li).get
-              thermal_bridge_type = thermal_bridge.additionalProperties.getFeatureAsString("thermal_bridge_type").get
-              exterior_wall2others = thermal_bridge.additionalProperties.getFeatureAsString("exterior_wall2others")
-
-              unless exterior_wall2others.empty? then
-                exterior_wall2others = JSON.parse(exterior_wall2others.get)
-
-                exterior_wall2others.each do |exterior_wall, others|
-                  face = os2su[os_model.getSurfaceByName(exterior_wall).get]
-                  others.each do |other|
-                    planar_surface = case thermal_bridge_type
-                    when "jamba", "dintel", "alfeizar", "capialzado"
-                      os_model.getSubSurfaceByName(other).get
-                    else
-                      os_model.getSurfaceByName(other).get
-                    end
-                    other_face = os2su[planar_surface]
-
-                    face.edges.each do |edge|
-                      next unless edge.used_by?(other_face)
-
-                      edge.material = green
-                    end
-                  end
-                end
+            thermal_bridges[id][group].each do |other|
+              planar_surface = case id
+              when "hueco", "capialzado"
+                os_model.getSubSurfaceByName(other).get
+              else
+                os_model.getSurfaceByName(other).get
               end
-            else
-              group = li[-1].to_i
-              os_model.getSurfaces.each do |surface|
-                thermal_bridges = surface.additionalProperties.getFeatureAsString("thermal_bridges")
-                next if thermal_bridges.empty?
-                thermal_bridges = JSON.parse(thermal_bridges.get)
+              other_face = os2su[planar_surface]
 
-                face = os2su[surface]
-                thermal_bridges[id][group].each do |other|
-                  planar_surface = case id
-                  when "hueco", "capialzado"
-                    os_model.getSubSurfaceByName(other).get
-                  else
-                    os_model.getSurfaceByName(other).get
-                  end
-                  other_face = os2su[planar_surface]
+              face.edges.each do |edge|
+                next unless edge.used_by?(other_face)
 
-                  face.edges.each do |edge|
-                    next unless edge.used_by?(other_face)
-
-                    edge.material = green
-                  end
-                end
+                self.set_material(edge, green)
               end
             end
           end
         end
       end
-
-    end
-
-    dialog.execute_script(script.join(";"))
+    end 
   end
 
   dialog.add_action_callback("set_render") do |action_context, option, id, li|
     script = []
 
     if option.eql?("openstudio") then
-      self.reset_render(su_model, new_groups)
+      self.render_white(su_model, new_groups)
 
       new_groups.each do |group| group.hidden = true end
       os_model.getSpaces.each do |space| space.drawing_interface.entity.hidden = false end
@@ -483,6 +466,7 @@ module OpenStudio
     else
       if render.eql?("openstudio") then
         # clean thermal bridges
+        
         os_model.getSurfaces.each do |exterior_wall|
           thermal_bridges = exterior_wall.additionalProperties.getFeatureAsString("thermal_bridges")
           next if thermal_bridges.empty?
@@ -710,11 +694,16 @@ module OpenStudio
       ["input", "kglobal", "output", "left", "main", "right"].each do |value|
         script << "document.getElementById('#{value}').classList.remove('hide')"
       end
+
+      self.render_by_selection(os_model, id, li, zc_thermal_bridge_types, os2su) if option.eql?("input")
     end
-
     render = option
-    script << "sketchup.render_by(#{id.nil? ? "null" : "'#{id}'"}, #{li.nil? ? "null" : "'#{li}'"})"
-
+    
+    unless render.eql?("openstudio") then
+      script << "var tabs = document.getElementById('output').getElementsByClassName('btn btn-success')"
+      script << "sketchup.compute_k_global(tabs.length === 0 ? null : tabs[0].value)"
+    end
+    
     dialog.execute_script(script.join(";"))
   end
 
@@ -874,8 +863,15 @@ module OpenStudio
         script << "document.getElementById('mu').readOnly = #{ id.eql?("materials") ? false : true }"
       end
     end
-
-    script << "sketchup.render_by(#{id.nil? ? "null" : "'#{id}'"}, #{li.nil? ? "null" : "'#{li}'"})"
+    
+    case render
+    when "input"
+      self.render_by_selection(os_model, id, li, zc_thermal_bridge_types, os2su)
+      
+    else
+      script << "var tabs = document.getElementById('output').getElementsByClassName('btn btn-success')"
+      script << "sketchup.compute_k_global(tabs.length === 0 ? null : tabs[0].value)"
+    end
 
     dialog.execute_script(script.join(";"))
   end
@@ -1050,8 +1046,6 @@ module OpenStudio
       end
     end
     object.remove
-
-    script << "sketchup.render_by(null, null)"
 
     dialog.execute_script(script.join(";"))
   end
@@ -1685,7 +1679,7 @@ module OpenStudio
         end
       end
 
-      script << "sketchup.render_by(#{id.nil? ? "null" : "'#{id}'"}, #{li.nil? ? "null" : "'#{li}'"})"
+      script << "sketchup.show_li('#{id}', '#{li}')"
     end
 
     selection.grep(Sketchup::Edge).each do |edge| edge.erase! end
@@ -1802,7 +1796,7 @@ module OpenStudio
         end
       end
 
-      script << "sketchup.render_by(#{id.nil? ? "null" : "'#{id}'"}, #{li.nil? ? "null" : "'#{li}'"})"
+      script << "sketchup.show_li('#{id}', '#{li}')"
     end
 
     selection.grep(Sketchup::Edge).each do |edge| edge.erase! end
@@ -2063,7 +2057,7 @@ module OpenStudio
 
                         color = Sketchup::Color.new
                         OpenStudio::set_hsba(color, [h, 100, 100, 1.0])
-                        edge.material = color
+                        self.set_material(edge, color)
                       end
 
                       space_thermal_bridges[cte_type]["length"] += edge_length
@@ -2104,7 +2098,7 @@ module OpenStudio
 
                         color = Sketchup::Color.new
                         OpenStudio::set_hsba(color, [h, 100, 100, 1.0])
-                        edge.material = color
+                        self.set_material(edge, color)
                       end
                     end
 
@@ -2194,16 +2188,12 @@ module OpenStudio
         OpenStudio::set_hsba(color, [h, 100, 100, 1.0])
 
         surface = os_model.getSurfaceByName(row[0].first).get
-        face = os2su[surface]
-        face.material = color
-        face.back_material = color
+        self.set_material(os2su[surface], color)
 
         adjacent_surface = surface.adjacentSurface
         next if adjacent_surface.empty?
-
-        face = os2su[adjacent_surface.get]
-        face.material = color
-        face.back_material = color
+        
+        self.set_material(os2su[adjacent_surface.get], color)
       end
 
       windows_us.each do |row|
@@ -2219,16 +2209,12 @@ module OpenStudio
         OpenStudio::set_hsba(color, [h, 100, 100, 1.0])
 
         sub_surface = os_model.getSubSurfaceByName(row[0].first).get
-        face = os2su[sub_surface]
-        face.material = color
-        face.back_material = color
+        self.set_material(os2su[sub_surface], color)
 
         adjacent_sub_surface = sub_surface.adjacentSubSurface
         next if adjacent_sub_surface.empty?
-
-        face = os2su[adjacent_sub_surface.get]
-        face.material = color
-        face.back_material = color
+        
+        self.set_material(os2su[adjacent_sub_surface.get], color)
       end
     end
 
@@ -2249,11 +2235,8 @@ module OpenStudio
           color = Sketchup::Color.new
           h = self.get_mirror_h_color(planar_surface, adjacent_planar_surface, os_model)
           OpenStudio::set_hsba(color, [h, 100, 100, 1.0])
-
-          face.material = color
-          face.back_material = color
-          adjacent_face.material = color
-          adjacent_face.back_material = color
+          self.set_material(face, color)
+          self.set_material(adjacent_face, color)
         end
       end
     end
