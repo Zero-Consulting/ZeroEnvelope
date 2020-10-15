@@ -1,8 +1,8 @@
 # ZeroEnvelope
 
-The ZeroEnvelope SketchUp plugin is an OpenStudio design tool that computes some energy efficiency indicators of the thermal envelope according to the CTE DB-HE.
+The ZeroEnvelope SketchUp plugin is an OpenStudio design tool that computes some energy efficiency indicators of the thermal envelope according to the CTE DB-HE (Spanish Technical Building Code).
 
-Based on the idea from [EnvolventeCTE](https://github.com/pachi/envolventecte) of getting quick indicators of the building envelope, this plugin simplifies the introduction of data into an OpenStudio and plots the results in SketchUp.
+Based on the idea from [EnvolventeCTE](https://pachi.github.io/envolventecte) of getting quick indicators of the building envelope, this plugin simplifies the introduction of data into an OpenStudio model and plots the results in SketchUp.
 
 ### K global
 
