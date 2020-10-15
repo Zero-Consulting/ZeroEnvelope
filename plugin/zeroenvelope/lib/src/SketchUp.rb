@@ -35,7 +35,7 @@ class SketchUp
   end
 
   def self.get_os2su(os_model, merge_adjacent)
-    new_groups, os_su = [], {}
+    new_groups, os2su = [], {}
 
     if merge_adjacent then
       new_group = Sketchup.active_model.entities.add_group
