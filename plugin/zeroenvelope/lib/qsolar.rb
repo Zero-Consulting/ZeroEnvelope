@@ -868,6 +868,7 @@ module OpenStudio
     end
     
     selection.grep(Sketchup::Edge).each do |edge| edge.erase! end
+    selection.clear
     script << "sketchup.show_li('#{id}', '#{li}')"
     
     dialog.execute_script(script.join(";"))
@@ -904,6 +905,7 @@ module OpenStudio
     end
     
     selection.grep(Sketchup::Edge).each do |edge| edge.erase! end
+    selection.clear
     script << "sketchup.show_li('#{id}', '#{li}')"
     
     dialog.execute_script(script.join(";"))

@@ -480,7 +480,6 @@ module OpenStudio
       ["input", "kglobal", "output", "left", "main", "right"].each do |value|
         script << "document.getElementById('#{value}').classList.add('hide')"
       end
-      script << "show_assign()"
     else
       if render.eql?("openstudio") then
         # clean thermal bridges
@@ -711,7 +710,6 @@ module OpenStudio
       ["input", "kglobal", "output", "left", "main", "right"].each do |value|
         script << "document.getElementById('#{value}').classList.remove('hide')"
       end
-      script << "show_assign()"
     end
 
     render = option
@@ -1579,120 +1577,119 @@ module OpenStudio
     end
   end
 
-  dialog.add_action_callback("assign") do |action_context, id, li|
+  dialog.add_action_callback("assign") do |action_context, input, id, li|
     script = []
 
-    thermal_bridge_type = case id
-    when "construction_sets", "constructions", "glazings", "frames"
-      nil
-
-    when "thermal_bridges"
-      os_model.getMasslessOpaqueMaterialByName(li).get.additionalProperties.getFeatureAsString("thermal_bridge_type").get
-
-    else
-      id
-    end
-
     selection = su_model.selection
-    spaces, surfaces, sub_surfaces, edges_surfaces = if selection.empty? then
-      unless UI.messagebox("Assign to all?", MB_YESNO).eql?(IDYES) then
-        [[], [], [], []]
+    unless input.eql?("materials") then
+      thermal_bridge_type = case input
+      when "thermal_bridges"
+        id.eql?(thermal_bridges) ? os_model.getMasslessOpaqueMaterialByName(li).get.additionalProperties.getFeatureAsString("thermal_bridge_type").get : id
+
       else
+        nil
+      end
+
+      spaces, surfaces, sub_surfaces, edges_surfaces = if selection.empty? then
+        unless UI.messagebox("Assign to all?", MB_YESNO).eql?(IDYES) then
+          [[], [], [], []]
+        else
+          case input
+          when "constructions"
+            [[], os_model.getSurfaces, [], []]
+
+          when "windows"
+            [[], [], os_model.getSubSurfaces, []]
+
+          when "construction_sets", "thermal_bridges"
+            [os_model.getSpaces, [], [], []]
+          end
+        end
+      else
+        planar_surfaces = SketchUp.get_selected_planar_surfaces(os_model)
+        [
+          selection.grep(Sketchup::Group).map do |group| SketchUp.get_space(group, os2su) end.compact,
+          planar_surfaces.select do |planar_surface| planar_surface.to_SubSurface.empty? end,
+          planar_surfaces.select do |planar_surface| planar_surface.to_Surface.empty? end,
+          if thermal_bridge_type.nil? then
+            []
+          else
+            self.select_edges_thermal_bridges(selection.grep(Sketchup::Edge), new_groups, su2os, thermal_bridge_type)
+          end
+        ]
+      end
+
+      case id
+      when "construction_sets"
+        construction_set = os_model.getDefaultConstructionSetByName(li).get
+        spaces.each do |space| space.setDefaultConstructionSet(construction_set) end
+
+      when "constructions", "glazings"
+        construction = os_model.getLayeredConstructionByName(li).get
         case id
         when "constructions"
-          [[], os_model.getSurfaces, [], []]
+          spaces.inject(surfaces) do |sum, space| sum + space.surfaces end
 
-        when "glazings", "frames"
-          [[], [], os_model.getSubSurfaces, []]
+        when "glazings"
+          spaces.inject(sub_surfaces) do |sum, space| sum + space.surfaces.inject([]) do |sum, surface| sum + surface.subSurfaces end end
+        end.each do |planar_surface|
+          planar_surface.setConstruction(construction)
+          next unless planar_surface.outsideBoundaryCondition.eql?("Surface")
 
-        else
-          [os_model.getSpaces, [], [], []]
+          script += self.assign_surface_planar_surface(os_model, planar_surface)
         end
-      end
-    else
-      planar_surfaces = SketchUp.get_selected_planar_surfaces(os_model)
-      [
-        selection.grep(Sketchup::Group).map do |group| SketchUp.get_space(group, os2su) end.compact,
-        planar_surfaces.select do |planar_surface| planar_surface.to_SubSurface.empty? end,
-        planar_surfaces.select do |planar_surface| planar_surface.to_Surface.empty? end,
-        if thermal_bridge_type.nil? then
-          []
-        else
-          self.select_edges_thermal_bridges(selection.grep(Sketchup::Edge), new_groups, su2os, thermal_bridge_type)
+
+      when "frames"
+        frame = os_model.getWindowPropertyFrameAndDividerByName(li).get
+        spaces.inject(sub_surfaces) do |sum, space| sum + space.surfaces.inject([]) do |sum, surface| sum + surface.subSurfaces end end.select do |sub_surface|
+          sub_surface_type = sub_surface.subSurfaceType
+          centroid = sub_surface.centroid
+          vertices = sub_surface.vertices.map do |vertex| (vertex - centroid).length end
+          sub_surface.outsideBoundaryCondition.eql?("Outdoors") && (sub_surface_type.end_with?("Window") || sub_surface_type.eql?("GlassDoor")) && (vertices.length.eql?(4) || vertices.uniq.length.eql?(1))
+        end.each do |sub_surface|
+          sub_surface.setWindowPropertyFrameAndDivider(frame)
         end
-      ]
-    end
 
-    case id
-    when "construction_sets"
-      construction_set = os_model.getDefaultConstructionSetByName(li).get
-      spaces.each do |space| space.setDefaultConstructionSet(construction_set) end
+      else
+        group = id.eql?("thermal_bridges") ? 0 : li[-1].to_i
 
-    when "constructions", "glazings"
-      construction = os_model.getLayeredConstructionByName(li).get
-      case id
-      when "constructions"
-        spaces.inject(surfaces) do |sum, space| sum + space.surfaces end
+        (edges_surfaces + self.select_spaces_thermal_bridges(spaces, thermal_bridge_type, group)).each do |exterior_wall, other|
+          thermal_bridges = exterior_wall.additionalProperties.getFeatureAsString("thermal_bridges")
+          thermal_bridges = thermal_bridges.empty? ? zc_thermal_bridge_types.map do |key| [key, (ThermalBridges.get_ngroups(key) + 1).times.map do |x| [] end] end.to_h : JSON.parse(thermal_bridges.get)
 
-      when "glazings"
-        spaces.inject(sub_surfaces) do |sum, space| sum + space.surfaces.inject([]) do |sum, surface| sum + surface.subSurfaces end end
-      end.each do |planar_surface|
-        planar_surface.setConstruction(construction)
-        next unless planar_surface.outsideBoundaryCondition.eql?("Surface")
+          other_name = other.name.get.to_s
+          thermal_bridges[thermal_bridge_type].each do |others| others.delete(other_name) end
 
-        script += self.assign_surface_planar_surface(os_model, planar_surface)
-      end
+          if group.eql?(0) then
+            exterior_wall_name = exterior_wall.name.get.to_s
+            os_model.getMasslessOpaqueMaterials.each do |thermal_bridge|
+              aux = thermal_bridge.additionalProperties.getFeatureAsString("thermal_bridge_type")
+              next if aux.empty?
+              next unless thermal_bridge_type.eql?(aux.get)
+              exterior_wall2others = thermal_bridge.additionalProperties.getFeatureAsString("exterior_wall2others")
+              next if exterior_wall2others.empty?
 
-    when "frames"
-      frame = os_model.getWindowPropertyFrameAndDividerByName(li).get
-      spaces.inject(sub_surfaces) do |sum, space| sum + space.surfaces.inject([]) do |sum, surface| sum + surface.subSurfaces end end.select do |sub_surface|
-        sub_surface_type = sub_surface.subSurfaceType
-        centroid = sub_surface.centroid
-        vertices = sub_surface.vertices.map do |vertex| (vertex - centroid).length end
-        sub_surface.outsideBoundaryCondition.eql?("Outdoors") && (sub_surface_type.end_with?("Window") || sub_surface_type.eql?("GlassDoor")) && (vertices.length.eql?(4) || vertices.uniq.length.eql?(1))
-      end.each do |sub_surface|
-        sub_surface.setWindowPropertyFrameAndDivider(frame)
-      end
+              exterior_wall2others = JSON.parse(exterior_wall2others.get)
+              (exterior_wall2others[exterior_wall_name] || []).each do |value| value.delete(other_name) end
 
-    else
-      group = id.eql?("thermal_bridges") ? 0 : li[-1].to_i
-
-      (edges_surfaces + self.select_spaces_thermal_bridges(spaces, thermal_bridge_type, group)).each do |exterior_wall, other|
-        thermal_bridges = exterior_wall.additionalProperties.getFeatureAsString("thermal_bridges")
-        thermal_bridges = thermal_bridges.empty? ? zc_thermal_bridge_types.map do |key| [key, (ThermalBridges.get_ngroups(key) + 1).times.map do |x| [] end] end.to_h : JSON.parse(thermal_bridges.get)
-
-        other_name = other.name.get.to_s
-        thermal_bridges[thermal_bridge_type].each do |others| others.delete(other_name) end
-
-        case id
-        when "thermal_bridges"
-          exterior_wall_name = exterior_wall.name.get.to_s
-          os_model.getMasslessOpaqueMaterials.each do |thermal_bridge|
-            aux = thermal_bridge.additionalProperties.getFeatureAsString("thermal_bridge_type")
-            next if aux.empty?
-            next unless thermal_bridge_type.eql?(aux.get)
-            exterior_wall2others = thermal_bridge.additionalProperties.getFeatureAsString("exterior_wall2others")
-            next if exterior_wall2others.empty?
-
-            exterior_wall2others = JSON.parse(exterior_wall2others.get)
-            (exterior_wall2others[exterior_wall_name] || []).each do |value| value.delete(other_name) end
-
+              thermal_bridge.additionalProperties.setFeature("exterior_wall2others", exterior_wall2others.to_json)
+            end
+            thermal_bridge = os_model.getMasslessOpaqueMaterialByName(li).get
+            exterior_wall2others = JSON.parse(thermal_bridge.additionalProperties.getFeatureAsString("exterior_wall2others").get)
+            exterior_wall2others[exterior_wall_name] = (exterior_wall2others[exterior_wall_name] || []) + [other_name]
             thermal_bridge.additionalProperties.setFeature("exterior_wall2others", exterior_wall2others.to_json)
           end
-          thermal_bridge = os_model.getMasslessOpaqueMaterialByName(li).get
-          exterior_wall2others = JSON.parse(thermal_bridge.additionalProperties.getFeatureAsString("exterior_wall2others").get)
-          exterior_wall2others[exterior_wall_name] = (exterior_wall2others[exterior_wall_name] || []) + [other_name]
-          thermal_bridge.additionalProperties.setFeature("exterior_wall2others", exterior_wall2others.to_json)
-        end
 
-        thermal_bridges[thermal_bridge_type][group] << other_name
-        exterior_wall.additionalProperties.setFeature("thermal_bridges", thermal_bridges.to_json)
+          thermal_bridges[thermal_bridge_type][group] << other_name
+          exterior_wall.additionalProperties.setFeature("thermal_bridges", thermal_bridges.to_json)
+        end
       end
+
+      script << "sketchup.render_by(#{id.nil? ? "null" : "'#{id}'"}, #{li.nil? ? "null" : "'#{li}'"})"
     end
 
     selection.grep(Sketchup::Edge).each do |edge| edge.erase! end
     selection.clear
-    script << "sketchup.render_by(#{id.nil? ? "null" : "'#{id}'"}, #{li.nil? ? "null" : "'#{li}'"})"
 
     dialog.execute_script(script.join(";"))
   end
@@ -1715,101 +1712,101 @@ module OpenStudio
     end
   end
 
-  dialog.add_action_callback("remove") do |action_context, id, li|
+  dialog.add_action_callback("remove") do |action_context, input, id, li|
     script = []
 
-    thermal_bridge_type = case id
-    when "construction_sets", "constructions", "glazings", "frames"
-      nil
-
-    when "thermal_bridges"
-      os_model.getMasslessOpaqueMaterialByName(li).get.additionalProperties.getFeatureAsString("thermal_bridge_type").get
-
-    else
-      id
-    end
-
     selection = su_model.selection
-    spaces, surfaces, sub_surfaces, edges_surfaces = if selection.empty? then
-      unless UI.messagebox("Remove all?", MB_YESNO).eql?(IDYES) then
-        [[], [], [], []]
+    unless input.eql?("materials") then
+      thermal_bridge_type = case input
+      when "thermal_bridges"
+        id.eql?(thermal_bridges) ? os_model.getMasslessOpaqueMaterialByName(li).get.additionalProperties.getFeatureAsString("thermal_bridge_type").get : id
+
       else
-        case id
-        when "constructions"
-          [[], os_model.getSurfaces, [], []]
+        nil
+      end
 
-        when "glazings", "frames"
-          [[], [], os_model.getSubSurfaces, []]
-
+      spaces, surfaces, sub_surfaces, edges_surfaces = if selection.empty? then
+        unless UI.messagebox("Remove all?", MB_YESNO).eql?(IDYES) then
+          [[], [], [], []]
         else
-          [os_model.getSpaces, [], [], []]
+          case input
+          when "constructions"
+            [[], os_model.getSurfaces, [], []]
+
+          when "windows"
+            [[], [], os_model.getSubSurfaces, []]
+
+          when "construction_sets", "thermal_bridges"
+            [os_model.getSpaces, [], [], []]
+          end
         end
-      end
-    else
-      planar_surfaces = SketchUp.get_selected_planar_surfaces(os_model)
-      [
-        selection.grep(Sketchup::Group).map do |group| SketchUp.get_space(group, os2su) end.compact,
-        planar_surfaces.select do |planar_surface| planar_surface.to_SubSurface.empty? end,
-        planar_surfaces.select do |planar_surface| planar_surface.to_Surface.empty? end,
-        self.select_edges_thermal_bridges(selection.grep(Sketchup::Edge), new_groups, su2os, thermal_bridge_type)
-      ]
-    end
-
-    case id
-    when "construction_sets"
-      spaces.each do |space| space.resetDefaultConstructionSet end
-
-    when "constructions", "glazings", "frames"
-      case id
-      when "constructions"
-        spaces.inject(surfaces) do |sum, space| sum + space.surfaces end
-
-      when "glazings", "frames"
-        spaces.inject(sub_surfaces) do |sum, space| sum + space.surfaces.inject([]) do |sum, surface| sum + surface.subSurfaces end end
+      else
+        planar_surfaces = SketchUp.get_selected_planar_surfaces(os_model)
+        [
+          selection.grep(Sketchup::Group).map do |group| SketchUp.get_space(group, os2su) end.compact,
+          planar_surfaces.select do |planar_surface| planar_surface.to_SubSurface.empty? end,
+          planar_surfaces.select do |planar_surface| planar_surface.to_Surface.empty? end,
+          self.select_edges_thermal_bridges(selection.grep(Sketchup::Edge), new_groups, su2os, thermal_bridge_type)
+        ]
       end
 
-      case id
-      when "constructions", "glazings"
-        (surfaces + sub_surfaces).each do |planar_surface|
-          planar_surface.resetConstruction
-          next unless planar_surface.outsideBoundaryCondition.eql?("Surface")
+      case input
+      when "construction_sets"
+        spaces.each do |space| space.resetDefaultConstructionSet end
 
-          script += self.assign_surface_planar_surface(os_model, planar_surface)
+      when "constructions", "windows"
+        case input
+        when "constructions"
+          spaces.inject(surfaces) do |sum, space| sum + space.surfaces end
+
+        when "windows"
+          spaces.inject(sub_surfaces) do |sum, space| sum + space.surfaces.inject([]) do |sum, surface| sum + surface.subSurfaces end end
         end
 
-      when "frames"
-        sub_surfaces.each do |sub_surface| sub_surface.resetWindowPropertyFrameAndDivider end
-      end
+        case id
+        when "constructions", "glazings"
+          (surfaces + sub_surfaces).each do |planar_surface|
+            planar_surface.resetConstruction
+            next unless planar_surface.outsideBoundaryCondition.eql?("Surface")
 
-    else
-      group = id.eql?("thermal_bridges") ? 0 : li[-1].to_i
-
-      (edges_surfaces + self.select_spaces_thermal_bridges(spaces, thermal_bridge_type, group)).each do |exterior_wall, other|
-        thermal_bridges = exterior_wall.additionalProperties.getFeatureAsString("thermal_bridges")
-        next if thermal_bridges.empty?
-
-        exterior_wall_name, other_name = exterior_wall.name.get.to_s, other.name.get.to_s
-        thermal_bridges = JSON.parse(thermal_bridges.get)
-        thermal_bridges[thermal_bridge_type] = thermal_bridges[thermal_bridge_type].each_with_index.map do |others, index|
-          if others.include?(other_name) then
-            self.remove_thermal_bridge(os_model, exterior_wall_name, other_name, thermal_bridge_type) if index.eql?(0)
-            others.delete(other_name)
+            script += self.assign_surface_planar_surface(os_model, planar_surface)
           end
 
-          others
+        when "frames"
+          sub_surfaces.each do |sub_surface| sub_surface.resetWindowPropertyFrameAndDivider end
         end
 
-        if thermal_bridges.find do |thermal_bridge_type, value| !value.find do |others| !others.empty? end.nil? end.nil? then
-          exterior_wall.additionalProperties.resetFeature("thermal_bridges")
-        else
-          exterior_wall.additionalProperties.setFeature("thermal_bridges", thermal_bridges.to_json)
+      when "thermal_bridges"
+        group = id.eql?("thermal_bridges") ? 0 : li[-1].to_i
+
+        (edges_surfaces + self.select_spaces_thermal_bridges(spaces, thermal_bridge_type, group)).each do |exterior_wall, other|
+          thermal_bridges = exterior_wall.additionalProperties.getFeatureAsString("thermal_bridges")
+          next if thermal_bridges.empty?
+
+          exterior_wall_name, other_name = exterior_wall.name.get.to_s, other.name.get.to_s
+          thermal_bridges = JSON.parse(thermal_bridges.get)
+          thermal_bridges[thermal_bridge_type] = thermal_bridges[thermal_bridge_type].each_with_index.map do |others, index|
+            if others.include?(other_name) then
+              self.remove_thermal_bridge(os_model, exterior_wall_name, other_name, thermal_bridge_type) if index.eql?(0)
+              others.delete(other_name)
+            end
+
+            others
+          end
+
+          if thermal_bridges.find do |thermal_bridge_type, value| !value.find do |others| !others.empty? end.nil? end.nil? then
+            exterior_wall.additionalProperties.resetFeature("thermal_bridges")
+          else
+            exterior_wall.additionalProperties.setFeature("thermal_bridges", thermal_bridges.to_json)
+          end
         end
       end
+
+      script << "sketchup.render_by(#{id.nil? ? "null" : "'#{id}'"}, #{li.nil? ? "null" : "'#{li}'"})"
     end
 
     selection.grep(Sketchup::Edge).each do |edge| edge.erase! end
     selection.clear
-    script << "sketchup.render_by(#{id.nil? ? "null" : "'#{id}'"}, #{li.nil? ? "null" : "'#{li}'"})"
 
     dialog.execute_script(script.join(";"))
   end

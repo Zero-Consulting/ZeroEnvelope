@@ -2,29 +2,6 @@
 var groups_id = [];
 var thermal_bridges_id = [];
 
-function show_assign() {
-  var lis = document.querySelectorAll('#left .selected');
-  var render_select = document.querySelectorAll("#render select")[0];
-  var render = render_select.options[render_select.selectedIndex];
-  var tab = document.getElementById("input").getElementsByClassName("btn btn-success")[0];
-  var hide = render.value === "openstudio" || lis.length === 0 || tab.value === "materials"
-
-  var spans = document.querySelectorAll("#assign > span");
-  for (var i = 0; i < spans.length; i++) {
-    if (hide) {
-      spans[i].classList.add('hide');
-    } else {
-      spans[i].classList.remove('hide');
-    }
-  }
-
-  if (hide) {
-    sketchup.render_by(null, null);
-  } else {
-    sketchup.render_by(lis[0].parentElement.parentElement.id, lis[0].innerHTML);
-  }
-}
-
 function hide_main_divs() {
   var main_divs = document.querySelectorAll("#main > div");
   for (var i = 0; i < main_divs.length; i++) {
@@ -48,7 +25,6 @@ function unselect_left() {
 
   var tabs = document.getElementById("output").getElementsByClassName("btn btn-success");
   if (tabs.length === 0) { hide_main_divs(); }
-  show_assign();
 }
 
 function select_tab(tab) {
@@ -83,8 +59,6 @@ function select_tab(tab) {
     if (!li.classList.contains("open")) { continue; }
     li.classList.toggle("open");
   }
-
-  show_assign();
 
   switch (tab.value) {
     case "construction_sets":
@@ -309,8 +283,6 @@ function select_li(li) {
     }
     sketchup.show_li(id, li.innerHTML);
   }
-
-  show_assign();
 }
 
 $("#left").click(function() {
