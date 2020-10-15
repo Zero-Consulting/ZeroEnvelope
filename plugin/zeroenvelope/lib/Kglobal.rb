@@ -149,6 +149,10 @@ module OpenStudio
     t_end = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     p "#{msg}: #{t_end - t_start}"
     t_start = t_end
+  end  
+  
+  dialog.add_action_callback("bug") do |action_context, msg|
+    p msg
   end
 
   dialog.add_action_callback("add_construction_set_layout") do |action_context|
@@ -454,10 +458,14 @@ module OpenStudio
 
   dialog.add_action_callback("set_render") do |action_context, option, id, li|
     script = []
-
+    
+    unless option.eql?("w_k")
+      su_model.rendering_options["EdgeColorMode"] = 1
+      su_model.rendering_options["DrawDepthQue"] = 0
+    end
+    
+    self.render_white(su_model, new_groups)
     if option.eql?("openstudio") then
-      self.render_white(su_model, new_groups)
-
       new_groups.each do |group| group.hidden = true end
       os_model.getSpaces.each do |space| space.drawing_interface.entity.hidden = false end
 
@@ -695,12 +703,13 @@ module OpenStudio
       ["input", "kglobal", "output", "left", "main", "right"].each do |value|
         script << "document.getElementById('#{value}').classList.remove('hide')"
       end
-
+      
       self.render_by_selection(os_model, id, li, zc_thermal_bridge_types, os2su) if option.eql?("input")
     end
     render = option
     
-    unless render.eql?("openstudio") then
+    case render
+    when "w_k", "u_limit", "mirror"
       script << "var tabs = document.getElementById('output').getElementsByClassName('btn btn-success')"
       script << "sketchup.compute_k_global(tabs.length === 0 ? null : tabs[0].value)"
     end

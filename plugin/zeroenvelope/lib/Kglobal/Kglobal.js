@@ -137,10 +137,6 @@ function select_tab(tab) {
         group.classList.add("hide");
       }
       thermal_bridges.classList.add("hide");
-
-      for (var i = 0; i < spans.length; i++) {
-        spans[i].classList.add('hide');
-      }
       break;
 
     case "windows":
@@ -208,8 +204,13 @@ function set_render(render) {
   }
 }
 
+
 $("#input button").click(function() {
   select_tab(this);
+  var render = document.querySelectorAll("#render select")[0];
+  if (render.options[render.selectedIndex].value === "input") {
+    sketchup.render_white();
+  }
 });
 
 function add_internal_source_row(tbody, source_layer) {
