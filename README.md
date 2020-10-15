@@ -44,9 +44,13 @@ Based on the idea from [EnvolventeCTE](https://pachi.github.io/envolventecte) of
   * add edge insulation and
   * reverse asymmetric constructions to mirror adjacent surfaces (check it rendering by mirror).
 
+[![Zero Envelope - K global - 201015 Demo](http://img.youtube.com/vi/NnLzam9g170/0.jpg)](http://www.youtube.com/watch?v=NnLzam9g170 "K global demo")
+
 ### q solar
 
 * Sort the results table by clicking on the header names.
+
+[![Zero Envelope - q solar - 201015 Demo](http://img.youtube.com/vi/iTK3uvhkkqs/0.jpg)](http://www.youtube.com/watch?v=iTK3uvhkkqs "q solar demo")
 
 ## License
 
