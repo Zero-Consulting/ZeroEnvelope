@@ -8,7 +8,7 @@ function show_assign() {
   var render = render_select.options[render_select.selectedIndex];
   var tab = document.getElementById("input").getElementsByClassName("btn btn-success")[0];
   var hide = render.value === "openstudio" || lis.length === 0 || tab.value === "materials"
-  
+
   var spans = document.querySelectorAll("#assign > span");
   for (var i = 0; i < spans.length; i++) {
     if (hide) {
@@ -76,14 +76,14 @@ function select_tab(tab) {
   var left = document.getElementById("left");
   var right = document.getElementById("right");
   right.classList.remove("hide");
-  
+
   var lis = document.querySelectorAll("#left > ul > li:not(.edit), #right > ul > li:not(.edit)");
   for (var i = 0; i < lis.length; i++) {
     var li = lis[i];
     if (!li.classList.contains("open")) { continue; }
     li.classList.toggle("open");
   }
-  
+
   show_assign();
 
   switch (tab.value) {
@@ -222,7 +222,7 @@ window.onload = function() {
   sketchup.add_lists();
   select_tab(document.getElementById("input").getElementsByTagName("button")[0]);
   sketchup.add_standards_information();
-  sketchup.set_render("input", null, null)
+  sketchup.set_render("input", null, null);
 };
 
 function set_render(render) {
@@ -298,7 +298,7 @@ function select_li(li) {
       }
     }
   }
-  
+
   var tabs = document.getElementById("output").getElementsByClassName("btn btn-success");
   if (tabs.length === 0) {
     var id = aux.getAttribute("id");
@@ -588,11 +588,11 @@ $("#output button").click(function() {
     tabs[i].className = tabs[i].className.replace("btn btn-success", "btn btn-secondary");
   }
   this.className = this.className.replace("btn btn-secondary", "btn btn-success");
-  
+
   hide_main_divs();
   document.getElementById("results").classList.remove("hide");
   document.getElementById("right").classList.add("hide");
-  
+
   sketchup.compute_k_global(this.value);
 });
 
@@ -610,6 +610,6 @@ $("#results").click(function() {
 
   this.classList.add("selected");
   sketchup.select_object(document.getElementById("output").getElementsByClassName("btn btn-success")[0].value, this.cells[0].innerHTML);
-  
+
   event.stopPropagation();
 });

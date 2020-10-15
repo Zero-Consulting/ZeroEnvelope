@@ -144,6 +144,13 @@ module OpenStudio
     ]
   }
 
+  t_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+  dialog.add_action_callback("time") do |action_context, msg|
+    t_end = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    p "#{msg}: #{t_end - t_start}"
+    t_start = t_end
+  end
+
   dialog.add_action_callback("add_construction_set_layout") do |action_context|
     script = []
 
@@ -477,7 +484,6 @@ module OpenStudio
     else
       if render.eql?("openstudio") then
         # clean thermal bridges
-
         os_model.getSurfaces.each do |exterior_wall|
           thermal_bridges = exterior_wall.additionalProperties.getFeatureAsString("thermal_bridges")
           next if thermal_bridges.empty?
@@ -622,6 +628,7 @@ module OpenStudio
         end
 
         new_groups, os2su = SketchUp.get_os2su(os_model, false)
+
         os_model.getSurfaces.each do |intermediate_floor|
           next unless intermediate_floor.surfaceType.eql?("RoofCeiling") && intermediate_floor.outsideBoundaryCondition.eql?("Surface")
 
@@ -636,6 +643,7 @@ module OpenStudio
             end
           end
         end
+
         su2os = os2su.invert
 
         column = ["alpha", "A", "B", "C", "D", "E"].index do |x| x.eql?(zonaClimatica[0...-1]) end
