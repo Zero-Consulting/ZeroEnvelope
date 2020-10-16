@@ -35,6 +35,7 @@ Based on the idea from [EnvolventeCTE](https://pachi.github.io/envolventecte) of
 
 ### K global
 
+* Define uninhabitable spaces using the "Part of Total Floor Area" flag.
 * In Construction Sets:
   * add an object to the construction set selecting the planar surface type and double clicking the construction from the list on the right and
   * remove a construction from the construction set double clicking its name.
