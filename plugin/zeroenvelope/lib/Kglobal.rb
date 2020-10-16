@@ -190,19 +190,10 @@ module OpenStudio
   su2os = os2su.invert
   os_model.getShadingSurfaceGroups.each do |group| group.drawing_interface.entity.locked = true end
 
-  os_model.getSurfaces.each do |intermediate_floor|
-    next unless intermediate_floor.surfaceType.eql?("RoofCeiling") && intermediate_floor.outsideBoundaryCondition.eql?("Surface")
+  os_model.getSurfaces.each do |surface|
+    next unless surface.surfaceType.eql?("RoofCeiling") && surface.outsideBoundaryCondition.eql?("Surface")
 
-    face = os2su[intermediate_floor]
-    intermediate_floor.space.get.surfaces.each do |exterior_wall|
-      next unless exterior_wall.surfaceType.eql?("Wall") && exterior_wall.outsideBoundaryCondition.eql?("Outdoors")
-
-      os2su[exterior_wall].edges.each do |edge|
-        next unless edge.used_by?(face)
-
-        edge.hidden = true
-      end
-    end
+    os2su[surface].edges.each do |edge| edge.hidden = true end
   end
 
   # sg save data
@@ -535,7 +526,9 @@ module OpenStudio
     self.render_white(su_model, new_groups) if render.eql?("input")
   end
 
-  def self.render_by_selection(os_model, id, li, zc_thermal_bridge_types, os2su)
+  def self.render_by_selection(os_model, id, li, zc_thermal_bridge_types, new_groups, os2su)
+    self.render_white(Sketchup.active_model, new_groups)
+    
     white = Sketchup::Color.new(255, 255, 255, 1.0)
     grey = Sketchup::Color.new(96, 80, 76, 1.0)
     green = Sketchup::Color.new(120, 157, 74, 1.0)
@@ -663,8 +656,7 @@ module OpenStudio
     
     render = option
     
-    self.render_white(su_model, new_groups)
-    self.render_by_selection(os_model, id, li, zc_thermal_bridge_types, os2su) if  render.eql?("input")
+    self.render_by_selection(os_model, id, li, zc_thermal_bridge_types, new_groups, os2su) if  render.eql?("input")
     
     script << "var tabs = document.getElementById('output').getElementsByClassName('btn btn-success')"
     script << "sketchup.compute_k_global(tabs.length === 0 ? null : tabs[0].value)"
@@ -832,7 +824,7 @@ module OpenStudio
     
     script << "var tabs = document.getElementById('output').getElementsByClassName('btn btn-success')"
     script << "sketchup.compute_k_global(tabs.length === 0 ? null : tabs[0].value)"
-    self.render_by_selection(os_model, id, li, zc_thermal_bridge_types, os2su) if render.eql?("input")
+    self.render_by_selection(os_model, id, li, zc_thermal_bridge_types, new_groups, os2su) if render.eql?("input")
 
     dialog.execute_script(script.join(";"))
   end
@@ -1756,7 +1748,7 @@ module OpenStudio
           end
         end
       end
-
+      
       script << "sketchup.show_li('#{id}', '#{li}')"
     end
 
