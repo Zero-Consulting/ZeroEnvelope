@@ -42,7 +42,7 @@ module OpenStudio
   edges.each do |edge| edge.erase! unless edge.deleted? end
 
   # clean thermal bridges
-  
+
   os_model.getSurfaces.each do |exterior_wall|
     thermal_bridges = exterior_wall.additionalProperties.getFeatureAsString("thermal_bridges")
     next if thermal_bridges.empty?
@@ -186,6 +186,46 @@ module OpenStudio
     OpenStudio::Plane.new(OpenStudio::Point3d.new, OpenStudio::Vector3d.new(0, 0, 1))
   end
 
+  # split edges to select thermal bridges
+
+  os_model.getSpaces.each do |space|
+    group = space.drawing_interface.entity
+
+    edges = group.entities.grep(Sketchup::Edge).select do |edge| edge.faces.length.eql?(1) end
+
+    while true do
+      split = false
+
+      edges.each do |edge|
+        points = edge.vertices.map do |vertex| vertex.position end
+
+        edges.each do |other_edge|
+          other_edge.vertices.each do |vertex|
+            point = vertex.position
+            next if (points.map do |x| x.distance(point) end.min).to_f < 1e-6
+            next unless Geom.point_in_polygon_2D(point, points, true)
+
+            split = true
+            edges << edge.split(point)
+
+            break
+          end
+          break if split
+        end
+        break if split
+      end
+
+      break unless split
+    end
+
+    edges.each do |edge|
+      line = group.entities.add_line(edge.start.position, edge.end.position)
+      line.find_faces
+    end
+
+    group.entities.grep(Sketchup::Edge).select do |edge| edge.faces.length.eql?(0) end.each do |edge| edge.erase! end
+  end
+
   new_groups, os2su = SketchUp.get_os2su(os_model, false)
   su2os = os2su.invert
   os_model.getShadingSurfaceGroups.each do |group| group.drawing_interface.entity.locked = true end
@@ -231,7 +271,7 @@ module OpenStudio
     [1.4, 1.4, 1.2, 1.2, 1.2, 1.0],
     [1.35, 1.25, 1.1, 0.95, 0.85, 0.7]
   ]
-  
+
   k_lims_cte = case residencialOTerciario
   when "Residencial"
     [
@@ -244,7 +284,7 @@ module OpenStudio
       [1.12, 0.98, 0.92, 0.82, 0.70, 0.59]
     ]
   end
-  
+
   column = ["alpha", "A", "B", "C", "D", "E"].index do |x| x.eql?(zonaClimatica[0...-1]) end
   u_lims = u_lims_cte.map do |row| row[column] end
 
@@ -350,8 +390,8 @@ module OpenStudio
     t_end = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     p "#{msg}: #{t_end - t_start}"
     t_start = t_end
-  end  
-  
+  end
+
   dialog.add_action_callback("bug") do |action_context, msg|
     p msg
   end
@@ -501,7 +541,7 @@ module OpenStudio
 
     dialog.execute_script(script.join(";"))
   end
-    
+
   def self.render_white(su_model, new_groups)
     su_model.rendering_options["EdgeColorMode"] = 1
     su_model.rendering_options["DrawDepthQue"] = 0
@@ -528,7 +568,7 @@ module OpenStudio
 
   def self.render_by_selection(os_model, id, li, zc_thermal_bridge_types, new_groups, os2su)
     self.render_white(Sketchup.active_model, new_groups)
-    
+
     white = Sketchup::Color.new(255, 255, 255, 1.0)
     grey = Sketchup::Color.new(96, 80, 76, 1.0)
     green = Sketchup::Color.new(120, 157, 74, 1.0)
@@ -561,7 +601,7 @@ module OpenStudio
           green
         end
         next if color.nil?
-        
+
         SketchUp.set_material(os2su[surface], color)
       end
 
@@ -583,7 +623,7 @@ module OpenStudio
           green
         end
         next if color.nil?
-        
+
         SketchUp.set_material(os2su[sub_surface], color)
       end
 
@@ -616,7 +656,7 @@ module OpenStudio
 
                 face.edges.each do |edge|
                   next unless edge.used_by?(other_face)
-                  
+
                   SketchUp.set_material(edge, green)
                 end
               end
@@ -648,19 +688,19 @@ module OpenStudio
           end
         end
       end
-    end 
+    end
   end
 
   dialog.add_action_callback("set_render") do |action_context, option, id, li|
     script = []
-    
+
     render = option
-    
+
     self.render_by_selection(os_model, id, li, zc_thermal_bridge_types, new_groups, os2su) if  render.eql?("input")
-    
+
     script << "var tabs = document.getElementById('output').getElementsByClassName('btn btn-success')"
     script << "sketchup.compute_k_global(tabs.length === 0 ? null : tabs[0].value)"
-    
+
     dialog.execute_script(script.join(";"))
   end
 
@@ -670,7 +710,7 @@ module OpenStudio
     script << "document.getElementById('right').classList.remove('hide')"
 
     li = Utilities.fix_name(li)
-    
+
     case id
     when "construction_sets"
       construction_set = os_model.getDefaultConstructionSetByName(li).get
@@ -821,7 +861,7 @@ module OpenStudio
         script << "document.getElementById('mu').readOnly = #{ id.eql?("materials") ? false : true }"
       end
     end
-    
+
     script << "var tabs = document.getElementById('output').getElementsByClassName('btn btn-success')"
     script << "sketchup.compute_k_global(tabs.length === 0 ? null : tabs[0].value)"
     self.render_by_selection(os_model, id, li, zc_thermal_bridge_types, new_groups, os2su) if render.eql?("input")
@@ -1748,7 +1788,7 @@ module OpenStudio
           end
         end
       end
-      
+
       script << "sketchup.show_li('#{id}', '#{li}')"
     end
 
@@ -2145,7 +2185,7 @@ module OpenStudio
 
         adjacent_surface = surface.adjacentSurface
         next if adjacent_surface.empty?
-        
+
         SketchUp.set_material(os2su[adjacent_surface.get], color)
       end
 
@@ -2166,7 +2206,7 @@ module OpenStudio
 
         adjacent_sub_surface = sub_surface.adjacentSubSurface
         next if adjacent_sub_surface.empty?
-        
+
         SketchUp.set_material(os2su[adjacent_sub_surface.get], color)
       end
     end

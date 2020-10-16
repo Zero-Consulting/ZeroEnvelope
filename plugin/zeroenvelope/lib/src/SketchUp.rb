@@ -107,10 +107,10 @@ class SketchUp
 
   def self.set_material(entity, color)
     return true if !entity.material.nil? && entity.material.color == color
-    
+
     entity.material = color
     entity.back_material = color if entity.is_a?(Sketchup::Face)
-    
+
     return true
   end
 
