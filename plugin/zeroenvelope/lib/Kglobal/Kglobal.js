@@ -190,11 +190,9 @@ function select_tab(tab) {
 window.onload = function() {
   sketchup.add_construction_set_layout();
   sketchup.add_lists();
-  select_tab(document.getElementById("input").getElementsByTagName("button")[0]);
   sketchup.add_standards_information();
+  select_tab(document.getElementById("input").getElementsByTagName("button")[0]);
   sketchup.set_render("input", null, null);
-  var tabs = document.getElementById('output').getElementsByClassName('btn btn-success');
-  sketchup.compute_k_global(tabs.length === 0 ? null : tabs[0].value);
 };
 
 function set_render(render) {

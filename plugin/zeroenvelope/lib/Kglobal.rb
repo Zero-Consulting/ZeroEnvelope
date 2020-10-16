@@ -41,13 +41,169 @@ module OpenStudio
   end
   edges.each do |edge| edge.erase! unless edge.deleted? end
 
-  # ground level for ISO 13370
+  # clean thermal bridges
+  
+  os_model.getSurfaces.each do |exterior_wall|
+    thermal_bridges = exterior_wall.additionalProperties.getFeatureAsString("thermal_bridges")
+    next if thermal_bridges.empty?
+    (exterior_wall.additionalProperties.resetFeature("thermal_bridges"); next) unless exterior_wall.outsideBoundaryCondition.eql?("Outdoors")
+    (exterior_wall.additionalProperties.resetFeature("thermal_bridges"); next) unless exterior_wall.space.get.partofTotalFloorArea
 
-  ground_level_plane = OpenStudio::Plane.new(OpenStudio::Point3d.new, OpenStudio::Vector3d.new(0, 0, 1))
+    thermal_bridges = JSON.parse(thermal_bridges.get).map do |thermal_bridge_type, value|
+      value = value.each_with_index.map do |others, index|
+        others.map do |other_name|
+          planar_surface = os_model.getPlanarSurfaceByName(other_name)
+          next if planar_surface.empty?
+          planar_surface = planar_surface.get
 
-  # sketchup components for rendering
+          case thermal_bridge_type
+          when "hueco", "capialzado"
+            other = planar_surface.to_SubSurface
+            next if other.empty?
+            next unless exterior_wall.subSurfaces.include?(other.get)
 
-  new_groups, os2su, su2os = [], {}, {}
+          else
+            other = planar_surface.to_Surface.get
+            next unless Geometry.get_length(exterior_wall.vertices, other.vertices) > 1e-6
+
+            surface_type, outsise_boundary_condition = other.surfaceType, other.outsideBoundaryCondition
+            case thermal_bridge_type
+            when "pilares", "esquina"
+              next unless surface_type.eql?("Wall") && outsise_boundary_condition.eql?("Outdoors")
+
+              aux = exterior_wall.outwardNormal.dot(other.centroid - exterior_wall.centroid)
+              case thermal_bridge_type
+              when "pilares"
+                next unless aux.abs < 1e-6
+
+              when "esquina"
+                case index
+                when 0, 2
+                  next unless aux < 1e-6
+
+                when 1
+                  next unless aux > 1e-6
+                end
+              end
+
+            when "frente_forjado"
+              next unless surface_type.eql?("Floor") && outsise_boundary_condition.eql?("Surface")
+
+            when "contorno_cubierta"
+              next unless surface_type.eql?("RoofCeiling") && outsise_boundary_condition.eql?("Outdoors")
+
+            when "forjado_aire"
+              next unless surface_type.eql?("Floor") && outsise_boundary_condition.eql?("Outdoors")
+
+            when "contorno_de_solera"
+              next unless surface_type.eql?("Floor") && outsise_boundary_condition.eql?("Ground")
+            end
+          end
+
+          next if index.eql?(0) && os_model.getMasslessOpaqueMaterials.find do |thermal_bridge|
+            aux = thermal_bridge.additionalProperties.getFeatureAsString("thermal_bridge_type")
+            next if aux.empty?
+            next unless aux.get.eql?(thermal_bridge_type)
+            exterior_wall2others = thermal_bridge.additionalProperties.getFeatureAsString("exterior_wall2others")
+            next if exterior_wall2others.empty?
+
+            JSON.parse(exterior_wall2others.get)[exterior_wall.name.get.to_s].include?(other_name)
+          end.nil?
+
+          other_name
+        end.compact
+      end
+
+      [thermal_bridge_type, value]
+    end.to_h
+
+    if thermal_bridges.find do |thermal_bridge_type, value| !value.find do |others| !others.empty? end.nil? end.nil? then
+      exterior_wall.additionalProperties.resetFeature("thermal_bridges")
+    else
+      exterior_wall.additionalProperties.setFeature("thermal_bridges", thermal_bridges.to_json)
+    end
+  end
+
+  os_model.getMasslessOpaqueMaterials.each do |thermal_bridge|
+    thermal_bridge_type = thermal_bridge.additionalProperties.getFeatureAsString("thermal_bridge_type")
+    next if thermal_bridge_type.empty?
+    thermal_bridge_type = thermal_bridge_type.get
+    exterior_wall2others = thermal_bridge.additionalProperties.getFeatureAsString("exterior_wall2others")
+    next if exterior_wall2others.empty?
+
+    exterior_wall2others = JSON.parse(exterior_wall2others.get)
+    exterior_wall2others = exterior_wall2others.map do |exterior_wall_name, others|
+      exterior_wall = os_model.getSurfaceByName(exterior_wall_name)
+      next if exterior_wall.empty?
+
+      thermal_bridges = exterior_wall.get.additionalProperties.getFeatureAsString("thermal_bridges")
+      next if thermal_bridges.empty?
+
+      others = others.select do |other_name| JSON.parse(thermal_bridges.get)[thermal_bridge_type][0].include?(other_name) end
+      next if others.nil?
+
+      [exterior_wall_name, others]
+    end.compact.to_h
+
+    thermal_bridge.additionalProperties.setFeature("exterior_wall2others", exterior_wall2others.to_json)
+  end
+
+  # get ground level
+
+  ground_surfaces = os_model.getSurfaces.select do |surface| surface.outsideBoundaryCondition.eql?("Ground") end
+  ground_level_vertices = []
+  ground_surfaces.each do |ground_surface|
+    vertices = ground_surface.space.get.transformation * ground_surface.vertices
+    vertices.each_with_index do |vertex, i|
+      prev_vertex = vertices[i-1]
+      vector = vertex - prev_vertex
+      vector.setLength(vector.length / 2)
+      midpoint = prev_vertex + vector
+      isGroundLevel = true
+      (ground_surfaces - [ground_surface]).each do |other_surface|
+        other_vertices = other_surface.space.get.transformation * other_surface.vertices
+        other_vertices.each_with_index do |vertex, i|
+          vector_a = midpoint - vertex
+          prev_vertex = other_vertices[i-1]
+          vector_b = prev_vertex - vertex
+          next if vector_b.cross(vector_a).length > 1e-6
+          dot = vector_b.dot(vector_a)
+          next if dot < -1e-6
+          next if dot > vector_b.length**2
+          isGroundLevel = false
+          break
+        end
+        break unless isGroundLevel
+      end
+
+      ground_level_vertices << midpoint if isGroundLevel
+    end
+  end
+
+  ground_level_plane = unless ground_level_vertices.length < 3 then
+    OpenStudio::Plane.new(ground_level_vertices)
+  else
+    OpenStudio::Plane.new(OpenStudio::Point3d.new, OpenStudio::Vector3d.new(0, 0, 1))
+  end
+
+  new_groups, os2su = SketchUp.get_os2su(os_model, false)
+  su2os = os2su.invert
+  os_model.getShadingSurfaceGroups.each do |group| group.drawing_interface.entity.locked = true end
+
+  os_model.getSurfaces.each do |intermediate_floor|
+    next unless intermediate_floor.surfaceType.eql?("RoofCeiling") && intermediate_floor.outsideBoundaryCondition.eql?("Surface")
+
+    face = os2su[intermediate_floor]
+    intermediate_floor.space.get.surfaces.each do |exterior_wall|
+      next unless exterior_wall.surfaceType.eql?("Wall") && exterior_wall.outsideBoundaryCondition.eql?("Outdoors")
+
+      os2su[exterior_wall].edges.each do |edge|
+        next unless edge.used_by?(face)
+
+        edge.hidden = true
+      end
+    end
+  end
 
   # sg save data
 
@@ -84,9 +240,7 @@ module OpenStudio
     [1.4, 1.4, 1.2, 1.2, 1.2, 1.0],
     [1.35, 1.25, 1.1, 0.95, 0.85, 0.7]
   ]
-  u_lims = u_lims_cte.map do |row| row.last end
-  volume, area_int = 0.0, 0.0
-
+  
   k_lims_cte = case residencialOTerciario
   when "Residencial"
     [
@@ -99,8 +253,64 @@ module OpenStudio
       [1.12, 0.98, 0.92, 0.82, 0.70, 0.59]
     ]
   end
-  au_lim = k_lims_cte.first.last * area_int
-  w_k_lim, w_k_count = 0.0, 0
+  
+  column = ["alpha", "A", "B", "C", "D", "E"].index do |x| x.eql?(zonaClimatica[0...-1]) end
+  u_lims = u_lims_cte.map do |row| row[column] end
+
+  volume, area_int, w_k_lim, w_k_count = 0.0, 0.0, 0.0, 0
+  spaces_neighbours = os_model.getSpaces.map do |space|
+    next unless space.partofTotalFloorArea
+
+    volume += Geometry.get_volume(space)
+    space.surfaces.each do |surface|
+      area = surface.grossArea
+
+      area = case surface.outsideBoundaryCondition
+      when "Outdoors", "Ground"
+        area
+      when "Surface"
+        adjacent_space = surface.adjacentSurface.get.space.get
+        adjacent_space.partofTotalFloorArea ? 0.0 : area
+      else
+        0.0
+      end
+      next if area < 1e-6
+
+      u_lim = case surface.outsideBoundaryCondition
+      when "Outdoors"
+        u_lims[ surface.surfaceType.eql?("RoofCeiling") ? 1 : 0 ]
+
+      else
+        u_lims[2]
+      end
+      sub_surfaces_area = surface.subSurfaces.map do |sub_surface| sub_surface.grossArea end
+      # w_k_lim = [surface.netArea * u_lim, (sub_surfaces_area.max || 0.0) * u_lims[3], w_k_lim].max
+      w_k_count += (1 + sub_surfaces_area.length)
+
+      area_int += area
+    end
+
+    space_neighbours = space.surfaces.map do |surface|
+      adjacent_surface = surface.adjacentSurface
+      next if adjacent_surface.empty?
+
+      adjacent_space = adjacent_surface.get.space
+      next if adjacent_space.empty?
+
+      space_neighbour = adjacent_space.get
+      next if space_neighbour.eql?(space)
+      next unless space_neighbour.partofTotalFloorArea
+      next unless surface.isAirWall || surface.subSurfaces.length > 0
+
+      space_neighbour
+    end.compact
+
+    [space, space_neighbours]
+  end.compact.to_h
+
+  f_array = k_lims_cte.map do |row| row[column] end
+  au_lim = area_int * [[ThermalBridges.interpolate([1.0, 4.0], f_array, volume / area_int), f_array.max].min, f_array.min].max
+  w_k_lim = 3 * au_lim / w_k_count
 
   # sketchup dialog
 
@@ -328,7 +538,7 @@ module OpenStudio
     end
   end
 
-  render = "openstudio"
+  render = nil
 
   dialog.add_action_callback("render_white") do |action_context|
     self.render_white(su_model, new_groups) if render.eql?("input")
@@ -459,260 +669,13 @@ module OpenStudio
   dialog.add_action_callback("set_render") do |action_context, option, id, li|
     script = []
     
-    unless option.eql?("w_k")
-      su_model.rendering_options["EdgeColorMode"] = 1
-      su_model.rendering_options["DrawDepthQue"] = 0
-    end
-    
-    self.render_white(su_model, new_groups)
-    if option.eql?("openstudio") then
-      new_groups.each do |group| group.hidden = true end
-      os_model.getSpaces.each do |space| space.drawing_interface.entity.hidden = false end
-
-      ["input", "kglobal", "output", "left", "main", "right"].each do |value|
-        script << "document.getElementById('#{value}').classList.add('hide')"
-      end
-    else
-      if render.eql?("openstudio") then
-        # clean thermal bridges
-        
-        os_model.getSurfaces.each do |exterior_wall|
-          thermal_bridges = exterior_wall.additionalProperties.getFeatureAsString("thermal_bridges")
-          next if thermal_bridges.empty?
-          (exterior_wall.additionalProperties.resetFeature("thermal_bridges"); next) unless exterior_wall.outsideBoundaryCondition.eql?("Outdoors")
-          (exterior_wall.additionalProperties.resetFeature("thermal_bridges"); next) unless exterior_wall.space.get.partofTotalFloorArea
-
-          thermal_bridges = JSON.parse(thermal_bridges.get).map do |thermal_bridge_type, value|
-            value = value.each_with_index.map do |others, index|
-              others.map do |other_name|
-                planar_surface = os_model.getPlanarSurfaceByName(other_name)
-                next if planar_surface.empty?
-                planar_surface = planar_surface.get
-
-                case thermal_bridge_type
-                when "hueco", "capialzado"
-                  other = planar_surface.to_SubSurface
-                  next if other.empty?
-                  next unless exterior_wall.subSurfaces.include?(other.get)
-
-                else
-                  other = planar_surface.to_Surface.get
-                  next unless Geometry.get_length(exterior_wall.vertices, other.vertices) > 1e-6
-
-                  surface_type, outsise_boundary_condition = other.surfaceType, other.outsideBoundaryCondition
-                  case thermal_bridge_type
-                  when "pilares", "esquina"
-                    next unless surface_type.eql?("Wall") && outsise_boundary_condition.eql?("Outdoors")
-
-                    aux = exterior_wall.outwardNormal.dot(other.centroid - exterior_wall.centroid)
-                    case thermal_bridge_type
-                    when "pilares"
-                      next unless aux.abs < 1e-6
-
-                    when "esquina"
-                      case index
-                      when 0, 2
-                        next unless aux < 1e-6
-
-                      when 1
-                        next unless aux > 1e-6
-                      end
-                    end
-
-                  when "frente_forjado"
-                    next unless surface_type.eql?("Floor") && outsise_boundary_condition.eql?("Surface")
-
-                  when "contorno_cubierta"
-                    next unless surface_type.eql?("RoofCeiling") && outsise_boundary_condition.eql?("Outdoors")
-
-                  when "forjado_aire"
-                    next unless surface_type.eql?("Floor") && outsise_boundary_condition.eql?("Outdoors")
-
-                  when "contorno_de_solera"
-                    next unless surface_type.eql?("Floor") && outsise_boundary_condition.eql?("Ground")
-                  end
-                end
-
-                next if index.eql?(0) && os_model.getMasslessOpaqueMaterials.find do |thermal_bridge|
-                  aux = thermal_bridge.additionalProperties.getFeatureAsString("thermal_bridge_type")
-                  next if aux.empty?
-                  next unless aux.get.eql?(thermal_bridge_type)
-                  exterior_wall2others = thermal_bridge.additionalProperties.getFeatureAsString("exterior_wall2others")
-                  next if exterior_wall2others.empty?
-
-                  JSON.parse(exterior_wall2others.get)[exterior_wall.name.get.to_s].include?(other_name)
-                end.nil?
-
-                other_name
-              end.compact
-            end
-
-            [thermal_bridge_type, value]
-          end.to_h
-
-          if thermal_bridges.find do |thermal_bridge_type, value| !value.find do |others| !others.empty? end.nil? end.nil? then
-            exterior_wall.additionalProperties.resetFeature("thermal_bridges")
-          else
-            exterior_wall.additionalProperties.setFeature("thermal_bridges", thermal_bridges.to_json)
-          end
-        end
-
-        os_model.getMasslessOpaqueMaterials.each do |thermal_bridge|
-          thermal_bridge_type = thermal_bridge.additionalProperties.getFeatureAsString("thermal_bridge_type")
-          next if thermal_bridge_type.empty?
-          thermal_bridge_type = thermal_bridge_type.get
-          exterior_wall2others = thermal_bridge.additionalProperties.getFeatureAsString("exterior_wall2others")
-          next if exterior_wall2others.empty?
-
-          exterior_wall2others = JSON.parse(exterior_wall2others.get)
-          exterior_wall2others = exterior_wall2others.map do |exterior_wall_name, others|
-            exterior_wall = os_model.getSurfaceByName(exterior_wall_name)
-            next if exterior_wall.empty?
-
-            thermal_bridges = exterior_wall.get.additionalProperties.getFeatureAsString("thermal_bridges")
-            next if thermal_bridges.empty?
-
-            others = others.select do |other_name| JSON.parse(thermal_bridges.get)[thermal_bridge_type][0].include?(other_name) end
-            next if others.nil?
-
-            [exterior_wall_name, others]
-          end.compact.to_h
-
-          thermal_bridge.additionalProperties.setFeature("exterior_wall2others", exterior_wall2others.to_json)
-        end
-
-        # get ground level
-
-        ground_surfaces = os_model.getSurfaces.select do |surface| surface.outsideBoundaryCondition.eql?("Ground") end
-        ground_level_vertices = []
-        ground_surfaces.each do |ground_surface|
-          vertices = ground_surface.space.get.transformation * ground_surface.vertices
-          vertices.each_with_index do |vertex, i|
-            prev_vertex = vertices[i-1]
-            vector = vertex - prev_vertex
-            vector.setLength(vector.length / 2)
-            midpoint = prev_vertex + vector
-            isGroundLevel = true
-            (ground_surfaces - [ground_surface]).each do |other_surface|
-              other_vertices = other_surface.space.get.transformation * other_surface.vertices
-              other_vertices.each_with_index do |vertex, i|
-                vector_a = midpoint - vertex
-                prev_vertex = other_vertices[i-1]
-                vector_b = prev_vertex - vertex
-                next if vector_b.cross(vector_a).length > 1e-6
-                dot = vector_b.dot(vector_a)
-                next if dot < -1e-6
-                next if dot > vector_b.length**2
-                isGroundLevel = false
-                break
-              end
-              break unless isGroundLevel
-            end
-
-            ground_level_vertices << midpoint if isGroundLevel
-          end
-        end
-
-        ground_level_plane = unless ground_level_vertices.length < 3 then
-          OpenStudio::Plane.new(ground_level_vertices)
-        else
-          OpenStudio::Plane.new(OpenStudio::Point3d.new, OpenStudio::Vector3d.new(0, 0, 1))
-        end
-
-        new_groups, os2su = SketchUp.get_os2su(os_model, false)
-        
-        os_model.getSurfaces.each do |intermediate_floor|
-          next unless intermediate_floor.surfaceType.eql?("RoofCeiling") && intermediate_floor.outsideBoundaryCondition.eql?("Surface")
-
-          face = os2su[intermediate_floor]
-          intermediate_floor.space.get.surfaces.each do |exterior_wall|
-            next unless exterior_wall.surfaceType.eql?("Wall") && exterior_wall.outsideBoundaryCondition.eql?("Outdoors")
-
-            os2su[exterior_wall].edges.each do |edge|
-              next unless edge.used_by?(face)
-
-              edge.hidden = true
-            end
-          end
-        end
-
-        su2os = os2su.invert
-
-        column = ["alpha", "A", "B", "C", "D", "E"].index do |x| x.eql?(zonaClimatica[0...-1]) end
-        u_lims = u_lims_cte.map do |row| row[column] end
-
-        volume, area_int, w_k_lim, w_k_count = 0.0, 0.0, 0.0, 0
-        spaces_neighbours = os_model.getSpaces.map do |space|
-          next unless space.partofTotalFloorArea
-
-          volume += Geometry.get_volume(space)
-          space.surfaces.each do |surface|
-            area = surface.grossArea
-
-            area = case surface.outsideBoundaryCondition
-            when "Outdoors", "Ground"
-              area
-            when "Surface"
-              adjacent_space = surface.adjacentSurface.get.space.get
-              adjacent_space.partofTotalFloorArea ? 0.0 : area
-            else
-              0.0
-            end
-            next if area < 1e-6
-
-            u_lim = case surface.outsideBoundaryCondition
-            when "Outdoors"
-              u_lims[ surface.surfaceType.eql?("RoofCeiling") ? 1 : 0 ]
-
-            else
-              u_lims[2]
-            end
-            sub_surfaces_area = surface.subSurfaces.map do |sub_surface| sub_surface.grossArea end
-            # w_k_lim = [surface.netArea * u_lim, (sub_surfaces_area.max || 0.0) * u_lims[3], w_k_lim].max
-            w_k_count += (1 + sub_surfaces_area.length)
-
-            area_int += area
-          end
-
-          space_neighbours = space.surfaces.map do |surface|
-            adjacent_surface = surface.adjacentSurface
-            next if adjacent_surface.empty?
-
-            adjacent_space = adjacent_surface.get.space
-            next if adjacent_space.empty?
-
-            space_neighbour = adjacent_space.get
-            next if space_neighbour.eql?(space)
-            next unless space_neighbour.partofTotalFloorArea
-            next unless surface.isAirWall || surface.subSurfaces.length > 0
-
-            space_neighbour
-          end.compact
-
-          [space, space_neighbours]
-        end.compact.to_h
-
-        f_array = k_lims_cte.map do |row| row[column] end
-        au_lim = area_int * [[ThermalBridges.interpolate([1.0, 4.0], f_array, volume / area_int), f_array.max].min, f_array.min].max
-        w_k_lim = 3 * au_lim / w_k_count
-      end
-
-      new_groups.each do |group| group.hidden = false end
-      os_model.getSpaces.each do |space| space.drawing_interface.entity.hidden = true end
-
-      ["input", "kglobal", "output", "left", "main", "right"].each do |value|
-        script << "document.getElementById('#{value}').classList.remove('hide')"
-      end
-      
-      self.render_by_selection(os_model, id, li, zc_thermal_bridge_types, os2su) if option.eql?("input")
-    end
     render = option
     
-    case render
-    when "w_k", "u_limit", "mirror"
-      script << "var tabs = document.getElementById('output').getElementsByClassName('btn btn-success')"
-      script << "sketchup.compute_k_global(tabs.length === 0 ? null : tabs[0].value)"
-    end
+    self.render_white(su_model, new_groups)
+    self.render_by_selection(os_model, id, li, zc_thermal_bridge_types, os2su) if  render.eql?("input")
+    
+    script << "var tabs = document.getElementById('output').getElementsByClassName('btn btn-success')"
+    script << "sketchup.compute_k_global(tabs.length === 0 ? null : tabs[0].value)"
     
     dialog.execute_script(script.join(";"))
   end
@@ -2344,6 +2307,8 @@ module OpenStudio
 
     if ok then
       os_model.getSpaces.each do |space| space.drawing_interface.entity.hidden = false end
+      os_model.getShadingSurfaceGroups.each do |group| group.drawing_interface.entity.locked = false end
+
       cte_materials_hash.values.each do |materials| materials.values.each(&:remove) end
       air_gap.remove
 
