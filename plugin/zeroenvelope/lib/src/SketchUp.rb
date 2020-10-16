@@ -99,7 +99,7 @@ class SketchUp
       sum + group.entities.grep(Sketchup::Edge).map do |edge|
         start, other_vertex = transformation * edge.start.position, transformation * edge.end.position
         vertices_b = [OpenStudio::Point3d.new(start.x.to_m, start.y.to_m, start.z.to_m), OpenStudio::Point3d.new(other_vertex.x.to_m, other_vertex.y.to_m, other_vertex.z.to_m)]
-        next unless self.get_length(vertices_a, vertices_b) > 0
+        next unless Geometry.get_length(vertices_a, vertices_b) > 0
         edge.faces[0..1].map do |face| su2os[face] end
       end.compact
     end
