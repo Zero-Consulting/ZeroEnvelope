@@ -1195,6 +1195,7 @@ module OpenStudio
     if @@render.eql?("openstudio") then
       @@new_group.hidden = true
       os_model.getSpaces.each do |space| space.drawing_interface.entity.hidden = false end
+      os_model.getShadingSurfaceGroups.each do |group| group.drawing_interface.entity.locked = false end
       
       script << "document.getElementById('top').classList.add('hide')"
       script << "document.getElementById('left').classList.add('hide')"
@@ -1211,6 +1212,7 @@ module OpenStudio
       
       @@new_group.hidden = false
       os_model.getSpaces.each do |space| space.drawing_interface.entity.hidden = true end
+      os_model.getShadingSurfaceGroups.each do |group| group.drawing_interface.entity.locked = true end
 
       script << "document.getElementById('top').classList.remove('hide')"
       script << "document.getElementById('left').classList.remove('hide')"
@@ -1276,6 +1278,8 @@ module OpenStudio
     @@new_group.erase!
     if ok then
       os_model.getSpaces.each do |space| space.drawing_interface.entity.hidden = false end
+      os_model.getShadingSurfaceGroups.each do |group| group.drawing_interface.entity.locked = false end
+      
       if os_path.nil?
         Plugin.command_manager.save_openstudio_as
       else
