@@ -202,8 +202,7 @@ module OpenStudio
     @@outdoor_sub_surfaces.each do |sub_surface|
       face = @@os2su[sub_surface]
       color = Sketchup::Color.new(255, 255, 255, 1.0)
-      face.material = color
-      face.back_material = color
+      SketchUp.set_material(face, color)
     end if @@render.eql?("input")
   end
   
@@ -225,10 +224,8 @@ module OpenStudio
       else
         Sketchup::Color.new(255, 255, 255, 1.0)
       end
-
-      face = @@os2su[sub_surface]
-      face.material = color
-      face.back_material = color
+      
+      SketchUp.set_material(@@os2su[sub_surface], color)
     end
   end
   
@@ -395,10 +392,8 @@ module OpenStudio
       color = Sketchup::Color.new
       h = (1.0 - [phi_sol_jul / (3 * (@@q_sol_jul_lim * @@total_floor_area) / @@outdoor_sub_surfaces.length), 1.0].min) * 120
       OpenStudio::set_hsba(color, [h, 100, 100, 1.0])
-
-      face = @@os2su[sub_surface]
-      face.material = color
-      face.back_material = color
+      
+      SketchUp.set_material(@@os2su[sub_surface], color)
     end
   end
   

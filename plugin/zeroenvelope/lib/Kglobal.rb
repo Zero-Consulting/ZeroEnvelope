@@ -510,16 +510,7 @@ module OpenStudio
 
     dialog.execute_script(script.join(";"))
   end
-  
-  def self.set_material(entity, color)
-    return true if !entity.material.nil? && entity.material.color == color
     
-    entity.material = color
-    entity.back_material = color if entity.is_a?(Sketchup::Face)
-    
-    return true
-  end
-  
   def self.render_white(su_model, new_groups)
     su_model.rendering_options["EdgeColorMode"] = 1
     su_model.rendering_options["DrawDepthQue"] = 0
@@ -529,11 +520,11 @@ module OpenStudio
 
     new_groups.each do |group|
       group.entities.grep(Sketchup::Face).each do |face|
-        self.set_material(face, white)
+        SketchUp.set_material(face, white)
       end
 
       group.entities.grep(Sketchup::Edge).each do |edge|
-        self.set_material(edge, black)
+        SketchUp.set_material(edge, black)
       end
     end
   end
@@ -562,8 +553,8 @@ module OpenStudio
         next if color.nil?
 
         space.surfaces.each do |surface|
-          self.set_material(os2su[surface], color)
-          surface.subSurfaces.each do |sub_surface| self.set_material(os2su[sub_surface], color) end
+          SketchUp.set_material(os2su[surface], color)
+          surface.subSurfaces.each do |sub_surface| SketchUp.set_material(os2su[sub_surface], color) end
         end
       end
 
@@ -578,7 +569,7 @@ module OpenStudio
         end
         next if color.nil?
         
-        self.set_material(os2su[surface], color)
+        SketchUp.set_material(os2su[surface], color)
       end
 
     when "materials"
@@ -600,7 +591,7 @@ module OpenStudio
         end
         next if color.nil?
         
-        self.set_material(os2su[sub_surface], color)
+        SketchUp.set_material(os2su[sub_surface], color)
       end
 
     else
@@ -632,7 +623,7 @@ module OpenStudio
                 face.edges.each do |edge|
                   next unless edge.used_by?(other_face)
                   
-                  self.set_material(edge, green)
+                  SketchUp.set_material(edge, green)
                 end
               end
             end
@@ -657,7 +648,7 @@ module OpenStudio
               face.edges.each do |edge|
                 next unless edge.used_by?(other_face)
 
-                self.set_material(edge, green)
+                SketchUp.set_material(edge, green)
               end
             end
           end
@@ -2026,7 +2017,7 @@ module OpenStudio
 
                         color = Sketchup::Color.new
                         OpenStudio::set_hsba(color, [h, 100, 100, 1.0])
-                        self.set_material(edge, color)
+                        SketchUp.set_material(edge, color)
                       end
 
                       space_thermal_bridges[cte_type]["length"] += edge_length
@@ -2067,7 +2058,7 @@ module OpenStudio
 
                         color = Sketchup::Color.new
                         OpenStudio::set_hsba(color, [h, 100, 100, 1.0])
-                        self.set_material(edge, color)
+                        SketchUp.set_material(edge, color)
                       end
                     end
 
@@ -2157,12 +2148,12 @@ module OpenStudio
         OpenStudio::set_hsba(color, [h, 100, 100, 1.0])
 
         surface = os_model.getSurfaceByName(row[0].first).get
-        self.set_material(os2su[surface], color)
+        SketchUp.set_material(os2su[surface], color)
 
         adjacent_surface = surface.adjacentSurface
         next if adjacent_surface.empty?
         
-        self.set_material(os2su[adjacent_surface.get], color)
+        SketchUp.set_material(os2su[adjacent_surface.get], color)
       end
 
       windows_us.each do |row|
@@ -2178,12 +2169,12 @@ module OpenStudio
         OpenStudio::set_hsba(color, [h, 100, 100, 1.0])
 
         sub_surface = os_model.getSubSurfaceByName(row[0].first).get
-        self.set_material(os2su[sub_surface], color)
+        SketchUp.set_material(os2su[sub_surface], color)
 
         adjacent_sub_surface = sub_surface.adjacentSubSurface
         next if adjacent_sub_surface.empty?
         
-        self.set_material(os2su[adjacent_sub_surface.get], color)
+        SketchUp.set_material(os2su[adjacent_sub_surface.get], color)
       end
     end
 
@@ -2204,8 +2195,8 @@ module OpenStudio
           color = Sketchup::Color.new
           h = self.get_mirror_h_color(planar_surface, adjacent_planar_surface, os_model)
           OpenStudio::set_hsba(color, [h, 100, 100, 1.0])
-          self.set_material(face, color)
-          self.set_material(adjacent_face, color)
+          SketchUp.set_material(face, color)
+          SketchUp.set_material(adjacent_face, color)
         end
       end
     end
