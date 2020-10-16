@@ -596,6 +596,7 @@ module OpenStudio
 
     else
       if (zc_thermal_bridge_types + ["thermal_bridges"]).include?(id) then
+        su_model = Sketchup.active_model
         su_model.rendering_options["EdgeColorMode"] = 0
         su_model.rendering_options["DrawDepthQue"] = 1
         su_model.rendering_options["DepthQueWidth"] = 10
@@ -1538,7 +1539,7 @@ module OpenStudio
     unless input.eql?("materials") then
       thermal_bridge_type = case input
       when "thermal_bridges"
-        id.eql?(thermal_bridges) ? os_model.getMasslessOpaqueMaterialByName(li).get.additionalProperties.getFeatureAsString("thermal_bridge_type").get : id
+        id.eql?(input) ? os_model.getMasslessOpaqueMaterialByName(li).get.additionalProperties.getFeatureAsString("thermal_bridge_type").get : id
 
       else
         nil
@@ -1673,7 +1674,7 @@ module OpenStudio
     unless input.eql?("materials") then
       thermal_bridge_type = case input
       when "thermal_bridges"
-        id.eql?(thermal_bridges) ? os_model.getMasslessOpaqueMaterialByName(li).get.additionalProperties.getFeatureAsString("thermal_bridge_type").get : id
+        id.eql?(input) ? os_model.getMasslessOpaqueMaterialByName(li).get.additionalProperties.getFeatureAsString("thermal_bridge_type").get : id
 
       else
         nil
