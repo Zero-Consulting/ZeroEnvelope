@@ -363,10 +363,10 @@ module OpenStudio
       OpenStudio::Model::Construction.new([new_object])
     when "shades"
       shading_control = os_model.getShadingControlByName(object_name).get.clone(os_model).to_ShadingControl.get
-      shading_control.setString(4, object_name)
+      shading_control.setString(4, new_name)
       shading_control
     end
-    other_object.setName(name) unless other_object.nil?
+    other_object.setName(new_name) unless other_object.nil?
     script << "add_li('#{id}', '#{new_object.name.get.to_s}')"
 
     dialog.execute_script(script.join(";"))
