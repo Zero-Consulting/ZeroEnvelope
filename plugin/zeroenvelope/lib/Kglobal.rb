@@ -384,17 +384,6 @@ module OpenStudio
     ]
   }
 
-  t_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-  dialog.add_action_callback("time") do |action_context, msg|
-    t_end = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    p "#{msg}: #{t_end - t_start}"
-    t_start = t_end
-  end
-
-  dialog.add_action_callback("bug") do |action_context, msg|
-    p msg
-  end
-
   dialog.add_action_callback("add_construction_set_layout") do |action_context|
     script = []
 
