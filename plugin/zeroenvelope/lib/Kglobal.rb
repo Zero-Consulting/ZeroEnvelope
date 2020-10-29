@@ -1939,10 +1939,10 @@ module OpenStudio
                 [boundary_condition, -1],
                 [sub_surface_area, 1],
                 [sub_surface_u_factor, 1],
-                [frame_area, 1],
+                [frame_area, 2],
                 [frame_u_factor, 1],
                 [perimeter, 1],
-                [psi_value, 1],
+                [psi_value, 2],
                 [overall_u, 1, u_lim],
                 [sub_surface_au, 1]
               ]
@@ -2131,7 +2131,7 @@ module OpenStudio
           [surface_type, -1],
           [boundary_condition, -1],
           [surface_area, 1],
-          [surface_u_factor, 1, u_lim],
+          [surface_u_factor, 2, u_lim],
           [surface_au, 1]
         ]
 
@@ -2147,8 +2147,8 @@ module OpenStudio
           [space.name.get.to_s, -1],
           [thermal_bridge_type.gsub("_", " ").capitalize, -1],
           [length, 1],
-          [thermal_bridge_au / length, 1],
-          [thermal_bridge_au, 1]
+          [thermal_bridge_au / length, 2],
+          [thermal_bridge_au, 2]
         ]
 
         au += thermal_bridge_au
