@@ -296,10 +296,12 @@ module OpenStudio
   def self.update_shade(shade)
     openness_fraction = shade.thermalTransmittance
     solar_reflectance = shade.solarReflectance
-
+    
+    # https://uwspace.uwaterloo.ca/handle/10012/13015
     b = 1.428*openness_fraction + 0.178
     solar_transmittance = (openness_fraction + 8e-3*solar_reflectance) * (1 + solar_reflectance)**(1/b) # Keyes Universal Chart
-
+    solar_transmittance = [solar_transmittance, 0.99 - solar_reflectance].min
+    
     shade.setSolarTransmittance(solar_transmittance)
     shade.setVisibleTransmittance(solar_transmittance)
     shade.setThermalHemisphericalEmissivity(0.9 * (1 - openness_fraction))
@@ -750,7 +752,7 @@ module OpenStudio
         shade.setSolarReflectance(shade.solarReflectance * (1 - value) / (1 - shade.thermalTransmittance))
         shade.setThermalTransmittance(value)
 
-      when "shade_openness_fraction", "shade_colour"
+      when "shade_colour", "shade_yarn_reflectance"
         shade.setSolarReflectance(value * (1 - shade.thermalTransmittance))
       end
 
