@@ -1,15 +1,15 @@
 
 module OpenStudio
-  
+
   os_model = Plugin.model_manager.model_interface.openstudio_model
   su_model = Sketchup.active_model
-  
+
   lZ = os_model.getClimateZones
-  
+
   prompts, defaults, list = [], [], []
-  
+
   zonaClimatica = lZ.getClimateZone('CTE', 0).value
-  
+
   prompts << "Zona Climatica"
   choices = []
   choices << "A3"
@@ -46,20 +46,20 @@ module OpenStudio
   choices << "E1c"
   list << choices.join("|")
   defaults << (zonaClimatica.empty? ? "D3" : zonaClimatica )
-  
+
   nuevoOExistente, residencialOTerciario = "Edificio NUEVO", nil
   while true do
     standards_building_type = os_model.building.get.standardsBuildingType()
     break if standards_building_type.empty?
-    
+
     aux = standards_building_type.get.split("-").map do |x| x.strip() end
     break unless aux.length.eql?(3)
-    
+
     nuevoOExistente = aux[0]
     residencialOTerciario = aux[1..-1].join("-")
     break
   end
-  
+
   prompts << "Residencial o Terciario"
   choices = []
   choices << "Residencial-Unifamiliar"
@@ -70,25 +70,13 @@ module OpenStudio
   list << choices.join("|")
   defaults << (residencialOTerciario || choices.first)
 
-  permeabilidadHuecos = lZ.getClimateZone('PermeabilidadHuecos', 0).value
-
-  prompts << "Permeabilidad huecos (m3/h-m2-100Pa)"
-  choices = []
-  choices << "3"
-  choices << "9"
-  choices << "27"
-  choices << "50"
-  choices << "100"
-  list << choices.join("|")
-  defaults << (permeabilidadHuecos.empty? ? choices.last : permeabilidadHuecos )
-
   input = UI.inputbox(prompts, defaults, list, "User input.")
-  
+
   unless zonaClimatica.eql?(input[0]) then
     zonaClimatica = input[0]
     epw_file_name = ( zonaClimatica.include?('c') || zonaClimatica.include?('alpha') ? "#{zonaClimatica.sub('c', '')}_canarias" : "#{zonaClimatica}_peninsula" ) + ".epw"
     epw_path = "#{File.dirname(__FILE__)}/src/epw/" + epw_file_name
-    
+
     osm_path = Plugin.model_manager.model_interface.openstudio_path
     osw_path = osm_path.gsub(".osm", "/workflow.osw")
     osw = OpenStudio::WorkflowJSON.load(osw_path).get.clone
@@ -97,18 +85,18 @@ module OpenStudio
     osw.saveAs(osw_path)
 
     UI.messagebox("Successfully set weather file to #{epw_file_name}.")
-    
+
     Plugin.model_manager.open_openstudio(osm_path, su_model)
-    
+
     os_model = Plugin.model_manager.model_interface.openstudio_model
-  
+
     lZ = os_model.getClimateZones
     if lZ.getClimateZones('CTE').empty?
       lZ.appendClimateZone('CTE', zonaClimatica)
     else
       lZ.getClimateZone('CTE', 0).setValue(zonaClimatica)
     end
-    
+
     epw_file = OpenStudio::EpwFile.new(epw_path)
     weather_lat = epw_file.latitude
     weather_lon = epw_file.longitude
@@ -123,15 +111,8 @@ module OpenStudio
     site.setTimeZone(weather_time)
     site.setElevation(weather_elev)
   end
-  
+
   residencialOTerciario = input[1]
   os_model.building.get.setStandardsBuildingType(nuevoOExistente + "-" + residencialOTerciario)
-
-  permeabilidadHuecos = input[2]
-  if lZ.getClimateZones('PermeabilidadHuecos').empty?
-    lZ.appendClimateZone('PermeabilidadHuecos', permeabilidadHuecos)
-  else
-    lZ.getClimateZone('PermeabilidadHuecos', 0).setValue(permeabilidadHuecos)
-  end
 
 end
