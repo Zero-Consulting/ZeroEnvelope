@@ -207,7 +207,6 @@ module OpenStudio
 
             split = true
             edges << edge.split(point)
-
             break
           end
           break if split

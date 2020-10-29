@@ -64,7 +64,7 @@ module OpenStudio
   
   t_shift = os_model.getSite.timeZone - os_model.getSite.longitude / 15
   phi_w = Utilities.convert(os_model.getSite.latitude, "deg", "rad")
-  
+    
   @@sun_phis, @@sun_thetas, @@g_sol_bs, @@g_sol_ds, @@bs, @@f1s, @@f2s = [], [], [], [], [], [], []
   epw_file.data.each do |row|
     next unless row.month.eql?(7)
@@ -154,13 +154,6 @@ module OpenStudio
     "fenestration_type" => [""] + OpenStudio::Model::StandardsInformationConstruction.fenestrationTypeValues,
     "fenestration_frame_type" => [""] + OpenStudio::Model::StandardsInformationConstruction.fenestrationFrameTypeValues
   }
-
-  t_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-  dialog.add_action_callback("time") do |action_context, msg|
-    t_end = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    p "#{msg}: #{t_end - t_start}"
-    t_start = t_end
-  end
 
   dialog.add_action_callback("load") do |action_context|
     script = []
@@ -921,7 +914,7 @@ module OpenStudio
     
     sub_surfaces_transformation = OpenStudio::Transformation.alignFace(sub_surfaces.first.space.get.transformation * sub_surfaces.first.vertices)
     polygons = []
-    fronts.each_with_index do |front|
+    fronts.each do |front|
       next if front.nil?
       next if front.empty?
 
@@ -946,12 +939,12 @@ module OpenStudio
         polygons << polygon
       end
     end
-                
+
     shadow = Geom2D::PolygonSet.new
-    polygons.each do |polygon| 
+    polygons.each do |polygon|
       shadow = Geom2D::Algorithms::PolygonOperation.run(shadow, Geom2D::PolygonSet.new([polygon]), :union)
     end
-    
+
     return shadow
   end
   
@@ -990,7 +983,7 @@ module OpenStudio
     @@outdoor_sub_surfaces = @@sub_surface2sunlit_vertices.keys.sort_by do |sub_surface|
       sub_surface.name.get.to_s.split("Sub Surface ").last.to_i
     end
-        
+
     @@coplanar_outdoor_sub_surfaces = {}
     @@outdoor_sub_surfaces.each do |sub_surface|
       sub_surface_plane = sub_surface.space.get.transformation * sub_surface.plane 
@@ -999,7 +992,7 @@ module OpenStudio
       plane_hash["sub_surfaces"] << sub_surface
       @@coplanar_outdoor_sub_surfaces[sub_surface_plane] = plane_hash
     end
-          
+
     @@coplanar_outdoor_sub_surfaces.each do |plane, plane_hash|
       normal, d = plane.outwardNormal, plane.d
              
@@ -1061,16 +1054,16 @@ module OpenStudio
         end
       end
     end
-          
+    
     @@phis.each_with_index do |phi, j|
       @@thetas.each_with_index do |theta, i|
         sun_direction = OpenStudio::Vector3d.new(Math.cos(phi)*Math.sin(theta), Math.cos(phi)*Math.cos(theta), Math.sin(phi)).reverseVector
         
         @@coplanar_outdoor_sub_surfaces.each do |plane, plane_hash|            
           next unless Geom2D::Utils.float_compare(plane.outwardNormal.dot(sun_direction), 0) < 0
-          
+
           shadow = self.get_shadow(sun_direction, plane, plane_hash)
-          
+
           sub_surfaces = plane_hash["sub_surfaces"]
           sub_surfaces_transformation = OpenStudio::Transformation.alignFace(sub_surfaces.first.space.get.transformation * sub_surfaces.first.vertices)
           sub_surfaces.each do |sub_surface|
@@ -1110,7 +1103,7 @@ module OpenStudio
         end
       end
     end
-        
+
     script = []
     
     script << "var tbody = document.getElementsByTagName('tbody')[0]"
@@ -1171,7 +1164,7 @@ module OpenStudio
   
   compute_shadows = true
   
-  dialog.add_action_callback("compute_shadows") do |action_context|
+  dialog.add_action_callback("compute_shadows") do |action_context|   
     script = []
     
     if compute_shadows then
@@ -1179,7 +1172,7 @@ module OpenStudio
       script << "sketchup.set_render('output', null, null);" if @@render.eql?("openstudio")
       compute_shadows = false
     end
-
+    
     dialog.execute_script(script.join(";"))
   end
     
