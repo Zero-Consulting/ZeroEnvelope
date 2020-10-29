@@ -684,7 +684,8 @@ module OpenStudio
 
     render = option
 
-    self.render_by_selection(os_model, id, li, zc_thermal_bridge_types, new_groups, os2su) if  render.eql?("input")
+    self.render_by_selection(os_model, id, li, zc_thermal_bridge_types, new_groups, os2su) if render.eql?("input")
+    self.render_white(Sketchup.active_model, new_groups) if render.eql?("mirror")
 
     script << "var tabs = document.getElementById('output').getElementsByClassName('btn btn-success')"
     script << "sketchup.compute_k_global(tabs.length === 0 ? null : tabs[0].value)"
