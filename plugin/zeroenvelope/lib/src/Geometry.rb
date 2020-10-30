@@ -1,3 +1,4 @@
+require "#{File.dirname(__FILE__)}/clipper.so"
 
 class Geometry
       
@@ -263,5 +264,148 @@ class Geometry
     floor_area = self.get_floor_area(space, planes_hash)
     return (volume / floor_area).round(1)
   end
- 
+  
+  # Returns the distance from this point to the given point.
+  # Geom2D
+  def self.distance2D(point_a, point_b)
+    return Math.hypot(point_a.first - point_b.first, point_a.last - point_b.last)
+  end
+  
+  def self.clipper(subject, clipping, operation)
+    clipper = Clipper::Clipper.new
+    
+    subject.each do |polygon|
+      clipper.add_subject_polygon(polygon.each_vertex.map do |vertex| [vertex.x, vertex.y] end.reverse)
+    end
+    
+    clipping.each do |polygon|
+      clipper.add_clip_polygon(polygon.each_vertex.map do |vertex| [vertex.x, vertex.y] end.reverse)
+    end
+    
+    result = []
+    case operation
+    when :intersection
+      clipper.intersection(:even_odd, :even_odd)
+    when :union
+      clipper.union(:even_odd, :even_odd)
+    when :difference
+      clipper.difference(:even_odd, :even_odd)
+    when :xor
+      clipper.xor(:even_odd, :even_odd)
+    end.each do |points|
+      polygon = []
+      result << polygon
+      points.each do |point|
+        next if polygon.length > 0 && self.distance2D(point, polygon[-1]) < 1e-3
+        polygon << point
+      end
+      polygon.pop if self.distance2D(polygon[0], polygon[-1]) < 1e-3
+    end
+    
+    return result
+  end
+  
+  # Performs the wedge product of this point with the other point.
+  # Geom2D
+  def self.wedge2D(point_a, point_b)
+    other = Geom2D::Point(other)
+    
+    return point_a.first * point_b.last - point_b.first * point_a.last
+  end
+  
+  # Geom2D
+  def self.polygon_area(polygon)
+    return 0 if polygon.empty?
+    
+    area = self..wedge2D(polygon[-1], polygon[0])
+    0.upto(polygon.size - 2) {|i| area += self.wedge2D(polygon[i], polygon[i + 1]) }
+    
+    return area / 2
+  end
+  
+  # Returns +true+ if the vertices of the polygon are ordered in a counterclockwise fashion.
+  # Geom2D
+  def self.polygon_ccw?(polygon)
+    Utilities.float_compare(self.polygon_area(polygon), 0) > -1
+  end
+  
+  # Returns the BoundingBox of this polygon, or an empty BoundingBox if the polygon has no
+  # vertices.
+  # Geom2D
+  def self.polygon_bbox(polygon)
+    return [0, 0, 0, 0] if polygon.empty?
+    
+    vertex = polygon.first
+    result = [vertex.first, vertex.last, vertex.first, vertex.last]
+    polygon[1..-1].each do |vertex| 
+      result = [[result[0], vertex.first].min, [result[1], vertex.last].min, [result[2], vertex.first].max, [result[3], vertex.last].max]
+    end
+    
+    return result
+  end
+  
+  # Returns the BoundingBox of all polygons in the set, or +nil+ if it contains no polygon.
+  # Geom2D
+  def self.polygons_bbox(polygons)
+    return [0, 0, 0, 0] if polygons.empty?
+    
+    result = self.polygon_bbox(polygons.first)
+    polygons[1..-1].each do |polygon|
+      polygon_bbox = self.polygon_bbox(polygon)
+      result = [[result[0], polygon_bbox[0]].min, [result[1], polygon_bbox[1]].min, [result[2], polygon_bbox[2]].max, [result[3], polygon_bbox[3]].max]
+    end
+    
+    return result
+  end
+  
+  def self.get_front_polygons(polygons, segment)
+    front = []
+
+    length = segment.length
+    return front if Utilities.float_compare(length, 0) < 1
+    
+    polygons.each do |polygon|
+      px, py = segment.first.first, segment.first.last
+      v = [segment.last.first - px, segment.last.last - py]
+      dx, dy = v.first.to_f / length, v.last.to_f / length
+      d = px*dy - py*dx
+      
+      distances = []
+      each_segment do |polygon_segment|
+        distances << polygon_segment.first.first*dy - polygon_segment.first.last*dx - d
+      end
+      
+      polygon_set = [polygon]
+      if Utilities.float_compare(distances.min, 0) > -1 then
+        front += polygon_set
+        next
+      end
+      distance = distances.max
+      next if Utilities.float_compare(distance, 0) < 1
+      
+      polygons_bbox = self.polygons_bbox(polygons)
+      points = case
+      when Utilities.float_equal(dx, 0) then [[px, polygons_bbox[1]], [px, polygons_bbox[3]]]
+      when Utilities.float_equal(dy, 0) then [[polygons_bbox[0], py], [polygons_bbox[2], py]]
+      else
+        [(polygons_bbox[0] - px) / dx, (polygons_bbox[2] - px) / dx, (polygons_bbox[1] - py) / dy, (polygons_bbox[3] - py) / dy].sort.values_at(0,-1).map do |t|
+          [px + t*dx, py + t*dy]
+        end
+      end
+      bbox_segment = [points.first, points.last]
+      bbox_segment.reverse! if Utilities.float_compare(dx * (bbox_segment.last.first - bbox_segment.first.first), 0) < 0
+      
+      clipping = [
+        [bbox_segment.first.first, bbox_segment.first.last],
+        [bbox_segment.last.first, bbox_segment.last.last],
+        [bbox_segment.last.first + dy*distance, bbox_segment.last.last - dx*distance],
+        [bbox_segment.first.first + dy*distance, bbox_segment.first.last - dx*distance]
+      ]
+
+      front += Geometry.clipper(polygon_set, [clipping], :intersection)
+    end
+    
+    return front
+  end
+
 end

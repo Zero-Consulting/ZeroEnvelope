@@ -483,8 +483,8 @@ module OpenStudio
       sun_direction = sun_direction.reverseVector
 
       vertices = sub_surface_vertices.map do |vertex| vertex + sun_direction end
-      sub_surface_polygon = Geom2D::Polygon.new((sub_surfaces_transformation.inverse * vertices).map do |vertex| [vertex.x, vertex.y] end)
-      Geom2D::Algorithms::PolygonOperation.run(Geom2D::PolygonSet.new([sub_surface_polygon]), sub_surface_sunlit, :intersection)
+      sub_surface_polygon = (sub_surfaces_transformation.inverse * vertices).map do |vertex| [vertex.x, vertex.y] end
+      Geometry.clipper([sub_surface_polygon], sub_surface_sunlit, :intersection)
     else
       sub_surface_sunlit
     end
@@ -933,16 +933,16 @@ module OpenStudio
           end
         end
         sun_direction.normalize
-
-        polygon = Geom2D::Polygon.new((sub_surfaces_transformation.inverse * vertices).map do |vertex| [vertex.x, vertex.y] end)
-        polygon.reverse! unless polygon.ccw?
+        
+        polygon = (sub_surfaces_transformation.inverse * vertices).map do |vertex| [vertex.x, vertex.y] end
+        polygon.reverse! unless Geometry.polygon_ccw?(polygon)
         polygons << polygon
       end
     end
 
-    shadow = Geom2D::PolygonSet.new
+    shadow = []
     polygons.each do |polygon|
-      shadow = Geom2D::Algorithms::PolygonOperation.run(shadow, Geom2D::PolygonSet.new([polygon]), :union)
+      shadow = Geometry.clipper(shadow, [polygon], :union)
     end
 
     return shadow
@@ -973,8 +973,8 @@ module OpenStudio
         @@total_floor_area += Geometry.get_floor_area(space)
         surface.subSurfaces.each do |sub_surface|
           @@sub_surface2sunlit_vertices[sub_surface] = {
-            "direct" => @@sun_thetas.length.times.map do Geom2D::PolygonSet.new end,
-            "diffuse" => @@phis.length.times.map do @@thetas.length.times.map do Geom2D::PolygonSet.new end end
+            "direct" => @@sun_thetas.length.times.map do [] end,
+            "diffuse" => @@phis.length.times.map do @@thetas.length.times.map do [] end end
           }
         end
       end
@@ -1006,9 +1006,9 @@ module OpenStudio
 
         outdoor_vertices = outdoor_transformation * exterior_surface.vertices
         face_transformation = OpenStudio::Transformation.alignFace(outdoor_vertices)
-        polygon = Geom2D::Polygon.new((face_transformation.inverse * outdoor_vertices).map do |vertex| [vertex.x, vertex.y] end)
-        polygon.reverse! unless polygon.ccw?
-        outdoor_polygon_set = Geom2D::PolygonSet.new([polygon])
+        polygon = (face_transformation.inverse * outdoor_vertices).map do |vertex| [vertex.x, vertex.y] end
+        polygon.reverse! unless Geometry.polygon_ccw?(polygon)
+        outdoor_polygons = [polygon]
 
         outdoor_plane = outdoor_transformation * exterior_surface.plane
         outdoor_normal, outward_d = outdoor_plane.outwardNormal, outdoor_plane.d
@@ -1016,7 +1016,7 @@ module OpenStudio
         next if Utilities.float_compare(intersection_vector.length, 0) < 1 && Utilities.float_compare(d, Utilities.float_compare(outdoor_normal.dot(normal), 0) > 0 ? outward_d : -outward_d) < 1
 
         plane_hash["fronts"] << if Utilities.float_compare(intersection_vector.length, 0) < 1 then
-          outdoor_polygon_set
+          outdoor_polygons
         else
           axis_normal = [0, 0, 0]
           axis_normal[["x", "y", "z"].find_index do |coordinate| eval("Utilities.float_compare(intersection_vector.#{coordinate}, 0) != 0") end] = 1
@@ -1046,9 +1046,9 @@ module OpenStudio
 
           start_point = face_transformation.inverse * intersection_point
           end_point = face_transformation.inverse * (intersection_point + intersection_vector)
-          interection_segment = Geom2D::Segment.new(Geom2D::Point(start_point.x, start_point.y), Geom2D::Point(end_point.x, end_point.y))
+          interection_segment = [[start_point.x, start_point.y], [end_point.x, end_point.y]]
 
-          outdoor_polygon_set.front(interection_segment)
+          Geometry.get_front_polygons(outdoor_polygons, interection_segment)
         end.polygons.map do |polygon|
           polygon.to_ary.map do |vertex| face_transformation * OpenStudio::Point3d.new(vertex.x, vertex.y, 0) end
         end
@@ -1068,8 +1068,8 @@ module OpenStudio
           sub_surfaces_transformation = OpenStudio::Transformation.alignFace(sub_surfaces.first.space.get.transformation * sub_surfaces.first.vertices)
           sub_surfaces.each do |sub_surface|
             vertices = sub_surface.space.get.transformation * sub_surface.vertices
-            polygon = Geom2D::Polygon.new((sub_surfaces_transformation.inverse * vertices).map do |vertex| [vertex.x, vertex.y] end)
-            sub_surface_sunlit = Geom2D::Algorithms::PolygonOperation.run(Geom2D::PolygonSet.new([polygon]), shadow, :difference)
+            polygon = (sub_surfaces_transformation.inverse * vertices).map do |vertex| [vertex.x, vertex.y] end
+            sub_surface_sunlit = Geometry.clipper([polygon], shadow, :difference)
             @@sub_surface2sunlit_vertices[sub_surface]["diffuse"][j][i] = sub_surface_sunlit
 
             next unless j.eql?(@@phis.length - 1)
@@ -1097,8 +1097,8 @@ module OpenStudio
         sub_surfaces_transformation = OpenStudio::Transformation.alignFace(sub_surfaces.first.space.get.transformation * sub_surfaces.first.vertices)
         sub_surfaces.each do |sub_surface|
           vertices = sub_surface.space.get.transformation * sub_surface.vertices
-          polygon = Geom2D::Polygon.new((sub_surfaces_transformation.inverse * vertices).map do |vertex| [vertex.x, vertex.y] end)
-          sub_surface_sunlit = Geom2D::Algorithms::PolygonOperation.run(Geom2D::PolygonSet.new([polygon]), shadow, :difference)
+          polygon = (sub_surfaces_transformation.inverse * vertices).map do |vertex| [vertex.x, vertex.y] end
+          sub_surface_sunlit = Geometry.clipper([polygon], shadow, :difference)
           @@sub_surface2sunlit_vertices[sub_surface]["direct"][k] = sub_surface_sunlit
         end
       end
