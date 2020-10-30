@@ -78,6 +78,10 @@ module OpenStudio
     epw_path = "#{File.dirname(__FILE__)}/src/epw/" + epw_file_name
 
     osm_path = Plugin.model_manager.model_interface.openstudio_path
+    if osm_path.nil? then
+      Plugin.command_manager.save_openstudio_as
+      osm_path = Plugin.model_manager.model_interface.openstudio_path
+    end
     osw_path = osm_path.gsub(".osm", "/workflow.osw")
     osw = OpenStudio::WorkflowJSON.load(osw_path).get.clone
     FileUtils.copy_entry(epw_path, osm_path.gsub(".osm", "/files/") + epw_file_name, remove_destination = true)
