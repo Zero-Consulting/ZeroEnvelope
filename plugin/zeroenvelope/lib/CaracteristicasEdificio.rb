@@ -102,6 +102,7 @@ module OpenStudio
     end
 
     epw_file = OpenStudio::EpwFile.new(epw_path)
+    OpenStudio::Model::WeatherFile.setWeatherFile(os_model, epw_file)
     weather_lat = epw_file.latitude
     weather_lon = epw_file.longitude
     weather_time = epw_file.timeZone
