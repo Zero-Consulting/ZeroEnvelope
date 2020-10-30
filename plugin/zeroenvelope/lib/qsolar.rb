@@ -69,7 +69,7 @@ module OpenStudio
 
     g_sol_d = Utilities.convert(row.diffuseHorizontalRadiation.get, "W", "kW") # kWh/m2
     g_sol_b = Utilities.convert(row.directNormalRadiation.get, "W", "kW") # kWh/m2
-    next unless Geom2D::Utils.float_compare(g_sol_b + g_sol_d, 0) > 0
+    next unless Utilities.float_compare(g_sol_b + g_sol_d, 0) > 0
 
     n_day = row.date.dayOfYear
     r_dc = Utilities.convert(360.0 / 365 * n_day, "deg", "rad")
@@ -101,20 +101,20 @@ module OpenStudio
     alpha_sol_rad = Utilities.convert(alpha_sol_deg, "deg", "rad")
 
     sun_theta_deg = Utilities.convert(Math.acos((Math.sin(solar_declination)*Math.cos(phi_w) - Math.cos(solar_declination)*Math.sin(phi_w)*Math.cos(omega_rad)) / Math.cos(alpha_sol_rad)), "rad", "deg")
-    sun_theta_deg = 360 - sun_theta_deg if Geom2D::Utils.float_compare(omega_rad, 0) > 0
+    sun_theta_deg = 360 - sun_theta_deg if Utilities.float_compare(omega_rad, 0) > 0
     # sin_phi_sol_aux1 = Math.cos(solar_declination) * Math.sin(Math::PI-omega_rad) / Math.cos(Math.asin(Math.sin(alpha_sol_rad)))
     # cos_phi_sol_aux1 = (Math.cos(phi_w)*Math.sin(solar_declination) + Math.sin(phi_w)*Math.cos(solar_declination)*Math.cos(Math::PI-omega_rad)) / Math.cos(Math.asin(Math.sin(alpha_sol_rad)))
     # phi_sol_aux2_deg = Utilities.convert(Math.asin(Math.cos(solar_declination) * Math.sin(Math::PI-omega_rad)) / Math.cos(Math.asin(Math.sin(alpha_sol_rad))), "rad", "deg")
-    # phi_sol_deg = if Geom2D::Utils.float_compare(sin_phi_sol_aux1, 0) > -1 && Geom2D::Utils.float_compare(cos_phi_sol_aux1, 0) > 0 then
+    # phi_sol_deg = if Utilities.float_compare(sin_phi_sol_aux1, 0) > -1 && Utilities.float_compare(cos_phi_sol_aux1, 0) > 0 then
       # 180 - phi_sol_aux2_deg
-    # elsif Geom2D::Utils.float_compare(cos_phi_sol_aux1, 0) < 0 then
+    # elsif Utilities.float_compare(cos_phi_sol_aux1, 0) < 0 then
       # phi_sol_aux2_deg
     # else
       # - (180 + phi_sol_aux2_deg)
     # end
 
     aux = 1.014 * alpha_sol_rad**3
-    epsilon = ( Geom2D::Utils.float_compare(g_sol_d, 0) != 0  ? ((g_sol_d+g_sol_b)/g_sol_d + aux) / (1 + aux) : 999 )
+    epsilon = ( Utilities.float_compare(g_sol_d, 0) != 0  ? ((g_sol_d+g_sol_b)/g_sol_d + aux) / (1 + aux) : 999 )
 
     m = 1.0 / ( alpha_sol_deg < 10 ? Math.sin(alpha_sol_rad)+0.15*(alpha_sol_deg+3.885)**-1.253 : Math.sin(alpha_sol_rad) )
     i_ext = Utilities.convert(1370.0, "W", "kW") * (1 + 0.033 * Math.cos(r_dc))
@@ -477,7 +477,7 @@ module OpenStudio
   end
 
   def self.get_sunlit_area(frame_setback, sun_direction, normal, sub_surface_vertices, sub_surfaces_transformation, sub_surface_sunlit)
-    sunlit = if Geom2D::Utils.float_compare(frame_setback, 0) > 0 then
+    sunlit = if Utilities.float_compare(frame_setback, 0) > 0 then
       alpha = - frame_setback / sun_direction.dot(normal)
       sun_direction.setLength(alpha)
       sun_direction = sun_direction.reverseVector
@@ -518,7 +518,7 @@ module OpenStudio
         @@phis.each_with_index.map do |phi, j|
           @@thetas.each_with_index.map do |theta, i|
             sub_surface_sunlit = diffuse_sunlit_vertices[j][i]
-            if Geom2D::Utils.float_compare(sub_surface_sunlit.area, 0) > 0 then
+            if Utilities.float_compare(sub_surface_sunlit.area, 0) > 0 then
               sun_direction = OpenStudio::Vector3d.new(Math.cos(phi)*Math.sin(theta), Math.cos(phi)*Math.cos(theta), Math.sin(phi)).reverseVector
 
               self.get_sunlit_area(frame_setback, sun_direction, normal, sub_surface_vertices, sub_surfaces_transformation, sub_surface_sunlit) / sub_surface.grossArea
@@ -533,13 +533,13 @@ module OpenStudio
         sum_irr_sf, sum_irr = 0, 0
         @@thetas.each_with_index do |theta, i|
           cos_alpha_i = normal.dot(OpenStudio::Vector3d.new(Math.sin(theta), Math.cos(theta), 0))
-          next if Geom2D::Utils.float_compare(cos_alpha_i, 0) < 1
+          next if Utilities.float_compare(cos_alpha_i, 0) < 1
           irr = (2 * Math::PI / @@thetas.length) * cos_alpha_i
           sum_irr_sf += irr * sunlit_fractions[0][i]
           sum_irr += irr
         end
 
-        Geom2D::Utils.float_compare(sum_irr, 0) == 0 ? 0 : sum_irr_sf / sum_irr
+        Utilities.float_compare(sum_irr, 0) == 0 ? 0 : sum_irr_sf / sum_irr
       else
         1
       end
@@ -550,14 +550,14 @@ module OpenStudio
           next if j.eql?(0) || (j+1).eql?(@@phis.length)
           @@thetas.each_with_index.map do |theta, i|
             cos_alpha_ij = normal.dot(OpenStudio::Vector3d.new(Math.cos(phi)*Math.sin(theta), Math.cos(phi)*Math.cos(theta), Math.sin(phi)))
-            next if Geom2D::Utils.float_compare(cos_alpha_ij, 0) < 1
+            next if Utilities.float_compare(cos_alpha_ij, 0) < 1
             irr = Math.cos(phi) * (2 * Math::PI / @@thetas.length) * (Math::PI / 2 / @@phis.length) * cos_alpha_ij
             sum_irr_sf += irr * sunlit_fractions[j][i]
             sum_irr += irr
           end
         end
 
-        Geom2D::Utils.float_compare(sum_irr, 0) == 0 ? 0 : sum_irr_sf / sum_irr
+        Utilities.float_compare(sum_irr, 0) == 0 ? 0 : sum_irr_sf / sum_irr
       else
         1
       end
@@ -568,7 +568,7 @@ module OpenStudio
         cos_theta_sol_ic = normal.dot(OpenStudio::Vector3d.new(Math.cos(sun_phi)*Math.sin(sun_theta), Math.cos(sun_phi)*Math.cos(sun_theta), Math.sin(sun_phi)))
 
         sf = unless sunlit_fractions.nil? then
-          if Geom2D::Utils.float_compare(sub_surface_sunlit.area, 0) > 0 then
+          if Utilities.float_compare(sub_surface_sunlit.area, 0) > 0 then
             sun_direction = OpenStudio::Vector3d.new(Math.cos(sun_phi)*Math.sin(sun_theta), Math.cos(sun_phi)*Math.cos(sun_theta), Math.sin(sun_phi)).reverseVector
 
             self.get_sunlit_area(frame_setback, sun_direction, normal, sub_surface_vertices, sub_surfaces_transformation, sub_surface_sunlit) / sub_surface.grossArea
@@ -576,7 +576,7 @@ module OpenStudio
             0.0
           end
         else
-          Geom2D::Utils.float_compare(cos_theta_sol_ic, 0) > 0 ? 1 : 0
+          Utilities.float_compare(cos_theta_sol_ic, 0) > 0 ? 1 : 0
         end
 
         a = [0, cos_theta_sol_ic].max
@@ -920,12 +920,12 @@ module OpenStudio
 
       front_normal = (front.first[1]-front.first[0]).cross(front.first[-1]-front.first[0])
       front_normal.normalize
-      next if Geom2D::Utils.float_compare(front_normal.dot(sun_direction), 0) == 0
+      next if Utilities.float_compare(front_normal.dot(sun_direction), 0) == 0
       front.each do |polygon|
         vertices = polygon.map do |vertex|
           sun_direction.normalize
           alpha = - ((vertex - OpenStudio::Point3d.new).dot(normal) + d) / sun_direction.dot(normal)
-          if Geom2D::Utils.float_compare(alpha, 0) < 1  then
+          if Utilities.float_compare(alpha, 0) < 1  then
             vertex
           else
             sun_direction.setLength(alpha)
@@ -1013,13 +1013,13 @@ module OpenStudio
         outdoor_plane = outdoor_transformation * exterior_surface.plane
         outdoor_normal, outward_d = outdoor_plane.outwardNormal, outdoor_plane.d
         intersection_vector = outdoor_normal.cross(normal)
-        next if Geom2D::Utils.float_compare(intersection_vector.length, 0) < 1 && Geom2D::Utils.float_compare(d, Geom2D::Utils.float_compare(outdoor_normal.dot(normal), 0) > 0 ? outward_d : -outward_d) < 1
+        next if Utilities.float_compare(intersection_vector.length, 0) < 1 && Utilities.float_compare(d, Utilities.float_compare(outdoor_normal.dot(normal), 0) > 0 ? outward_d : -outward_d) < 1
 
-        plane_hash["fronts"] << if Geom2D::Utils.float_compare(intersection_vector.length, 0) < 1 then
+        plane_hash["fronts"] << if Utilities.float_compare(intersection_vector.length, 0) < 1 then
           outdoor_polygon_set
         else
           axis_normal = [0, 0, 0]
-          axis_normal[["x", "y", "z"].find_index do |coordinate| eval("Geom2D::Utils.float_compare(intersection_vector.#{coordinate}, 0) != 0") end] = 1
+          axis_normal[["x", "y", "z"].find_index do |coordinate| eval("Utilities.float_compare(intersection_vector.#{coordinate}, 0) != 0") end] = 1
           eval("axis_normal = OpenStudio::Vector3d.new(#{axis_normal.join(", ")})")
 
           vector_u = normal
@@ -1060,7 +1060,7 @@ module OpenStudio
         sun_direction = OpenStudio::Vector3d.new(Math.cos(phi)*Math.sin(theta), Math.cos(phi)*Math.cos(theta), Math.sin(phi)).reverseVector
 
         @@coplanar_outdoor_sub_surfaces.each do |plane, plane_hash|
-          next unless Geom2D::Utils.float_compare(plane.outwardNormal.dot(sun_direction), 0) < 0
+          next unless Utilities.float_compare(plane.outwardNormal.dot(sun_direction), 0) < 0
 
           shadow = self.get_shadow(sun_direction, plane, plane_hash)
 
@@ -1089,7 +1089,7 @@ module OpenStudio
       sun_direction = OpenStudio::Vector3d.new(Math.cos(sun_phi)*Math.sin(sun_theta), Math.cos(sun_phi)*Math.cos(sun_theta), Math.sin(sun_phi)).reverseVector
 
       @@coplanar_outdoor_sub_surfaces.each do |plane, plane_hash|
-        next unless Geom2D::Utils.float_compare(plane.outwardNormal.dot(sun_direction), 0) < 0
+        next unless Utilities.float_compare(plane.outwardNormal.dot(sun_direction), 0) < 0
 
         shadow = self.get_shadow(sun_direction, plane, plane_hash)
 
@@ -1127,13 +1127,13 @@ module OpenStudio
       @@h_sh_obst_jul_dirs[sub_surface] = h_sh_obst_jul_dir
       @@h_sh_obst_jul_difs[sub_surface] = h_sh_obst_jul_dif
       script << "var f_sh_obst_jul_dir = row.insertCell(4)"
-      if Geom2D::Utils.float_compare(h_sol_jul_dir, 0) > 0 then
+      if Utilities.float_compare(h_sol_jul_dir, 0) > 0 then
         script << "f_sh_obst_jul_dir.innerHTML = parseFloat(#{h_sh_obst_jul_dir / h_sol_jul_dir}).toFixed(2)"
       else
         script << "f_sh_obst_jul_dir.innerHTML = '-'"
       end
       script << "var f_sh_obst_jul_dif = row.insertCell(5)"
-      if Geom2D::Utils.float_compare(h_sol_jul_dir, 0) > 0 then
+      if Utilities.float_compare(h_sol_jul_dir, 0) > 0 then
         script << "f_sh_obst_jul_dif.innerHTML = parseFloat(#{h_sh_obst_jul_dif / h_sol_jul_dif}).toFixed(2)"
       else
         script << "f_sh_obst_jul_dif.innerHTML = '-'"
