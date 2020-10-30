@@ -253,7 +253,8 @@ module OpenStudio
 
   if zonaClimatica.empty? || residencialOTerciario.nil? then
     load(File.dirname(__FILE__)+"/CaracteristicasEdificio.rb")
-
+    
+    os_model = Plugin.model_manager.model_interface.openstudio_model
     zonaClimatica = os_model.getClimateZones.getClimateZone("CTE", 0).value
     residencialOTerciario = (os_model.building.get.standardsBuildingType().get.split("-").map do |x| x.strip() end)[1]
   end
