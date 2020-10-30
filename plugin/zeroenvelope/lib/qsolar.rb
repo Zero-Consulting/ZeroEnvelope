@@ -41,7 +41,8 @@ module OpenStudio
 
   if epw_file.nil? || residencialOTerciario.nil? then
     load(File.dirname(__FILE__)+"/CaracteristicasEdificio.rb")
-
+    
+    os_model = Plugin.model_manager.model_interface.openstudio_model
     epw_file = EpwFile.load(os_model.workflowJSON.findFile(os_model.getOptionalWeatherFile.get.path.get).get).get
     residencialOTerciario = (os_model.building.get.standardsBuildingType().get.split("-").map do |x| x.strip() end)[1]
   end
