@@ -1,4 +1,3 @@
-require "#{File.dirname(__FILE__)}/src/geom2d"
 
 module OpenStudio
 
@@ -1049,7 +1048,7 @@ module OpenStudio
           interection_segment = [[start_point.x, start_point.y], [end_point.x, end_point.y]]
 
           Geometry.get_front_polygons(outdoor_polygons, interection_segment)
-        end.polygons.map do |polygon|
+        end.map do |polygon|
           polygon.to_ary.map do |vertex| face_transformation * OpenStudio::Point3d.new(vertex.x, vertex.y, 0) end
         end
       end

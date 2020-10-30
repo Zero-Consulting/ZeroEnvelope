@@ -275,11 +275,11 @@ class Geometry
     clipper = Clipper::Clipper.new
     
     subject.each do |polygon|
-      clipper.add_subject_polygon(polygon.each_vertex.map do |vertex| [vertex.x, vertex.y] end.reverse)
+      clipper.add_subject_polygon(polygon.map do |vertex| [vertex.x, vertex.y] end.reverse)
     end
     
     clipping.each do |polygon|
-      clipper.add_clip_polygon(polygon.each_vertex.map do |vertex| [vertex.x, vertex.y] end.reverse)
+      clipper.add_clip_polygon(polygon.map do |vertex| [vertex.x, vertex.y] end.reverse)
     end
     
     result = []
@@ -307,9 +307,7 @@ class Geometry
   
   # Performs the wedge product of this point with the other point.
   # Geom2D
-  def self.wedge2D(point_a, point_b)
-    other = Geom2D::Point(other)
-    
+  def self.wedge2D(point_a, point_b)   
     return point_a.first * point_b.last - point_b.first * point_a.last
   end
   
@@ -317,7 +315,7 @@ class Geometry
   def self.polygon_area(polygon)
     return 0 if polygon.empty?
     
-    area = self..wedge2D(polygon[-1], polygon[0])
+    area = self.wedge2D(polygon[-1], polygon[0])
     0.upto(polygon.size - 2) {|i| area += self.wedge2D(polygon[i], polygon[i + 1]) }
     
     return area / 2
@@ -370,10 +368,14 @@ class Geometry
       dx, dy = v.first.to_f / length, v.last.to_f / length
       d = px*dy - py*dx
       
-      distances = []
-      each_segment do |polygon_segment|
-        distances << polygon_segment.first.first*dy - polygon_segment.first.last*dx - d
+      segments = []
+      polygons.each do |py|
+        next if py.length < 2
+        
+        py.each_cons(2) do |point_a, point_b| segments << [point_a, point_b] end
+        segments << [py.last, py.first]
       end
+      distances = segments.map do |segment| segment.first.first * dy - segment.first.last * dx - d end
       
       polygon_set = [polygon]
       if Utilities.float_compare(distances.min, 0) > -1 then
