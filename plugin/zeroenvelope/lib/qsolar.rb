@@ -40,7 +40,7 @@ module OpenStudio
 
   if epw_file.nil? || residencialOTerciario.nil? then
     load(File.dirname(__FILE__)+"/CaracteristicasEdificio.rb")
-    
+
     os_model = Plugin.model_manager.model_interface.openstudio_model
     epw_file = EpwFile.load(os_model.workflowJSON.findFile(os_model.getOptionalWeatherFile.get.path.get).get).get
     residencialOTerciario = (os_model.building.get.standardsBuildingType().get.split("-").map do |x| x.strip() end)[1]
@@ -296,12 +296,12 @@ module OpenStudio
   def self.update_shade(shade)
     openness_fraction = shade.thermalTransmittance
     solar_reflectance = shade.solarReflectance
-    
+
     # https://uwspace.uwaterloo.ca/handle/10012/13015
     b = 1.428*openness_fraction + 0.178
     solar_transmittance = (openness_fraction + 8e-3*solar_reflectance) * (1 + solar_reflectance)**(1/b) # Keyes Universal Chart
     solar_transmittance = [solar_transmittance, 0.99 - solar_reflectance].min
-    
+
     shade.setSolarTransmittance(solar_transmittance)
     shade.setVisibleTransmittance(solar_transmittance)
     shade.setThermalHemisphericalEmissivity(0.9 * (1 - openness_fraction))
@@ -932,7 +932,7 @@ module OpenStudio
           end
         end
         sun_direction.normalize
-        
+
         polygon = (sub_surfaces_transformation.inverse * vertices).map do |vertex| [vertex.x, vertex.y] end
         polygon.reverse! unless Geometry.polygon_ccw?(polygon)
         polygons << polygon
@@ -941,9 +941,9 @@ module OpenStudio
 
     shadow = []
     # shadow = polygons.inject([]) do |shadow, polygon| Geometry.clipper(shadow, [polygon], :union) end
-    # polygons.each do |polygon|
-      # shadow = Geometry.clipper(shadow, [polygon], :union)
-    # end
+    polygons.each do |polygon|
+      shadow = Geometry.clipper(shadow, [polygon], :union)
+    end
 
     return shadow
   end
