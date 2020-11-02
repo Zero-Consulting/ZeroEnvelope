@@ -327,6 +327,10 @@ class Geometry
     Utilities.float_compare(self.polygon_area(polygon), 0) > -1
   end
   
+  def self.polygons_area(polygons)
+    return polygons.inject(0.0) do |sum, polygon| sum + self.polygon_area(polygon) end
+  end
+  
   # Returns the BoundingBox of this polygon, or an empty BoundingBox if the polygon has no
   # vertices.
   # Geom2D

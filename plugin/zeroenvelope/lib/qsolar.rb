@@ -488,7 +488,7 @@ module OpenStudio
       sub_surface_sunlit
     end
 
-    return sunlit.area
+    return Geometry.polygons_area(sunlit)
   end
 
   phis_length = 6
@@ -517,7 +517,7 @@ module OpenStudio
         @@phis.each_with_index.map do |phi, j|
           @@thetas.each_with_index.map do |theta, i|
             sub_surface_sunlit = diffuse_sunlit_vertices[j][i]
-            if Utilities.float_compare(sub_surface_sunlit.area, 0) > 0 then
+            if Utilities.float_compare(Geometry.polygons_area(sub_surface_sunlit), 0) > 0 then
               sun_direction = OpenStudio::Vector3d.new(Math.cos(phi)*Math.sin(theta), Math.cos(phi)*Math.cos(theta), Math.sin(phi)).reverseVector
 
               self.get_sunlit_area(frame_setback, sun_direction, normal, sub_surface_vertices, sub_surfaces_transformation, sub_surface_sunlit) / sub_surface.grossArea
@@ -567,7 +567,7 @@ module OpenStudio
         cos_theta_sol_ic = normal.dot(OpenStudio::Vector3d.new(Math.cos(sun_phi)*Math.sin(sun_theta), Math.cos(sun_phi)*Math.cos(sun_theta), Math.sin(sun_phi)))
 
         sf = unless sunlit_fractions.nil? then
-          if Utilities.float_compare(sub_surface_sunlit.area, 0) > 0 then
+          if Utilities.float_compare(Geometry.polygons_area(sub_surface_sunlit), 0) > 0 then
             sun_direction = OpenStudio::Vector3d.new(Math.cos(sun_phi)*Math.sin(sun_theta), Math.cos(sun_phi)*Math.cos(sun_theta), Math.sin(sun_phi)).reverseVector
 
             self.get_sunlit_area(frame_setback, sun_direction, normal, sub_surface_vertices, sub_surfaces_transformation, sub_surface_sunlit) / sub_surface.grossArea
@@ -940,9 +940,10 @@ module OpenStudio
     end
 
     shadow = []
-    polygons.each do |polygon|
-      shadow = Geometry.clipper(shadow, [polygon], :union)
-    end
+    # shadow = polygons.inject([]) do |shadow, polygon| Geometry.clipper(shadow, [polygon], :union) end
+    # polygons.each do |polygon|
+      # shadow = Geometry.clipper(shadow, [polygon], :union)
+    # end
 
     return shadow
   end
