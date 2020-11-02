@@ -275,11 +275,11 @@ class Geometry
     clipper = Clipper::Clipper.new
     
     subject.each do |polygon|
-      clipper.add_subject_polygon(polygon.map do |vertex| [vertex.x, vertex.y] end.reverse)
+      clipper.add_subject_polygon(polygon.reverse)
     end
     
     clipping.each do |polygon|
-      clipper.add_clip_polygon(polygon.map do |vertex| [vertex.x, vertex.y] end.reverse)
+      clipper.add_clip_polygon(polygon.reverse)
     end
     
     result = []
