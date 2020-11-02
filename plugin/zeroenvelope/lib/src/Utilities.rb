@@ -73,13 +73,18 @@ class Utilities
     
     return objects
   end
-  
+
+  # Compares two float whether they are equal using the set precision.
+  def self.float_equal(a, b)
+    (a - b).abs < 1e-6
+  end
+
   # Compares two floats like the <=> operator but using the set precision for detecting whether
   # they are equal.
   # Geom2D
   def self.float_compare(a, b)
     result = a - b
-    (result.abs < Utils.precision ? 0 : a <=> b)
+    (result.abs < 1e-6 ? 0 : a <=> b)
   end
   
 end
