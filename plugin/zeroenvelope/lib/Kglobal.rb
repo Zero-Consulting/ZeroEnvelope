@@ -7,6 +7,30 @@ module OpenStudio
   os_model = Plugin.model_manager.model_interface.openstudio_model
   os_path = Plugin.model_manager.model_interface.openstudio_path
 
+  # sg save data
+
+  zonaClimatica = os_model.getClimateZones.getClimateZone("CTE", 0).value
+
+  residencialOTerciario = nil
+  while true do
+    standards_building_type = os_model.building.get.standardsBuildingType()
+    break if standards_building_type.empty?
+
+    aux = standards_building_type.get.split("-").map do |x| x.strip() end
+    break unless aux.length.eql?(3)
+
+    residencialOTerciario = aux[1]
+    break
+  end
+
+  if zonaClimatica.empty? || residencialOTerciario.nil? then
+    load(File.dirname(__FILE__)+"/CaracteristicasEdificio.rb")
+
+    os_model = Plugin.model_manager.model_interface.openstudio_model
+    zonaClimatica = os_model.getClimateZones.getClimateZone("CTE", 0).value
+    residencialOTerciario = (os_model.building.get.standardsBuildingType().get.split("-").map do |x| x.strip() end)[1]
+  end
+
   # remove air gaps
 
   os_model.getAirGaps.each do |air_gap|
@@ -235,29 +259,6 @@ module OpenStudio
     os2su[surface].edges.each do |edge| edge.hidden = true end
   end
 
-  # sg save data
-
-  zonaClimatica = os_model.getClimateZones.getClimateZone("CTE", 0).value
-
-  residencialOTerciario = nil
-  while true do
-    standards_building_type = os_model.building.get.standardsBuildingType()
-    break if standards_building_type.empty?
-
-    aux = standards_building_type.get.split("-").map do |x| x.strip() end
-    break unless aux.length.eql?(3)
-
-    residencialOTerciario = aux[1]
-    break
-  end
-
-  if zonaClimatica.empty? || residencialOTerciario.nil? then
-    load(File.dirname(__FILE__)+"/CaracteristicasEdificio.rb")
-    
-    os_model = Plugin.model_manager.model_interface.openstudio_model
-    zonaClimatica = os_model.getClimateZones.getClimateZone("CTE", 0).value
-    residencialOTerciario = (os_model.building.get.standardsBuildingType().get.split("-").map do |x| x.strip() end)[1]
-  end
 
   # he1 indicators limits
 
@@ -338,7 +339,7 @@ module OpenStudio
 
     [space, space_neighbours]
   end.compact.to_h
-  
+
   if area_int < 1e-6 then
     UI.messagebox("This building has no envelope.")
   else
@@ -2379,5 +2380,5 @@ module OpenStudio
     dialog.center
     dialog.show
   end
-  
+
 end
