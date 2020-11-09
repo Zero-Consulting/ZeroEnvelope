@@ -418,22 +418,23 @@ module OpenStudio
     return g_gl_wi unless shading_type.end_with?("Shade")
 
     shade = shading_control.shadingMaterial.get.to_Shade.get
-    transmittance, reflectance = shade.thermalTransmittance, shade.solarReflectance
+    transmittance, reflectance = shade.solarTransmittance, shade.solarReflectance
+    absorbance = 1.0 - transmittance - reflectance
     case shading_type
     when "ExteriorShade"
-      g_1, g_2 = 5, 10
-      g_ext = 1 / (1/glass_u_factor + 1/g_1 + 1/g_2)
-      return transmittance*g_gl_n + (1-transmittance-reflectance)*g_ext/g_2 + transmittance*(1-g_gl_n)*g_ext/g_1
+      g_1, g_2 = 5.0, 10.0
+      g_ext = 1.0 / (1.0 / glass_u_factor + 1.0 / g_1 + 1.0 / g_2)
+      return transmittance * g_gl_n + absorbance * g_ext / g_2 + transmittance * (1 - g_gl_n) * g_ext / g_1
 
     when "InteriorShade"
-      g_3 = 30
-      g_int = 1 / (1/glass_u_factor + 1/g_3)
-      return g_gl_n * (1 - g_gl_n*reflectance - (1-transmittance-reflectance)*g_int/g_3)
+      g_3 = 30.0
+      g_int = 1.0 / (1.0 / glass_u_factor + 1.0 / g_3)
+      return g_gl_n * (1.0 - g_gl_n * reflectance - absorbance * g_int / g_3)
 
     when "BetweenGlassShade", "BetweenglassShade"
-      g_4 = 3
-      g_integr = 1 / (1/glass_u_factor + 1/g_4)
-      return g_gl_n*transmittance + g_gl_n*((1-transmittance-reflectance) + (1-g_gl_n)*reflectance)*g_integr/g_4
+      g_4 = 3.0
+      g_integr = 1.0 / (1.0 / glass_u_factor + 1.0 / g_4)
+      return g_gl_n * transmittance + g_gl_n * (absorbance + (1.0 - g_gl_n) * reflectance) * g_integr / g_4
     end # UNE 52022
 
     return 1
@@ -460,7 +461,7 @@ module OpenStudio
 
     @@total_phi_sol_jul -= (h_sh_obst_jul_dir + h_sh_obst_jul_dif) * area * @@g_gl_sh_wis[sub_surface]
     g_gl_sh_wi = self.get_g_gl_sh_wi(sub_surface)
-    script << "cells[6].innerHTML = parseFloat(#{g_gl_sh_wi}).toFixed(1)"
+    script << "cells[6].innerHTML = parseFloat(#{g_gl_sh_wi}).toFixed(2)"
     @@g_gl_sh_wis[sub_surface] = g_gl_sh_wi
     phi_sol_jul = (h_sh_obst_jul_dir + h_sh_obst_jul_dif) * area * g_gl_sh_wi
     script << "cells[7].innerHTML = parseFloat(#{phi_sol_jul}).toFixed(2)"
@@ -939,11 +940,7 @@ module OpenStudio
       end
     end
 
-    shadow = []
-    # shadow = polygons.inject([]) do |shadow, polygon| Geometry.clipper(shadow, [polygon], :union) end
-    polygons.each do |polygon|
-      shadow = Geometry.clipper(shadow, [polygon], :union)
-    end
+    shadow = polygons.inject([]) do |shadow, polygon| Geometry.clipper(shadow, [polygon], :union) end
 
     return shadow
   end
