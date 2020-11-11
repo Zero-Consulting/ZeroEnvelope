@@ -212,42 +212,42 @@ module OpenStudio
 
   # split edges to select thermal bridges
 
-  os_model.getSpaces.each do |space|
-    group = space.drawing_interface.entity
+  # os_model.getSpaces.each do |space|
+    # group = space.drawing_interface.entity
 
-    edges = group.entities.grep(Sketchup::Edge).select do |edge| edge.faces.length.eql?(1) end
+    # edges = group.entities.grep(Sketchup::Edge).select do |edge| edge.faces.length.eql?(1) end
 
-    while true do
-      split = false
+    # while true do
+      # split = false
 
-      edges.each do |edge|
-        points = edge.vertices.map do |vertex| vertex.position end
+      # edges.each do |edge|
+        # points = edge.vertices.map do |vertex| vertex.position end
 
-        edges.each do |other_edge|
-          other_edge.vertices.each do |vertex|
-            point = vertex.position
-            next if (points.map do |x| x.distance(point) end.min).to_f < 1e-6
-            next unless Geom.point_in_polygon_2D(point, points, true)
+        # edges.each do |other_edge|
+          # other_edge.vertices.each do |vertex|
+            # point = vertex.position
+            # next if (points.map do |x| x.distance(point) end.min).to_f < 1e-6
+            # next unless Geom.point_in_polygon_2D(point, points, true)
 
-            split = true
-            edges << edge.split(point)
-            break
-          end
-          break if split
-        end
-        break if split
-      end
+            # split = true
+            # edges << edge.split(point)
+            # break
+          # end
+          # break if split
+        # end
+        # break if split
+      # end
 
-      break unless split
-    end
+      # break unless split
+    # end
 
-    edges.each do |edge|
-      line = group.entities.add_line(edge.start.position, edge.end.position)
-      line.find_faces
-    end
+    # edges.each do |edge|
+      # line = group.entities.add_line(edge.start.position, edge.end.position)
+      # line.find_faces
+    # end
 
-    group.entities.grep(Sketchup::Edge).select do |edge| edge.faces.length.eql?(0) end.each do |edge| edge.erase! end
-  end
+    # group.entities.grep(Sketchup::Edge).select do |edge| edge.faces.length.eql?(0) end.each do |edge| edge.erase! end
+  # end
 
   new_groups, os2su = SketchUp.get_os2su(os_model, false)
   su2os = os2su.invert
@@ -258,7 +258,6 @@ module OpenStudio
 
     os2su[surface].edges.each do |edge| edge.hidden = true end
   end
-
 
   # he1 indicators limits
 
@@ -2129,7 +2128,8 @@ module OpenStudio
           else
             u_lims[2]
           end
-
+          
+          surface_area = [surface_area, 0.0].max
           surface_au = surface_area * surface_u_factor
           opaques_us << [
             [surface_name, -1],
