@@ -1633,7 +1633,7 @@ module OpenStudio
               angles << Math.acos(next_vec.dot(prev_vec))
               prev_vec = next_vec.reverseVector
             end
-            sub_surface.outsideBoundaryCondition.eql?("Outdoors") && (sub_surface_type.end_with?("Window") || sub_surface_type.eql?("GlassDoor")) && vertices.length.eql?(4) && (angles.max - angles.min).abs < 1e-6
+            sub_surface.outsideBoundaryCondition.eql?("Outdoors") && ["FixedWindow", "OperableWindow", "GlassDoor", "Skylight"].include?(sub_surface_type) && vertices.length.eql?(4) && (angles.max - angles.min).abs < 1e-6
           end.each do |sub_surface|
             sub_surface.setWindowPropertyFrameAndDivider(frame)
           end
