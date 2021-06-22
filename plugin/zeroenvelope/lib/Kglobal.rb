@@ -1623,9 +1623,16 @@ module OpenStudio
           frame = os_model.getWindowPropertyFrameAndDividerByName(li).get
           spaces.inject(sub_surfaces) do |sum, space| sum + space.surfaces.inject([]) do |sum, surface| sum + surface.subSurfaces end end.select do |sub_surface|
             sub_surface_type = sub_surface.subSurfaceType
-            centroid = sub_surface.centroid
-            vertices = sub_surface.vertices.map do |vertex| (vertex - centroid).length end
-            sub_surface.outsideBoundaryCondition.eql?("Outdoors") && (sub_surface_type.end_with?("Window") || sub_surface_type.eql?("GlassDoor")) && (vertices.length.eql?(4) || vertices.uniq.length.eql?(1))
+            angles = []
+            prev_vec = vertices.last - vertices.first
+            prev_vec.normalize
+            vertices.each_with_index.each do |vertex, i|
+              next_vec = vertices[i+1] - vertex
+              next_vec.normalize
+              angles << Math.acos(next_vec.dot(prev_vec))
+              prev_vec = next_vec.reverseVector
+            end
+            sub_surface.outsideBoundaryCondition.eql?("Outdoors") && (sub_surface_type.end_with?("Window") || sub_surface_type.eql?("GlassDoor")) && vertices.length.eql?(4) && (angles.max - angles.min).abs < 1e-6
           end.each do |sub_surface|
             sub_surface.setWindowPropertyFrameAndDivider(frame)
           end
@@ -2128,7 +2135,7 @@ module OpenStudio
           else
             u_lims[2]
           end
-          
+
           surface_area = [surface_area, 0.0].max
           surface_au = surface_area * surface_u_factor
           opaques_us << [
