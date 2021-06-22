@@ -1623,9 +1623,10 @@ module OpenStudio
           frame = os_model.getWindowPropertyFrameAndDividerByName(li).get
           spaces.inject(sub_surfaces) do |sum, space| sum + space.surfaces.inject([]) do |sum, surface| sum + surface.subSurfaces end end.select do |sub_surface|
             sub_surface_type = sub_surface.subSurfaceType
-            angles = []
+            vertices = sub_surface.vertices
             prev_vec = vertices.last - vertices.first
             prev_vec.normalize
+            angles = []
             vertices.each_with_index.each do |vertex, i|
               next_vec = vertices[i+1] - vertex
               next_vec.normalize
